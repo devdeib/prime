@@ -95,7 +95,7 @@ export default function FurnitureNavbar() {
                 <NavDropdown.Item
                   key={category.id}
                   href={`/products/${category.alias}`}
-                  className={`text-dark ${styles.ft14} fw-normal`}
+                  className={`text-dark fw-normal ${styles.dropdownItem}`}
                 >
                   {pickLocalized(i18n.language, category.name, category.name_ar)}
                 </NavDropdown.Item>

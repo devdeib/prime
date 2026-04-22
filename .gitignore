@@ -24,8 +24,7 @@
 .DS_Store
 *.pem
 
-# Local mock API persistence (no real DB)
-/data/.mock-backend-store.json
+
 
 # Locally uploaded product images (mock)
 /public/uploads/products/*

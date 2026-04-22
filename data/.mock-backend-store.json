@@ -1,0 +1,255 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "first_name": "Admin",
+      "last_name": "VG",
+      "email": "admin@vg.local",
+      "phone": "01700000002",
+      "password": "admin123",
+      "role": "admin"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Modern Sofa Set",
+      "price": 18999,
+      "category": "sofas",
+      "name_ar": "طقم كنب عصري",
+      "descriptions": "Comfortable 3-seater fabric sofa with clean modern lines.",
+      "descriptions_ar": "كنب قماشي مريح بثلاثة مقاعد وخطوط عصرية."
+    },
+    {
+      "id": 2,
+      "name": "Leather Sofa 3+2",
+      "price": 25999,
+      "category": "sofas",
+      "name_ar": "كنب جلد 3+2",
+      "descriptions": "Premium leather seating with deep cushions.",
+      "descriptions_ar": "جلد فاخر مع وسائد عميقة."
+    },
+    {
+      "id": 3,
+      "name": "L-Shaped Corner Set",
+      "price": 20500,
+      "category": "corner-set",
+      "name_ar": "كنب زاوية على شكل L",
+      "descriptions": "Space-smart corner layout for living rooms.",
+      "descriptions_ar": "تخطيط زاوية يوفر المساحة لغرف المعيشة."
+    },
+    {
+      "id": 4,
+      "name": "Compact Corner Sofa",
+      "price": 18500,
+      "category": "corner-set",
+      "name_ar": "كنب زاوية مدمج",
+      "descriptions": "Compact footprint, generous seating.",
+      "descriptions_ar": "حجم مدمج مع مقاعد واسعة."
+    },
+    {
+      "id": 5,
+      "name": "Queen Size Bed",
+      "price": 17000,
+      "category": "beds",
+      "name_ar": "سرير كوين",
+      "descriptions": "Sturdy frame with a refined headboard.",
+      "descriptions_ar": "هيكل متين مع تاج أنيق."
+    },
+    {
+      "id": 6,
+      "name": "King Size Wooden Bed",
+      "price": 25500,
+      "category": "beds",
+      "name_ar": "سرير كينغ خشبي",
+      "descriptions": "Solid wood construction with warm finish.",
+      "descriptions_ar": "تصنيع خشب صلب بلمسة دافئة."
+    },
+    {
+      "id": 7,
+      "name": "Dining Table 6-Seater",
+      "price": 14999,
+      "category": "dining-tables",
+      "name_ar": "طاولة طعام لستة أشخاص",
+      "descriptions": "Seats six comfortably for family meals.",
+      "descriptions_ar": "تتسع لستة أشخاص بسهولة."
+    },
+    {
+      "id": 8,
+      "name": "Glass Top Dining Set",
+      "price": 18000,
+      "category": "dining-tables",
+      "name_ar": "طقم طعام بسطح زجاجي",
+      "descriptions": "Tempered glass top with durable legs.",
+      "descriptions_ar": "سطح زجاجي مقوّى مع أرجل متينة."
+    },
+    {
+      "id": 9,
+      "name": "Upholstered Chair",
+      "price": 3499,
+      "category": "chairs",
+      "name_ar": "كرسي مبطّن",
+      "descriptions": "Soft upholstery for long sitting comfort.",
+      "descriptions_ar": "تنجيد ناعم لراحة طويلة."
+    },
+    {
+      "id": 10,
+      "name": "Rocking Chair",
+      "price": 4800,
+      "category": "chairs",
+      "name_ar": "كرسي هزاز",
+      "descriptions": "Classic rocking motion, stable base.",
+      "descriptions_ar": "حركة هزازة كلاسيكية وقاعدة ثابتة."
+    },
+    {
+      "id": 11,
+      "name": "Sliding Door Wardrobe",
+      "price": 22500,
+      "category": "wardrobes",
+      "name_ar": "خزانة أبواب منزلقة",
+      "descriptions": "Sliding doors to save bedroom space.",
+      "descriptions_ar": "أبواب منزلقة لتوفير مساحة الغرفة."
+    },
+    {
+      "id": 12,
+      "name": "Classic Wardrobe 3-Door",
+      "price": 18900,
+      "category": "featured",
+      "name_ar": "خزانة كلاسيكية بثلاثة أبواب",
+      "descriptions": "Three-door storage with hanging rails.",
+      "descriptions_ar": "تخزين بثلاثة أبواب مع علاقات تعليق.",
+      "image_url": "/uploads/products/1776356669219-bje1w3pg.png"
+    },
+    {
+      "id": 13,
+      "name": "Old Sofa",
+      "price": 52,
+      "category": "sofas",
+      "descriptions": "وصف دقيق جدا"
+    },
+    {
+      "id": 15,
+      "name": "Sofa",
+      "price": 500,
+      "category": "featured",
+      "image_url": "/uploads/products/1776356599890-27rhrb1t.png",
+      "name_ar": "صوفا"
+    },
+    {
+      "id": 16,
+      "name": "Sofa",
+      "price": 800,
+      "category": "featured",
+      "image_url": "/uploads/products/1776356617971-ujlm17s1.png"
+    }
+  ],
+  "nextUserId": 4,
+  "nextProductId": 17,
+  "categories": [
+    {
+      "id": 1,
+      "name": "Sofas",
+      "alias": "sofas",
+      "name_ar": "كنب"
+    },
+    {
+      "id": 2,
+      "name": "Corner Sets",
+      "alias": "corner-set",
+      "name_ar": "طقم زاوية"
+    },
+    {
+      "id": 3,
+      "name": "Beds",
+      "alias": "beds",
+      "name_ar": "أسرة"
+    },
+    {
+      "id": 4,
+      "name": "Dining Tables",
+      "alias": "dining-tables",
+      "name_ar": "طاولات طعام"
+    },
+    {
+      "id": 5,
+      "name": "Chairs",
+      "alias": "chairs",
+      "name_ar": "كراسي"
+    },
+    {
+      "id": 6,
+      "name": "Wardrobes",
+      "alias": "wardrobes",
+      "name_ar": "خزائن"
+    },
+    {
+      "id": 7,
+      "name": "Others",
+      "alias": "others",
+      "name_ar": "أخرى"
+    },
+    {
+      "id": 8,
+      "name": "Featured Products",
+      "alias": "featured",
+      "name_ar": "المنتجات المختارة"
+    }
+  ],
+  "nextCategoryId": 9,
+  "heroSlides": [
+    {
+      "id": 9,
+      "image_url": "/uploads/products/1776355679633-gwwa20hm.jpg",
+      "sort_order": 2
+    },
+    {
+      "id": 10,
+      "image_url": "/uploads/products/1776355736095-dv5ag67p.jpg",
+      "sort_order": 3
+    },
+    {
+      "id": 11,
+      "image_url": "/uploads/products/1776355738573-bytelkyo.jpg",
+      "sort_order": 4
+    }
+  ],
+  "showrooms": [
+    {
+      "id": 2,
+      "name": "Jeddah Boulevard",
+      "name_ar": "جدة بولفارد",
+      "city": "Jeddah",
+      "city_ar": "جدة",
+      "sort_order": 0,
+      "description": "Experience materials and finishes in person.",
+      "description_ar": "اختبر المواد واللمسات عن قرب.",
+      "images": [
+        "/uploads/products/1776522569858-zndqctyo.jpg",
+        "/uploads/products/1776522572193-exksjapq.jpg",
+        "/uploads/products/1776522575068-fuq0f6qi.jpg",
+        "/uploads/products/1776522587943-q99s200m.jpg"
+      ],
+      "image_url": "/uploads/products/1776522569858-zndqctyo.jpg"
+    },
+    {
+      "id": 3,
+      "name": "syria",
+      "name_ar": "سوريا",
+      "city": "Damascus",
+      "city_ar": "دمشق",
+      "address": "مزة",
+      "address_ar": "mazzeh",
+      "description": "Description",
+      "description_ar": "وصف",
+      "images": [
+        "/uploads/products/1776522545479-qi36i8j0.jpg",
+        "/uploads/products/1776522549431-forctzud.jpg",
+        "/uploads/products/1776522553889-uzgbav5k.jpg"
+      ],
+      "image_url": "/uploads/products/1776522545479-qi36i8j0.jpg",
+      "sort_order": 1
+    }
+  ],
+  "nextHeroSlideId": 15,
+  "nextShowroomId": 4
+}

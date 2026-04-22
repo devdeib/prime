@@ -51,6 +51,8 @@ export type FurnitureCatalogExperienceProps = {
    * Defaults to true only on the home shop view (no `routeCategorySlug`).
    */
   showTopImageCarousel?: boolean;
+  /** Server-provided hero slides to avoid client-side fallback flash on first paint. */
+  initialHeroSlides?: HomeCarouselSlide[];
 };
 
 const HOME_FEATURED_ALIAS = "featured";
@@ -70,6 +72,7 @@ export default function FurnitureCatalogExperience({
   routeCategorySlug,
   syncRouteOnCategoryChange = false,
   showTopImageCarousel,
+  initialHeroSlides,
 }: FurnitureCatalogExperienceProps = {}) {
   const { t, i18n } = useTranslation("common");
   const topCarousel = showTopImageCarousel ?? routeCategorySlug === undefined;
@@ -84,7 +87,9 @@ export default function FurnitureCatalogExperience({
   );
   const [selected, setSelected] = useState<Product | null>(null);
   const [heroSlides, setHeroSlides] =
-    useState<HomeCarouselSlide[]>(MOCK_HOME_CAROUSEL_SLIDES);
+    useState<HomeCarouselSlide[]>(
+      initialHeroSlides?.length ? initialHeroSlides : MOCK_HOME_CAROUSEL_SLIDES
+    );
 
   useEffect(() => {
     if (!topCarousel) return;

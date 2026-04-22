@@ -114,7 +114,7 @@
 
 .marqueeItem {
   flex-shrink: 0;
-  font-size: 0.62rem;
+  font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -337,7 +337,7 @@
 }
 
 .cardNameArabic {
-  font-size: 1.16rem;
+  font-size: 30px;
   letter-spacing: 0;
   text-transform: none;
   line-height: 1.5;

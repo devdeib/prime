@@ -35,7 +35,7 @@
 }
 
 .carousel :global(.carousel-indicators .active) {
-  background-color: var(--carousel-accent);
+  background-color: #b8942f;
   transform: scale(1.15);
 }
 

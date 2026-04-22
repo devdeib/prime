@@ -57,7 +57,7 @@
 
 .brandWrap {
   display: flex;
-  justify-content: left;
+  justify-content: start;
   margin-bottom: 4rem;
 }
 
@@ -83,7 +83,7 @@
 }
 
 :global(html[lang="ar"]) .title {
-  font-size: 1.08rem;
+  font-size: 30px;
   letter-spacing: 0.04em;
 }
 

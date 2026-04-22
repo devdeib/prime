@@ -46,12 +46,12 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
           </Col>
           <Col md="6">
             <h1
-              className="ft-8 fw-bold text-uppercase text-left mb-2"
+                      className="ft-8 fw-bold text-uppercase text-inherit mb-2"
               style={{ color: "#b8942f" }}
             >
               {t("about.who")}
             </h1>
-            <h1 className="ft-18 fw-bold text-muted text-left mt-3 mb-3">
+                    <h1 className="ft-18 fw-bold text-muted text-inherit mt-3 mb-3">
               {t("about.title")}
             </h1>
               <hr />

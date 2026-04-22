@@ -81,6 +81,21 @@
   color: rgba(255, 255, 255, 0.92) !important;
 }
 
+.navDropdown :global(.dropdown-menu) {
+  text-align: start;
+}
+
+.navDropdown :global(.dropdown-item) {
+  text-align: start;
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  margin-right: 0 !important;
+  font-size: 18px !important;
+}
+
 .navToggle {
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.45) !important;
