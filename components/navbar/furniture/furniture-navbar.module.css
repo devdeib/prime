@@ -1,0 +1,200 @@
+.navShell {
+  background: linear-gradient(
+    180deg,
+    rgba(7, 12, 22, 0.78) 0%,
+    rgba(7, 12, 22, 0.22) 68%,
+    rgba(7, 12, 22, 0) 100%
+  );
+  padding: 1.75rem 0 !important;
+  z-index: 1100;
+}
+
+:global(html:not([lang="ar"])) .navShell,
+:global(html:not([lang="ar"])) .navShell :global(.nav-link),
+:global(html:not([lang="ar"])) .navShell :global(.dropdown-toggle),
+:global(html:not([lang="ar"])) .navShell :global(.dropdown-item) {
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+}
+
+.navContainer {
+  position: relative;
+}
+
+.brandCentered {
+  position: absolute !important;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -1.5rem;
+  margin-right: 0 !important;
+  z-index: 3;
+  width: auto;
+}
+
+.brandText {
+  color: #d7a83e;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.brandMark {
+  color: #ffffff;
+  width: auto;
+  align-items: center;
+  justify-content: center;
+  gap: 0.14rem;
+}
+
+.brandMark :global(img) {
+  width: 48px !important;
+  height: auto !important;
+}
+
+.brandMark span:last-child {
+  display: inline;
+  color: #ffffff;
+  font-size: 1.54rem;
+  line-height: 0.96;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leftLinks,
+.rightLinks {
+  position: relative;
+  z-index: 2;
+  align-items: center;
+}
+
+.languageWrap {
+  display: inline-flex;
+  align-items: center;
+  margin-inline-end: 1rem;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.navLink {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.navDropdown :global(.dropdown-toggle) {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+.navToggle {
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-radius: 999px !important;
+  padding: 0.45rem 0.55rem !important;
+  background: rgba(7, 12, 22, 0.18) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+}
+
+.navToggle:focus {
+  box-shadow: 0 0 0 0.18rem rgba(255, 255, 255, 0.18) !important;
+}
+
+.navToggle :global(svg) {
+  display: block;
+}
+
+.navScrolled {
+  background: #ffffff !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.navScrolled .navLink {
+  color: #1e2735 !important;
+}
+
+.navScrolled .navDropdown :global(.dropdown-toggle) {
+  color: #1e2735 !important;
+}
+
+.navScrolled .brandText {
+  color: #b8942f;
+}
+
+.navScrolled .brandMark {
+  color: #1e2735;
+}
+
+.navScrolled .brandMark span:last-child {
+  color: #1e2735;
+}
+
+.navScrolled .navToggle {
+  color: #1e2735 !important;
+  border-color: rgba(30, 39, 53, 0.18) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+}
+
+.langOnLight {
+  color: #1e2735;
+}
+
+.navScrolled .languageWrap {
+  color: #1e2735;
+}
+.navWhite {
+  color: #fff !important;
+}
+
+.ftBold {
+  font-weight: bold !important;
+}
+
+.ft20 {
+  font-size: 20px !important;
+  
+}
+
+.ft18 {
+  font-size: 18px !important;
+}
+
+.ft14 {
+  font-size: 18px !important;
+  margin-right: 2rem;
+}
+
+.ft13 {
+  font-size: 13px !important;
+}
+
+.ft12 {
+  font-size: 12px !important;
+}
+
+.ft10 {
+  font-size: 10px !important;
+}
+
+@media (max-width: 991px) {
+  .navShell {
+    padding: 1.08rem 0 !important;
+  }
+
+  .brandCentered {
+    position: static !important;
+    transform: none;
+    margin-right: auto !important;
+    width: auto;
+    max-width: none;
+  }
+
+  .navScrolled .brandCentered {
+    color: #1e2735;
+  }
+
+  .brandMark span:last-child {
+    font-size: 0.54rem;
+  }
+
+  .languageWrap {
+    margin-inline-end: 0.6rem;
+  }
+}

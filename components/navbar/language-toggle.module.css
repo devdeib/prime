@@ -1,0 +1,28 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: inherit;
+  font-size: 20px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.link {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  opacity: 0.72;
+  font: inherit;
+  line-height: 1;
+  transition: opacity 0.2s ease;
+}
+
+.active {
+  opacity: 1;
+}
+
+.separator {
+  opacity: 0.55;
+}

@@ -1,0 +1,118 @@
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(184, 148, 47, 0.12), transparent 30%),
+    linear-gradient(180deg, #f7f4ee 0%, #ffffff 55%);
+  padding: 7rem 1.25rem 4rem;
+}
+
+.shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+  border: 1px solid rgba(30, 39, 53, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 24px 70px rgba(17, 24, 39, 0.08);
+}
+
+.intro {
+  padding: clamp(2rem, 5vw, 4rem);
+  background: linear-gradient(160deg, #faf7f1 0%, #f2ede4 100%);
+  border-inline-end: 1px solid rgba(30, 39, 53, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.brand {
+  color: #1e2735;
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.85rem;
+  color: #b8942f;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+}
+
+.title {
+  margin: 0;
+  color: #1e2735;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.subtitle {
+  margin: 1.15rem 0 0;
+  color: #677181;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  max-width: 34rem;
+}
+
+.highlights {
+  margin-top: 2.2rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.highlight {
+  padding: 0.95rem 1rem;
+  border-left: 2px solid #b8942f;
+  background: rgba(255, 255, 255, 0.55);
+  color: #4b5563;
+}
+
+.formWrap {
+  padding: clamp(2rem, 5vw, 4rem);
+}
+
+.formCard {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.formTitle {
+  margin: 0 0 0.5rem;
+  color: #1e2735;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 400;
+}
+
+.formText {
+  margin: 0 0 1.75rem;
+  color: #7b8596;
+  line-height: 1.7;
+}
+
+.submit {
+  width: 100%;
+  margin-top: 0.6rem;
+  border-radius: 0 !important;
+  background: #1e2735 !important;
+  border-color: #1e2735 !important;
+  color: #ffffff !important;
+}
+
+.submit:hover,
+.submit:focus {
+  background: #b8942f !important;
+  border-color: #b8942f !important;
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .intro {
+    border-inline-end: 0;
+    border-bottom: 1px solid rgba(30, 39, 53, 0.08);
+  }
+}

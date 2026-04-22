@@ -1,0 +1,130 @@
+.shell {
+  background: #ffffff;
+  color: #2b3038;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.04);
+}
+
+:global(html:not([lang="ar"])) .shell,
+:global(html:not([lang="ar"])) .customIntro,
+:global(html:not([lang="ar"])) .shell a,
+:global(html:not([lang="ar"])) .shell h3,
+:global(html:not([lang="ar"])) .shell p,
+:global(html:not([lang="ar"])) .customIntro h2,
+:global(html:not([lang="ar"])) .customIntro p {
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+}
+
+.customIntro {
+  padding: clamp(3rem, 7vw, 5.5rem) 1.25rem clamp(2rem, 4vw, 3rem);
+  background: linear-gradient(180deg, #faf9f7 0%, #faf9f7 100%);
+  border-top: 1px solid rgba(184, 148, 47, 0.12);
+}
+
+.customIntroInner {
+  max-width: 48rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.customIntroBrand {
+  color: #b8942f;
+  margin-bottom: 1.25rem;
+  opacity: 0.82;
+}
+
+.customIntroTitle {
+  margin: 0;
+  color: #b8942f;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: 60px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.customIntroText {
+  margin: 1rem auto 0;
+  max-width: 40rem;
+  color: #858b94;
+  font-size: 25px;
+  line-height: 1.8;
+}
+
+.inner {
+  padding: 2.25rem 0 1rem;
+ 
+}
+
+.brandWrap {
+  display: flex;
+  justify-content: left;
+  margin-bottom: 4rem;
+}
+
+.brandMark {
+  color: #111111;
+}
+
+.brandLine {
+  text-align: center;
+  color: #b8942f;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  font-size: 0.88rem;
+  margin-bottom: 2rem;
+}
+
+.title {
+  color: #1e2735;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 1.05rem;
+  margin-bottom: 0.85rem;
+}
+
+:global(html[lang="ar"]) .title {
+  font-size: 1.08rem;
+  letter-spacing: 0.04em;
+}
+
+.link {
+  display: block;
+  color: #4a5568;
+  text-decoration: none;
+  font-size: 1.08rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.7rem;
+}
+
+:global(html[lang="ar"]) .link {
+  font-size: 1.08rem;
+  letter-spacing: 0;
+}
+
+.link:hover {
+  color: #1e2735;
+}
+
+.socials {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.65rem;
+}
+
+.socialIcon {
+  color: #b8942f;
+  font-size: 1.05rem;
+}
+
+.bottom {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin-top: 1.5rem;
+  padding-top: 0.9rem;
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+:global(html[lang="ar"]) .bottom {
+  font-size: 1rem;
+}

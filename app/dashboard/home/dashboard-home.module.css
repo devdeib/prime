@@ -1,0 +1,104 @@
+.page {
+  padding: 2rem;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.panel,
+.stat,
+.note {
+  background: linear-gradient(180deg, #ffffff 0%, #f8f4ec 100%);
+  border: 1px solid rgba(184, 148, 47, 0.16);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.05);
+}
+
+.panel {
+  padding: 1.8rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: #b8942f;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.74rem;
+}
+
+.title {
+  margin: 0;
+  color: #1e2735;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.text {
+  margin: 1rem 0 0;
+  color: #626d7f;
+  line-height: 1.8;
+  max-width: 42rem;
+}
+
+.stats {
+  display: grid;
+  gap: 1rem;
+}
+
+.stat {
+  padding: 1.2rem;
+}
+
+.statValue {
+  display: block;
+  color: #1e2735;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: 2rem;
+}
+
+.statLabel {
+  display: block;
+  margin-top: 0.35rem;
+  color: #7a8597;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.note {
+  padding: 1.3rem;
+}
+
+.noteTitle {
+  margin: 0 0 0.6rem;
+  color: #1e2735;
+  font-size: 1rem;
+}
+
+.noteText {
+  margin: 0;
+  color: #667085;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: 1rem;
+  }
+
+  .hero,
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

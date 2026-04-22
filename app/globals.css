@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body-ar), var(--font-body-ar-alt), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* English: Italian Didot; Arabic: Cairo + Noto Kufi (I18nProvider sets html lang/dir) */
+html,
+body {
+  background: var(--background);
+  color: var(--foreground);
+  min-height: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[lang="en"] body {
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+}
+html[lang="ar"] body {
+  font-family: var(--font-body-ar), var(--font-body-ar-alt), ui-sans-serif, system-ui, sans-serif;
+}
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+}
+
+/* Arabic (RTL): document dir is set in I18nProvider; tweak common layout clashes */
+html[dir="rtl"] .navbar .me-auto {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+html[dir="rtl"] .text-md-start {
+  text-align: right !important;
+}

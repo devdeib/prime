@@ -1,0 +1,32 @@
+.bar {
+  background: rgba(18, 25, 39, 0.94) !important;
+  border-bottom: 1px solid rgba(184, 148, 47, 0.22);
+  backdrop-filter: blur(10px);
+}
+
+.brand {
+  color: #f6f3ed !important;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.ghostInput {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: #fff !important;
+}
+
+.ghostInput::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.backBtn {
+  border-color: rgba(184, 148, 47, 0.55) !important;
+  color: #f1e7d4 !important;
+  border-radius: 0 !important;
+}
+
+.backBtn:hover {
+  background: rgba(184, 148, 47, 0.16) !important;
+}

@@ -1,0 +1,65 @@
+.wrap {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.carousel {
+  --carousel-accent: #d12121;
+}
+
+.carousel :global(.carousel-control-prev),
+.carousel :global(.carousel-control-next) {
+  width: 8%;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.carousel :global(.carousel-control-prev-icon),
+.carousel :global(.carousel-control-next-icon) {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+}
+
+.carousel :global(.carousel-indicators) {
+  margin-bottom: 0.65rem;
+}
+
+.carousel :global(.carousel-indicators [data-bs-target]) {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.45);
+  transition:
+    transform 0.35s ease,
+    background-color 0.35s ease;
+}
+
+.carousel :global(.carousel-indicators .active) {
+  background-color: var(--carousel-accent);
+  transform: scale(1.15);
+}
+
+.item {
+  min-height: 100vh;
+}
+
+.slideCol {
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+.caption {
+  padding: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+@media (max-width: 575px) {
+  .item,
+  .slideCol {
+    min-height: 100vh;
+  }
+}

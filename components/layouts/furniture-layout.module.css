@@ -1,0 +1,9 @@
+.main {
+  --nav-h: 84px;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.contentOffset {
+  padding-top: var(--nav-h);
+}

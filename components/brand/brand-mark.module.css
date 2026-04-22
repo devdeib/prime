@@ -1,0 +1,37 @@
+.link {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.brandMark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  max-width: 100%;
+}
+
+.stacked {
+  flex-direction: column;
+  text-align: center;
+  gap: 0.2rem;
+}
+
+.inline {
+  flex-direction: row;
+}
+
+.logo {
+  width: auto;
+  height: auto;
+  display: block;
+}
+
+.text {
+  color: inherit;
+  text-transform: uppercase;
+  line-height: 1;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  max-width: 100%;
+  white-space: nowrap;
+  font-size: 20px;
+}

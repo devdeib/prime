@@ -1,0 +1,29 @@
+/* Italian Didot — English display (files under /public/fonts/...) */
+@font-face {
+  font-family: "Italian Didot W90";
+  src: url("/fonts/Italian-Didot-W90-Normal/Italian Didot W90 Normal.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Cairo + Noto Kufi Arabic — Arabic UI (variable fonts in public/fonts) */
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/Cairo/Cairo-VariableFont_slnt,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Noto Kufi Arabic";
+  src: url("/fonts/Noto_Kufi_Arabic/NotoKufiArabic-VariableFont_wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --font-display: "Italian Didot W90", Didot, "Libre Bodoni", Georgia, serif;
+}
