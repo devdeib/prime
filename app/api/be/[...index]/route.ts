@@ -1,81 +1,160 @@
-/**
- * BFF proxy for the VG Furniture storefront: `/api/be/*` → backend `/v1/*`.
- * When `API_BASE` is unset, uses local mock auth/users/products persisted in `data/.mock-backend-store.json`.
- */
-import axios, { AxiosError } from "axios";
-import { getServerSession } from "next-auth/next";
-import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "@/lib/auth-options";
-import { API_BASE } from "@/data/utils/api.urls";
-import { tryMockBeRequest } from "@/lib/mock-be-http";
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 
-type SessionWithToken = {
-  access_token?: string;
-};
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
-async function proxy(req: NextRequest, method: string) {
-  try {
-    const session = await getServerSession(authOptions);
+export async function GET(req: NextRequest, context: { params: Promise<{ index: string[] }> }) {
+  const { index } = await context.params
+  const [resource, id] = index
 
-    if (!API_BASE) {
-      const mock = await tryMockBeRequest(req, method, session);
-      if (mock) return mock;
-      return NextResponse.json(
-        { statusCode: 404, message: "Not found", error: "Not Found" },
-        { status: 404 }
-      );
-    }
-
-    const url = req.nextUrl.pathname.replace("/api/be", "");
-    const apiUrl = `${API_BASE}/v1${url}${req.nextUrl.search}`;
-    const body = method === "GET" || method === "HEAD" ? undefined : await req.json();
-
-    const accessToken = (session as SessionWithToken | null)?.access_token;
-    const headers = accessToken
-      ? { Authorization: `Bearer ${accessToken}` }
-      : undefined;
-
-    const apiRes = await axios({
-      method,
-      url: apiUrl,
-      data: body,
-      headers,
-    });
-
-    return NextResponse.json(apiRes.data, { status: apiRes.status });
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      return NextResponse.json(error.response?.data ?? {}, {
-        status: error.response?.status ?? 400,
-      });
-    }
-    return NextResponse.json(
-      {
-        statusCode: 400,
-        message: "Unknown server error",
-        error: "Bad Request",
-      },
-      { status: 400 }
-    );
+  if (resource === 'categories') {
+    const { data, error } = await supabase.from('categories').select('*')
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
   }
+
+  if (resource === 'products') {
+    const category = req.nextUrl.searchParams.get('category')
+    let query = supabase.from('products').select('*')
+    if (category) query = query.eq('category', category)
+    const { data, error } = await query
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'hero-slides') {
+    const { data, error } = await supabase.from('hero_slides').select('*').order('sort_order')
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'showrooms') {
+    const { data, error } = await supabase.from('showrooms').select('*').order('sort_order')
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'users') {
+    const { data, error } = await supabase.from('users').select('*')
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  return NextResponse.json({ error: 'Not found' }, { status: 404 })
 }
 
-export async function GET(req: NextRequest) {
-  return proxy(req, "GET");
+export async function POST(req: NextRequest, context: { params: Promise<{ index: string[] }> }) {
+  const { index } = await context.params
+  const [resource] = index
+  const body = await req.json()
+
+  if (resource === 'products') {
+    const { data, error } = await supabase.from('products').insert([body]).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'categories') {
+    const { data, error } = await supabase.from('categories').insert([body]).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'hero-slides') {
+    const { data, error } = await supabase.from('hero_slides').insert([body]).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'showrooms') {
+    const { data, error } = await supabase.from('showrooms').insert([body]).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'users') {
+    const { data, error } = await supabase.from('users').insert([body]).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  return NextResponse.json({ error: 'Not found' }, { status: 404 })
 }
 
-export async function POST(req: NextRequest) {
-  return proxy(req, "POST");
+export async function PUT(req: NextRequest, context: { params: Promise<{ index: string[] }> }) {
+  const { index } = await context.params
+  const [resource, id] = index
+  const body = await req.json()
+
+  if (resource === 'products') {
+    const { data, error } = await supabase.from('products').update(body).eq('id', id).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'categories') {
+    const { data, error } = await supabase.from('categories').update(body).eq('id', id).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'hero-slides') {
+    const { data, error } = await supabase.from('hero_slides').update(body).eq('id', id).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'showrooms') {
+    const { data, error } = await supabase.from('showrooms').update(body).eq('id', id).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'users') {
+    const { data, error } = await supabase.from('users').update(body).eq('id', id).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  return NextResponse.json({ error: 'Not found' }, { status: 404 })
 }
 
-export async function PATCH(req: NextRequest) {
-  return proxy(req, "PATCH");
-}
+export async function DELETE(req: NextRequest, context: { params: Promise<{ index: string[] }> }) {
+  const { index } = await context.params
+  const [resource, id] = index
 
-export async function PUT(req: NextRequest) {
-  return proxy(req, "PUT");
-}
+  if (resource === 'products') {
+    const { error } = await supabase.from('products').delete().eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
 
-export async function DELETE(req: NextRequest) {
-  return proxy(req, "DELETE");
+  if (resource === 'categories') {
+    const { error } = await supabase.from('categories').delete().eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  if (resource === 'hero-slides') {
+    const { error } = await supabase.from('hero_slides').delete().eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  if (resource === 'showrooms') {
+    const { error } = await supabase.from('showrooms').delete().eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  if (resource === 'users') {
+    const { error } = await supabase.from('users').delete().eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  return NextResponse.json({ error: 'Not found' }, { status: 404 })
 }

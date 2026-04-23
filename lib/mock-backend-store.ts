@@ -83,28 +83,7 @@ export const DEFAULT_CATEGORIES: MockStoredCategory[] = [
   { id: 7, name: "Others", name_ar: "أخرى", alias: "others" },
 ];
 
-const DEFAULT_HERO_SLIDES: MockStoredHeroSlide[] = [
-  {
-    id: 1,
-    image_url: "https://picsum.photos/seed/bakery-hero-1/1920/1080",
-    sort_order: 0,
-  },
-  {
-    id: 2,
-    image_url: "https://picsum.photos/seed/bakery-hero-2/1920/1080",
-    sort_order: 1,
-  },
-  {
-    id: 3,
-    image_url: "https://picsum.photos/seed/bakery-hero-3/1920/1080",
-    sort_order: 2,
-  },
-  {
-    id: 4,
-    image_url: "https://picsum.photos/seed/bakery-hero-4/1920/1080",
-    sort_order: 3,
-  },
-];
+const DEFAULT_HERO_SLIDES: MockStoredHeroSlide[] = [];
 
 const DEFAULT_SHOWROOMS: MockStoredShowroom[] = [
   {
