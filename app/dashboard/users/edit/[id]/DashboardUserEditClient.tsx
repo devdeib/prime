@@ -31,7 +31,7 @@ export default function DashboardUserEditClient({
       try {
         setError(null);
         const userResults = await getUser(Number(userId), token);
-        if (mounted) setUser(userResults.data.data);
+        if (mounted) setUser(userResults.data);
       } catch {
         if (mounted) setError("Could not load user.");
       }

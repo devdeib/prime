@@ -30,8 +30,8 @@ async function uploadProductImage(file: File): Promise<string> {
     body: fd,
     credentials: "include",
   });
-  const json = (await res.json()) as { url?: string; message?: string };
-  if (!res.ok) throw new Error(json.message ?? "Upload failed");
+  const json = (await res.json()) as { url?: string; message?: string; error?: string };
+  if (!res.ok) throw new Error(json.message ?? json.error ?? "Upload failed");
   if (!json.url) throw new Error("No URL returned");
   return json.url;
 }
@@ -58,8 +58,8 @@ export default function DashboardHeroSlidesPage() {
       ]);
       const sJson = await sRes.json();
       const cJson = await cRes.json();
-      if (Array.isArray(sJson.data)) setSlides(sJson.data);
-      if (Array.isArray(cJson.data)) setCandidates(cJson.data);
+      if (Array.isArray(sJson)) setSlides(sJson);
+      if (Array.isArray(cJson)) setCandidates(cJson);
     } catch {
       setError(t("dashboard.failedToLoadHeroSlides"));
     } finally {
@@ -83,7 +83,11 @@ export default function DashboardHeroSlidesPage() {
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        setError((j as { message?: string }).message ?? t("dashboard.couldNotAddSlide"));
+        setError(
+          (j as { message?: string; error?: string }).message ??
+          (j as { message?: string; error?: string }).error ??
+          t("dashboard.couldNotAddSlide")
+        );
         return;
       }
       await load();
@@ -99,14 +103,18 @@ export default function DashboardHeroSlidesPage() {
     setError(null);
     try {
       const res = await fetch(`/api/be/hero-slides/${id}`, {
-        method: "PATCH",
+        method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(patch),
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        setError((j as { message?: string }).message ?? t("dashboard.couldNotSave"));
+        setError(
+          (j as { message?: string; error?: string }).message ??
+          (j as { message?: string; error?: string }).error ??
+          t("dashboard.couldNotSave")
+        );
         return;
       }
       await load();

@@ -34,9 +34,9 @@ async function uploadProductImage(file: File): Promise<string> {
     body: fd,
     credentials: "include",
   });
-  const json = (await res.json()) as { url?: string; message?: string };
+  const json = (await res.json()) as { url?: string; message?: string; error?: string };
   if (!res.ok) {
-    throw new Error(json.message ?? "Upload failed");
+    throw new Error(json.message ?? json.error ?? "Upload failed");
   }
   if (!json.url) throw new Error("No URL returned");
   return json.url;
@@ -77,10 +77,10 @@ export default function DashboardProductsPage() {
       ]);
       const catJson = await catRes.json();
       const prodJson = await prodRes.json();
-      if (Array.isArray(catJson.data)) setCategories(catJson.data);
-      if (Array.isArray(prodJson.data)) {
+      if (Array.isArray(catJson)) setCategories(catJson);
+      if (Array.isArray(prodJson)) {
         setProducts(
-          prodJson.data.map(
+          prodJson.map(
             (p: ProductRow & {
               category_id?: number;
               storage_files?: { image_url?: string }[];
@@ -180,7 +180,11 @@ export default function DashboardProductsPage() {
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        setError((j as { message?: string }).message ?? t("dashboard.couldNotCreateProduct"));
+        setError(
+          (j as { message?: string; error?: string }).message ??
+          (j as { message?: string; error?: string }).error ??
+          t("dashboard.couldNotCreateProduct")
+        );
         return;
       }
       resetForm();
@@ -234,14 +238,18 @@ export default function DashboardProductsPage() {
       if (imagePatch) body.image_url = imagePatch.image_url;
 
       const res = await fetch(`/api/be/products/${editingId}`, {
-        method: "PATCH",
+        method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        setError((j as { message?: string }).message ?? t("dashboard.couldNotUpdateProduct"));
+        setError(
+          (j as { message?: string; error?: string }).message ??
+          (j as { message?: string; error?: string }).error ??
+          t("dashboard.couldNotUpdateProduct")
+        );
         return;
       }
       resetForm();

@@ -25,7 +25,7 @@ export const updateUser = (
   userPayload: Partial<EditUserFormFields>,
   accessToken: string
 ) => {
-  return axios.patch(`${USER_URL}/${id}`, userPayload, {
+  return axios.put(`${USER_URL}/${id}`, userPayload, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",

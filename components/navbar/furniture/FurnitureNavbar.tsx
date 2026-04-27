@@ -45,7 +45,7 @@ export default function FurnitureNavbar() {
     fetch("/api/be/categories")
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data.data)) setCategories(data.data);
+        if (Array.isArray(data)) setCategories(data);
       })
       .catch(() => setCategories([]));
   }, []);

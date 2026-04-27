@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       const token = `${(session as any)?.access_token}`;
       const userId = (session.user as any).id;
       const userResults = await getUser(+userId, token);
-      user = userResults.data.data as User;
+      user = userResults.data as User;
     }
     return { props: { user: user } };
   } catch (error) {

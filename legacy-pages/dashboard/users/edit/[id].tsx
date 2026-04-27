@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     if (session) {
       const token = `${(session as any)?.access_token}`;
       const userResults = await getUser(Number(id), token);
-      user = userResults.data.data as User;
+      user = userResults.data as User;
     }
     return { props: { user: user } };
   } catch (error) {

@@ -39,8 +39,8 @@ async function uploadProductImage(file: File): Promise<string> {
     body: fd,
     credentials: "include",
   });
-  const json = (await res.json()) as { url?: string; message?: string };
-  if (!res.ok) throw new Error(json.message ?? "Upload failed");
+  const json = (await res.json()) as { url?: string; message?: string; error?: string };
+  if (!res.ok) throw new Error(json.message ?? json.error ?? "Upload failed");
   if (!json.url) throw new Error("No URL returned");
   return json.url;
 }
@@ -55,6 +55,7 @@ export default function DashboardShowroomsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -78,7 +79,7 @@ export default function DashboardShowroomsPage() {
     try {
       const res = await fetch("/api/be/showrooms", { credentials: "include" });
       const j = await res.json();
-      if (Array.isArray(j.data)) setRows(j.data);
+      if (Array.isArray(j)) setRows(j);
     } catch {
       setError(t("dashboard.failedToLoadShowrooms"));
     } finally {
@@ -118,6 +119,10 @@ export default function DashboardShowroomsPage() {
   const submitCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAdmin) return;
+    if (uploadingImage) {
+      setError("Please wait for the image upload to finish.");
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
@@ -135,12 +140,17 @@ export default function DashboardShowroomsPage() {
           description: form.description || undefined,
           description_ar: form.descriptionAr || undefined,
           images: form.images,
+          image_url: form.images[0] || undefined,
           sort_order: Number(form.sortOrder),
         }),
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        setError((j as { message?: string }).message ?? t("dashboard.couldNotCreate"));
+        setError(
+          (j as { message?: string; error?: string }).message ??
+          (j as { message?: string; error?: string }).error ??
+          t("dashboard.couldNotCreate")
+        );
         return;
       }
       reset();
@@ -155,11 +165,15 @@ export default function DashboardShowroomsPage() {
   const submitUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAdmin || editingId == null) return;
+    if (uploadingImage) {
+      setError("Please wait for the image upload to finish.");
+      return;
+    }
     setSaving(true);
     setError(null);
     try {
       const res = await fetch(`/api/be/showrooms/${editingId}`, {
-        method: "PATCH",
+        method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -172,12 +186,17 @@ export default function DashboardShowroomsPage() {
           description: form.description,
           description_ar: form.descriptionAr,
           images: form.images,
+          image_url: form.images[0] || "",
           sort_order: Number(form.sortOrder),
         }),
       });
       if (!res.ok) {
         const j = await res.json().catch(() => ({}));
-        setError((j as { message?: string }).message ?? t("dashboard.couldNotSave"));
+        setError(
+          (j as { message?: string; error?: string }).message ??
+          (j as { message?: string; error?: string }).error ??
+          t("dashboard.couldNotSave")
+        );
         return;
       }
       reset();
@@ -207,10 +226,13 @@ export default function DashboardShowroomsPage() {
     const f = e.target.files?.[0];
     if (!f) return;
     try {
+      setUploadingImage(true);
       const url = await uploadProductImage(f);
       setForm((prev) => ({ ...prev, images: [...prev.images, url] }));
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t("dashboard.uploadFailed"));
+    } finally {
+      setUploadingImage(false);
     }
     e.target.value = "";
   };
@@ -358,8 +380,12 @@ export default function DashboardShowroomsPage() {
                   type="file"
                   accept="image/jpeg,image/png,image/webp,image/gif"
                   onChange={onPickUpload}
+                  disabled={saving || uploadingImage}
                 />
                 <Form.Text>{t("dashboard.showroomImagesHelp")}</Form.Text>
+                {uploadingImage ? (
+                  <div className="small text-muted mt-2">Uploading image...</div>
+                ) : null}
                 {form.images.length > 0 ? (
                   <div className="d-flex gap-2 flex-wrap mt-2">
                     {form.images.map((image, index) => (
@@ -402,9 +428,11 @@ export default function DashboardShowroomsPage() {
                   type="submit"
                   variant="dark"
                   className={`w-100 ${styles.primaryBtn}`}
-                  disabled={saving}
+                  disabled={saving || uploadingImage}
                 >
-                  {saving
+                  {uploadingImage
+                    ? "Uploading image..."
+                    : saving
                     ? t("dashboard.saving")
                     : editingId == null
                       ? t("dashboard.add")

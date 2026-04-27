@@ -25,6 +25,7 @@ type Product = {
   name_ar?: string | null;
   price: number;
   category: string;
+  image_url?: string | null;
   descriptions?: string;
   descriptions_ar?: string | null;
   quantity?: number;
@@ -65,6 +66,9 @@ function productImageUrl(product: Product) {
   ) {
     return product.storage_files[0].image_url;
   }
+  if (product.image_url) {
+    return product.image_url;
+  }
   return `https://picsum.photos/seed/product-${product.id}/800/1000`;
 }
 
@@ -97,7 +101,7 @@ export default function FurnitureCatalogExperience({
     fetch("/api/be/hero-slides", { signal: c.signal })
       .then((r) => r.json())
       .then((j) => {
-        const rows = j.data as Array<{ id: number; image_url: string }>;
+        const rows = j as Array<{ id: number; image_url: string }>;
         if (!Array.isArray(rows) || rows.length === 0) return;
         setHeroSlides(
           rows.map((h) => ({ id: h.id, imageUrl: h.image_url }))
@@ -114,7 +118,7 @@ export default function FurnitureCatalogExperience({
     fetch("/api/be/categories", { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data.data)) setCategories(data.data);
+        if (Array.isArray(data)) setCategories(data);
       })
       .catch(() => {
         setCategories([]);
@@ -137,7 +141,7 @@ export default function FurnitureCatalogExperience({
     fetch(url, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data.data)) setProducts(data.data);
+        if (Array.isArray(data)) setProducts(data);
         else setProducts([]);
       })
       .catch(() => {

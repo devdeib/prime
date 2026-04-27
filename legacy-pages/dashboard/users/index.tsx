@@ -33,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
         };
       }
       const usersResults = await getUsers(token);
-      users = usersResults.data.data;
+      users = Array.isArray(usersResults.data) ? usersResults.data : [];
     }
     return { props: { users: users } };
   } catch (error) {

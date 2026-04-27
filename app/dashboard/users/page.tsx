@@ -35,7 +35,7 @@ export default function DashboardUsersPage() {
       try {
         setError(null);
         const usersResults = await getUsers(token);
-        if (mounted) setUsers(usersResults.data.data);
+        if (mounted) setUsers(Array.isArray(usersResults.data) ? usersResults.data : []);
       } catch {
         if (mounted) {
           setError(t("dashboard.failedToLoadUsers"));

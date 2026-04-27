@@ -80,7 +80,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
     // getProducts hits the new furniture API
     const productRes = await require("@/data/api/products").getProducts(productsUrl);
-    const productsItems = productRes.data?.data ?? [];
+    const productsItems = Array.isArray(productRes.data) ? productRes.data : [];
 
     return { props: { productsItems, category: cat } };
   } catch (error) {

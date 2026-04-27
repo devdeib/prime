@@ -18,7 +18,7 @@ export default function AboutUsPage() {
         setError(null);
         const res = await getStorageFiles("?type=home_banner");
         if (!mounted) return;
-        setProductBanner(Array.isArray(res.data.data) ? res.data.data : []);
+        setProductBanner(Array.isArray(res.data) ? res.data : []);
       } catch {
         if (!mounted) return;
         setError("Unable to load page data");

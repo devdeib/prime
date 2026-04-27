@@ -7,30 +7,40 @@ const supabase = createClient(
 )
 
 export async function POST(req: NextRequest) {
-  const formData = await req.formData()
-  const file = formData.get('file') as File
+  try {
+    const formData = await req.formData()
+    const file = formData.get('file') as File
 
-  if (!file) {
-    return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    }
+
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`
+
+    const arrayBuffer = await file.arrayBuffer()
+    const buffer = new Uint8Array(arrayBuffer)
+
+    const { data, error } = await supabase.storage
+      .from('products')
+      .upload(fileName, buffer, {
+        contentType: file.type,
+        upsert: false
+      })
+
+    if (error) {
+      console.error('Supabase upload error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    const { data: urlData } = supabase.storage
+      .from('products')
+      .getPublicUrl(fileName)
+
+    return NextResponse.json({ url: urlData.publicUrl })
+
+  } catch (err) {
+    console.error('Upload route error:', err)
+    return NextResponse.json({ error: String(err) }, { status: 500 })
   }
-
-  const fileExt = file.name.split('.').pop()
-  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`
-
-  const { data, error } = await supabase.storage
-    .from('products')
-    .upload(fileName, file, {
-      contentType: file.type,
-      upsert: false
-    })
-
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-
-  const { data: urlData } = supabase.storage
-    .from('products')
-    .getPublicUrl(fileName)
-
-  return NextResponse.json({ url: urlData.publicUrl })
 }

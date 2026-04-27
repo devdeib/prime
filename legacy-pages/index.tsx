@@ -50,7 +50,7 @@ const Home: NextPageWithLayout<ProductListPageProps> = ({
       const result = await getProducts(productFilterUrl);
       setSelectedCategory(categoryAlias);
       setLoading(false);
-      setProducts(result.data.data);
+      setProducts(Array.isArray(result.data) ? result.data : []);
     } catch (error) {
       console.log("error : ", error);
       setLoading(false);
@@ -157,7 +157,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // استخدم أول فئة إن وجدت أو all-items
     let defaultCategoryAlias = "all-items";
     const categoriesRes = await getCategories();
-    const categoriesArr = categoriesRes.data.data || [];
+    const categoriesArr = Array.isArray(categoriesRes.data) ? categoriesRes.data : [];
     if (categoriesArr.length > 0) {
       defaultCategoryAlias = categoriesArr[0].alias;
     }
@@ -174,10 +174,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         getStorageFiles(homeBannerUrl),
       ]);
     const response = {
-      productsItems: productRes.data.data,
-      bannerFiles: bannerFileRes.data.data,
-      categories: categoryRes.data.data,
-      homeBanner: homeBannerRes.data.data,
+      productsItems: Array.isArray(productRes.data) ? productRes.data : [],
+      bannerFiles: Array.isArray(bannerFileRes.data) ? bannerFileRes.data : [],
+      categories: Array.isArray(categoryRes.data) ? categoryRes.data : [],
+      homeBanner: Array.isArray(homeBannerRes.data) ? homeBannerRes.data : [],
     };
 
     return { props: { response } };

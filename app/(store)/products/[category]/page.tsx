@@ -1,13 +1,7 @@
 import FurnitureCatalogExperience from "@/components/shop/FurnitureCatalogExperience";
-import { loadStore } from "@/lib/mock-backend-store";
 
 export function generateStaticParams() {
-  const store = loadStore();
-  const categories = store.categories.map((category) => ({
-    category: category.alias,
-  }));
-
-  return [{ category: "all-items" }, ...categories];
+  return [{ category: "all-items" }];
 }
 
 export default async function CategoryProductsPage(

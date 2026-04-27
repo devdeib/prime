@@ -43,9 +43,9 @@ export default function DashboardCategoriesPage() {
       const res = await fetch("/api/be/categories", { credentials: "include" });
       const json = await res.json();
       if (!res.ok) throw new Error(json.message ?? "Failed to load");
-      if (Array.isArray(json.data)) {
+      if (Array.isArray(json)) {
         setCategories(
-          json.data.map(
+          json.map(
             (c: {
               id: number;
               name: string;
@@ -94,7 +94,11 @@ export default function DashboardCategoriesPage() {
     });
     if (!res.ok) {
       const j = await res.json().catch(() => ({}));
-      setError((j as { message?: string }).message ?? t("dashboard.couldNotCreate"));
+      setError(
+        (j as { message?: string; error?: string }).message ??
+        (j as { message?: string; error?: string }).error ??
+        t("dashboard.couldNotCreate")
+      );
       return;
     }
     resetForm();
@@ -113,7 +117,7 @@ export default function DashboardCategoriesPage() {
     if (!isAdmin || editingId == null) return;
     setError(null);
     const res = await fetch(`/api/be/categories/${editingId}`, {
-      method: "PATCH",
+      method: "PUT",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -125,9 +129,10 @@ export default function DashboardCategoriesPage() {
     if (!res.ok) {
       const j = await res.json().catch(() => ({}));
       setError(
-        (j as { message?: string; errors?: { alias?: string[] } }).errors
+        (j as { message?: string; error?: string; errors?: { alias?: string[] } }).errors
           ?.alias?.[0] ??
-          (j as { message?: string }).message ??
+          (j as { message?: string; error?: string }).message ??
+          (j as { message?: string; error?: string }).error ??
           t("dashboard.couldNotUpdate")
       );
       return;
@@ -145,7 +150,11 @@ export default function DashboardCategoriesPage() {
     });
     if (!res.ok) {
       const j = await res.json().catch(() => ({}));
-      setError((j as { message?: string }).message ?? t("dashboard.couldNotDelete"));
+      setError(
+        (j as { message?: string; error?: string }).message ??
+        (j as { message?: string; error?: string }).error ??
+        t("dashboard.couldNotDelete")
+      );
       return;
     }
     await load();

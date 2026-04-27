@@ -22,6 +22,8 @@ type ShowroomApi = {
   sort_order: number;
 };
 
+const SHOWROOM_PLACEHOLDER = "/images/La dolce casa.svg";
+
 export default function ShowroomsPage() {
   const { t, i18n } = useTranslation("common");
   const [items, setItems] = useState<ShowroomApi[]>([]);
@@ -36,7 +38,7 @@ export default function ShowroomsPage() {
     fetch("/api/be/showrooms", { signal: c.signal })
       .then((r) => r.json())
       .then((j) => {
-        if (Array.isArray(j.data)) setItems(j.data);
+        if (Array.isArray(j)) setItems(j);
       })
       .catch(() => setItems([]));
     return () => c.abort();
@@ -54,8 +56,7 @@ export default function ShowroomsPage() {
     if (showroom.image_url?.trim()) {
       return [showroom.image_url.trim()];
     }
-    // fallback placeholder
-    return [`https://picsum.photos/seed/showroom-${showroom.id}/960/640`];
+    return [SHOWROOM_PLACEHOLDER];
   }
 
   return (
