@@ -250,6 +250,29 @@
       "sort_order": 1
     }
   ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Palm Residence",
+      "name_ar": "سكن بالم",
+      "city": "Riyadh",
+      "city_ar": "الرياض",
+      "sort_order": 0,
+      "description": "A warm residential installation blending dining, lounge, and bedroom pieces.",
+      "description_ar": "مشروع سكني دافئ يجمع بين قطع الطعام والمعيشة وغرف النوم."
+    },
+    {
+      "id": 2,
+      "name": "Coastal Majlis",
+      "name_ar": "مجلس ساحلي",
+      "city": "Jeddah",
+      "city_ar": "جدة",
+      "sort_order": 1,
+      "description": "Custom seating and tables prepared for a hospitality-style private lounge.",
+      "description_ar": "جلسات وطاولات مخصصة لمساحة ضيافة خاصة بطابع أنيق."
+    }
+  ],
   "nextHeroSlideId": 15,
-  "nextShowroomId": 4
+  "nextShowroomId": 4,
+  "nextProjectId": 3
 }

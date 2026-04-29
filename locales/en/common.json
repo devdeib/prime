@@ -8,6 +8,7 @@
     "signUp": "SIGN UP",
     "brand": "La Dolce Casa",
     "showrooms": "SHOWROOM",
+    "projects": "PROJECTS",
     "langEn": "EN",
     "langAr": "AR"
   },
@@ -76,6 +77,8 @@
     "editProduct": "Edit product",
     "addShowroom": "Add showroom",
     "editShowroom": "Edit showroom",
+    "addProject": "Add project",
+    "editProject": "Edit project",
     "save": "Save",
     "saving": "Saving...",
     "add": "Add",
@@ -87,11 +90,13 @@
     "deleteCategoryConfirm": "Delete this category?",
     "deleteProductConfirm": "Delete this product?",
     "deleteShowroomConfirm": "Delete this showroom?",
+    "deleteProjectConfirm": "Delete this project?",
     "deleteSlideConfirm": "Remove this slide from the homepage carousel?",
     "loading": "Loading...",
     "failedToLoadCategories": "Failed to load categories",
     "failedToLoadHeroSlides": "Failed to load hero slides",
     "failedToLoadShowrooms": "Failed to load showroom",
+    "failedToLoadProjects": "Failed to load projects",
     "failedToLoadUsers": "Failed to load users.",
     "pleaseSignInAgain": "Please sign in again.",
     "couldNotCreate": "Could not create",
@@ -117,6 +122,7 @@
     "removeSavedImage": "Remove saved image",
     "imageHelp": "Leave empty to use the default placeholder on the storefront.",
     "showroomImagesHelp": "You can upload multiple images for the same showroom.",
+    "projectImagesHelp": "You can upload multiple images for the same project.",
     "navSection": {
       "main": "Main",
       "list": "Management",
@@ -134,12 +140,18 @@
     "pickFromLibrary": "Pick from library",
     "addSlide": "Add slide",
     "showroomsMenu": "Showrooms",
+    "projectsMenu": "Projects",
     "sortOrder": "Sort order"
   },
   "showroomsPage": {
     "title": "SHOWROOM",
     "subtitle": "Visit us and explore collections in person.",
     "empty": "No showroom listed yet."
+  },
+  "projectsPage": {
+    "title": "PROJECTS",
+    "subtitle": "Browse selected spaces and previous work completed by our team.",
+    "empty": "No projects listed yet."
   },
   "about": {
     "metaTitle": "La Dolce Casa | About Us",

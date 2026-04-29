@@ -66,6 +66,31 @@ function formatShowroomRow(row: Record<string, unknown>) {
   }
 }
 
+function normalizeProjectPayload(body: Record<string, unknown>) {
+  const images = normalizeImageList(body.images)
+  const fallbackImageUrl = normalizeImageUrl(body.image_url)
+  const normalizedImages =
+    images.length > 0 ? images : fallbackImageUrl ? [fallbackImageUrl] : []
+  const leadImageUrl = normalizedImages[0] ?? null
+
+  return {
+    ...body,
+    images: normalizedImages,
+    image_url: leadImageUrl,
+  }
+}
+
+function formatProjectRow(row: Record<string, unknown>) {
+  const images = normalizeImageList(row.images)
+  const imageUrl = images[0] ?? normalizeImageUrl(row.image_url)
+
+  return {
+    ...row,
+    images: imageUrl && images.length === 0 ? [imageUrl] : images,
+    image_url: imageUrl,
+  }
+}
+
 function formatProductRow(row: Record<string, unknown>) {
   const imageUrl = normalizeImageUrl(row.image_url)
 
@@ -79,15 +104,17 @@ function formatProductRow(row: Record<string, unknown>) {
 }
 
 async function getMediaCandidates() {
-  const [productsRes, heroSlidesRes, showroomsRes] = await Promise.all([
+  const [productsRes, heroSlidesRes, showroomsRes, projectsRes] = await Promise.all([
     supabase.from('products').select('image_url'),
     supabase.from('hero_slides').select('image_url'),
     supabase.from('showrooms').select('image_url,images'),
+    supabase.from('projects').select('image_url,images'),
   ])
 
   if (productsRes.error) throw productsRes.error
   if (heroSlidesRes.error) throw heroSlidesRes.error
   if (showroomsRes.error) throw showroomsRes.error
+  if (projectsRes.error) throw projectsRes.error
 
   const urls = new Set<string>()
 
@@ -102,6 +129,13 @@ async function getMediaCandidates() {
   }
 
   for (const row of showroomsRes.data ?? []) {
+    const images = normalizeImageList(row.images)
+    for (const image of images) urls.add(image)
+    const imageUrl = normalizeImageUrl(row.image_url)
+    if (imageUrl) urls.add(imageUrl)
+  }
+
+  for (const row of projectsRes.data ?? []) {
     const images = normalizeImageList(row.images)
     for (const image of images) urls.add(image)
     const imageUrl = normalizeImageUrl(row.image_url)
@@ -131,7 +165,7 @@ function buildStorageFileRows(type: string | null, urls: string[]) {
 
 export async function GET(req: NextRequest, context: { params: Promise<{ index: string[] }> }) {
   const { index } = await context.params
-  const [resource, id] = index
+  const [resource] = index
 
   if (resource === 'categories') {
     const { data, error } = await supabase.from('categories').select('*')
@@ -169,6 +203,12 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
     const { data, error } = await supabase.from('showrooms').select('*').order('sort_order')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json((data ?? []).map((row) => formatShowroomRow(row)))
+  }
+
+  if (resource === 'projects') {
+    const { data, error } = await supabase.from('projects').select('*').order('sort_order')
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json((data ?? []).map((row) => formatProjectRow(row)))
   }
 
   if (resource === 'storage-files') {
@@ -234,6 +274,13 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
     return NextResponse.json(formatShowroomRow(data))
   }
 
+  if (resource === 'projects') {
+    const payload = normalizeProjectPayload(body)
+    const { data, error } = await supabase.from('projects').insert([payload]).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(formatProjectRow(data))
+  }
+
   if (resource === 'users') {
     const { data, error } = await supabase.from('users').insert([body]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -285,6 +332,13 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
     return NextResponse.json(formatShowroomRow(data))
   }
 
+  if (resource === 'projects') {
+    const payload = normalizeProjectPayload(body)
+    const { data, error } = await supabase.from('projects').update(payload).eq('id', id).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(formatProjectRow(data))
+  }
+
   if (resource === 'users') {
     const { data, error } = await supabase.from('users').update(body).eq('id', id).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -318,6 +372,12 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ inde
 
   if (resource === 'showrooms') {
     const { error } = await supabase.from('showrooms').delete().eq('id', id)
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ success: true })
+  }
+
+  if (resource === 'projects') {
+    const { error } = await supabase.from('projects').delete().eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ success: true })
   }

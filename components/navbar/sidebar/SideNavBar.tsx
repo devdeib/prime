@@ -13,7 +13,7 @@ import {
   MdAutoGraph,
   MdNotificationsActive,
 } from "react-icons/md";
-import { FaRegUser, FaBuilding, FaHandshake } from "react-icons/fa";
+import { FaRegUser, FaBuilding, FaHandshake, FaImages } from "react-icons/fa";
 import SingleListItems from "./SingleListItems";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button, Spinner } from "react-bootstrap";
@@ -91,6 +91,12 @@ export const sideNavItems = (role: string): SideNavItems => {
         labelKey: "dashboard.showroomsMenu",
         url: "/dashboard/showrooms",
         icon: (size: number = 21) => <MdStoreMallDirectory size={size} />,
+      },
+      {
+        id: 7,
+        labelKey: "dashboard.projectsMenu",
+        url: "/dashboard/projects",
+        icon: (size: number = 21) => <FaImages size={size} />,
       },
     ];
     navItems.list = adminRoutes;

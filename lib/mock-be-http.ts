@@ -10,6 +10,7 @@ import {
   toApiUser,
   type MockStoredCategory,
   type MockStoredHeroSlide,
+  type MockStoredProject,
   type MockStoredProduct,
   type MockStoredShowroom,
   type MockStoredUser,
@@ -154,6 +155,15 @@ function heroImageCandidates(store: ReturnType<typeof loadStore>): string[] {
   for (const h of store.heroSlides) {
     if (h.image_url.trim()) set.add(h.image_url.trim());
   }
+  for (const project of store.projects) {
+    const images =
+      Array.isArray(project.images) && project.images.length > 0
+        ? project.images
+        : project.image_url?.trim()
+          ? [project.image_url.trim()]
+          : [];
+    for (const image of images) set.add(image);
+  }
   for (const u of listPublicProductUploads()) set.add(u);
   return Array.from(set).sort();
 }
@@ -182,7 +192,42 @@ function formatShowroomRow(s: MockStoredShowroom) {
   };
 }
 
+function formatProjectRow(p: MockStoredProject) {
+  const images =
+    Array.isArray(p.images) && p.images.length > 0
+      ? p.images
+      : p.image_url?.trim()
+        ? [p.image_url.trim()]
+        : [];
+
+  return {
+    id: p.id,
+    name: p.name,
+    name_ar: p.name_ar ?? null,
+    city: p.city ?? null,
+    city_ar: p.city_ar ?? null,
+    address: p.address ?? null,
+    address_ar: p.address_ar ?? null,
+    description: p.description ?? null,
+    description_ar: p.description_ar ?? null,
+    images,
+    image_url: images[0] ?? null,
+    sort_order: p.sort_order,
+  };
+}
+
 function normalizeShowroomImages(body: Partial<MockStoredShowroom>): string[] {
+  const rawImages = Array.isArray(body.images) ? body.images : [];
+  const images = rawImages
+    .map((img) => String(img).trim())
+    .filter(Boolean);
+
+  if (images.length > 0) return images;
+  if (body.image_url?.trim()) return [String(body.image_url).trim()];
+  return [];
+}
+
+function normalizeProjectImages(body: Partial<MockStoredProject>): string[] {
   const rawImages = Array.isArray(body.images) ? body.images : [];
   const images = rawImages
     .map((img) => String(img).trim())
@@ -721,6 +766,14 @@ export async function tryMockBeRequest(
     return NextResponse.json({ data: sorted.map(formatShowroomRow) });
   }
 
+  if (method === "GET" && segments[0] === "projects" && segments.length === 1) {
+    const store = loadStore();
+    const sorted = [...store.projects].sort(
+      (a, b) => a.sort_order - b.sort_order || a.id - b.id
+    );
+    return NextResponse.json({ data: sorted.map(formatProjectRow) });
+  }
+
   if (method === "POST" && segments[0] === "showrooms" && segments.length === 1) {
     if (sessionRole(session) !== "admin") {
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
@@ -750,6 +803,37 @@ export async function tryMockBeRequest(
     store.showrooms.push(row);
     saveStore(store);
     return NextResponse.json({ data: formatShowroomRow(row) }, { status: 201 });
+  }
+
+  if (method === "POST" && segments[0] === "projects" && segments.length === 1) {
+    if (sessionRole(session) !== "admin") {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
+    const body = (await req.json()) as Partial<MockStoredProject>;
+    const store = loadStore();
+    const images = normalizeProjectImages(body);
+    const row: MockStoredProject = {
+      id: store.nextProjectId++,
+      name: String(body.name ?? "Project").trim() || "Project",
+      name_ar: body.name_ar ? String(body.name_ar).trim() : undefined,
+      city: body.city ? String(body.city).trim() : undefined,
+      city_ar: body.city_ar ? String(body.city_ar).trim() : undefined,
+      address: body.address ? String(body.address).trim() : undefined,
+      address_ar: body.address_ar ? String(body.address_ar).trim() : undefined,
+      description: body.description ? String(body.description).trim() : undefined,
+      description_ar: body.description_ar
+        ? String(body.description_ar).trim()
+        : undefined,
+      images,
+      image_url: images[0],
+      sort_order:
+        body.sort_order != null
+          ? Number(body.sort_order)
+          : store.projects.length,
+    };
+    store.projects.push(row);
+    saveStore(store);
+    return NextResponse.json({ data: formatProjectRow(row) }, { status: 201 });
   }
 
   if (
@@ -824,6 +908,77 @@ export async function tryMockBeRequest(
   }
 
   if (
+    (method === "PATCH" || method === "PUT") &&
+    segments[0] === "projects" &&
+    segments[1] &&
+    segments.length === 2
+  ) {
+    if (sessionRole(session) !== "admin") {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
+    const id = Number(segments[1]);
+    const body = (await req.json()) as Partial<MockStoredProject>;
+    const store = loadStore();
+    const idx = store.projects.findIndex((p) => p.id === id);
+    if (idx === -1) {
+      return NextResponse.json({ message: "Not found" }, { status: 404 });
+    }
+    const cur = store.projects[idx];
+    const prevImages =
+      Array.isArray(cur.images) && cur.images.length > 0
+        ? cur.images
+        : cur.image_url?.trim()
+          ? [cur.image_url.trim()]
+          : [];
+    const nextImages =
+      body.images !== undefined || body.image_url !== undefined
+        ? normalizeProjectImages(body)
+        : prevImages;
+    const next: MockStoredProject = {
+      ...cur,
+      name: body.name != null ? String(body.name).trim() : cur.name,
+      name_ar:
+        body.name_ar !== undefined
+          ? String(body.name_ar).trim() || undefined
+          : cur.name_ar,
+      city:
+        body.city !== undefined
+          ? String(body.city).trim() || undefined
+          : cur.city,
+      city_ar:
+        body.city_ar !== undefined
+          ? String(body.city_ar).trim() || undefined
+          : cur.city_ar,
+      address:
+        body.address !== undefined
+          ? String(body.address).trim() || undefined
+          : cur.address,
+      address_ar:
+        body.address_ar !== undefined
+          ? String(body.address_ar).trim() || undefined
+          : cur.address_ar,
+      description:
+        body.description !== undefined
+          ? String(body.description).trim() || undefined
+          : cur.description,
+      description_ar:
+        body.description_ar !== undefined
+          ? String(body.description_ar).trim() || undefined
+          : cur.description_ar,
+      images: nextImages,
+      image_url: nextImages[0],
+      sort_order:
+        body.sort_order != null ? Number(body.sort_order) : cur.sort_order,
+    };
+    if (body.images !== undefined || body.image_url !== undefined) {
+      removeUnusedUploadedImages(nextImages, prevImages);
+    }
+    store.projects[idx] = next;
+    saveStore(store);
+    return NextResponse.json({ data: formatProjectRow(next) });
+  }
+
+  if (
     method === "DELETE" &&
     segments[0] === "showrooms" &&
     segments[1] &&
@@ -838,6 +993,36 @@ export async function tryMockBeRequest(
     const before = store.showrooms.length;
     store.showrooms = store.showrooms.filter((s) => s.id !== id);
     if (store.showrooms.length === before) {
+      return NextResponse.json({ message: "Not found" }, { status: 404 });
+    }
+    if (victim) {
+      const victimImages =
+        Array.isArray(victim.images) && victim.images.length > 0
+          ? victim.images
+          : victim.image_url?.trim()
+            ? [victim.image_url.trim()]
+            : [];
+      removeUnusedUploadedImages([], victimImages);
+    }
+    saveStore(store);
+    return NextResponse.json({ ok: true }, { status: 200 });
+  }
+
+  if (
+    method === "DELETE" &&
+    segments[0] === "projects" &&
+    segments[1] &&
+    segments.length === 2
+  ) {
+    if (sessionRole(session) !== "admin") {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
+    const id = Number(segments[1]);
+    const store = loadStore();
+    const victim = store.projects.find((p) => p.id === id);
+    const before = store.projects.length;
+    store.projects = store.projects.filter((p) => p.id !== id);
+    if (store.projects.length === before) {
       return NextResponse.json({ message: "Not found" }, { status: 404 });
     }
     if (victim) {

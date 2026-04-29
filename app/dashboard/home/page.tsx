@@ -14,7 +14,7 @@ export default function DashboardHomePage() {
           <h1 className={styles.title}>{t("dashboard.dashboard")}</h1>
           <p className={styles.text}>
             A calmer control room for products, categories, hero images, and
-            showroom content. The goal here is a cleaner administrative
+            showroom and project content. The goal here is a cleaner administrative
             experience that feels connected to the storefront instead of a
             separate generic tool.
           </p>
@@ -26,7 +26,7 @@ export default function DashboardHomePage() {
             <span className={styles.statLabel}>Storefront theme aligned</span>
           </div>
           <div className={styles.stat}>
-            <span className={styles.statValue}>04</span>
+            <span className={styles.statValue}>05</span>
             <span className={styles.statLabel}>Core admin sections ready</span>
           </div>
         </div>
@@ -49,6 +49,12 @@ export default function DashboardHomePage() {
           <h2 className={styles.noteTitle}>{t("dashboard.showroomsMenu")}</h2>
           <p className={styles.noteText}>
             Curate showroom information and media in a layout that better matches the public site.
+          </p>
+        </article>
+        <article className={styles.note}>
+          <h2 className={styles.noteTitle}>{t("dashboard.projectsMenu")}</h2>
+          <p className={styles.noteText}>
+            Publish completed work using the same bilingual gallery flow available for showrooms.
           </p>
         </article>
       </div>

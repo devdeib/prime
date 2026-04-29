@@ -39,6 +39,9 @@ const Footer = () => {
             <Link href="/showrooms" className={styles.link}>
               {t("nav.showrooms")}
             </Link>
+            <Link href="/projects" className={styles.link}>
+              {t("nav.projects")}
+            </Link>
           </Col>
           <Col md={3}>
             <h3 className={styles.title}>{t("footer.support")}</h3>

@@ -1,0 +1,481 @@
+.page {
+  padding: 0 0 4rem;
+  background: linear-gradient(180deg, #faf9f7 0%, #ffffff 45%);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  padding-top: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+.headerBrand {
+  color: #b8942f;
+  margin-bottom: 0.9rem;
+}
+
+.eyebrow {
+  font-size: 20px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #858b94;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-family: var(--font-display, serif);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #1e2735;
+  margin-bottom: 0.5rem;
+}
+
+.sub {
+  color: #858b94;
+  max-width: 40ch;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-size: 20px;
+}
+
+.list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.listItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.3rem 0;
+  border-bottom: 1px solid rgba(30, 39, 53, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.listItem:hover,
+.listItem:focus-visible {
+  transform: translateX(6px);
+  border-color: rgba(184, 148, 47, 0.42);
+  outline: none;
+}
+
+.listName {
+  flex: 2;
+  font-weight: 500;
+  font-size: 25px;
+  color: #1e2735;
+}
+
+.listCity {
+  flex: 1;
+  color: #b8942f;
+  font-size: 20px;
+  text-align: end;
+  margin-inline-start: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 12px 40px -24px rgba(30, 39, 53, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+}
+
+.mediaPanel {
+  padding: 0.9rem 0.9rem 0;
+}
+
+.cardImageButton {
+  display: block;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.cardImage {
+  position: relative;
+  aspect-ratio: 16 / 11;
+  background: #e8e6e1;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.cardImageButton:hover .img {
+  transform: scale(1.05);
+}
+
+.img {
+  object-fit: cover;
+  transform: scale(1.01);
+  transition: transform 0.35s ease;
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 18, 28, 0) 55%, rgba(12, 18, 28, 0.34) 100%);
+}
+
+.galleryBadge {
+  position: absolute;
+  inset-inline-end: 0.75rem;
+  bottom: 0.75rem;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1e2735;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 24px rgba(18, 27, 38, 0.14);
+}
+
+.openHint {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  bottom: 0.75rem;
+  background: rgba(30, 39, 53, 0.78);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.thumbRail {
+  margin-top: 0.85rem;
+  background: linear-gradient(180deg, #fbf8f2 0%, #f6f1e7 100%);
+  border-top: 1px solid rgba(184, 148, 47, 0.12);
+  border-bottom: 1px solid rgba(184, 148, 47, 0.12);
+}
+
+.thumbRow {
+  display: flex;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  overflow-x: auto;
+}
+
+.thumbButton {
+  position: relative;
+  width: 78px;
+  min-width: 78px;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(30, 39, 53, 0.08);
+  background: #f7f4ee;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0.72;
+  border-radius: 14px;
+  transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.thumbActive {
+  opacity: 1;
+  border-color: #b8942f;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(184, 148, 47, 0.18);
+}
+
+.thumbImage {
+  object-fit: cover;
+}
+
+.cardBody {
+  padding: 1.2rem 1.2rem 1.35rem;
+}
+
+.cardTitleButton {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.cardTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1e2735;
+  margin: 0 0 0.45rem;
+}
+
+.city {
+  font-size: 0.78rem;
+  color: #b8942f;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+}
+
+.addr {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin: 0 0 0.5rem;
+  line-height: 1.45;
+}
+
+.desc {
+  font-size: 0.88rem;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.viewerBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  background: rgba(9, 14, 22, 0.74);
+  backdrop-filter: blur(10px);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.viewerDialog {
+  position: relative;
+  width: min(1120px, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow: auto;
+  background: linear-gradient(180deg, #fffdfa 0%, #f8f4ec 100%);
+  border: 1px solid rgba(184, 148, 47, 0.18);
+  border-radius: 0;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.28);
+  padding: 1.5rem;
+}
+
+.viewerClose {
+  position: absolute;
+  top: 1rem;
+  inset-inline-end: 1rem;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(30, 39, 53, 0.18);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e2735;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+}
+
+.viewerHeader {
+  margin-bottom: 1.4rem;
+  padding-inline-end: 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.viewerCity {
+  margin: 0 0 0.35rem;
+  color: #b8942f;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+
+.viewerTitle {
+  margin: 0;
+  color: #1e2735;
+  font-size: clamp(1.5rem, 3vw, 2.4rem);
+}
+
+.viewerMeta {
+  padding-top: 0.35rem;
+}
+
+.viewerAddress,
+.viewerDescription {
+  margin: 0;
+  color: #596273;
+  line-height: 1.75;
+  font-size: 20px;
+}
+
+.viewerAddress + .viewerDescription {
+  margin-top: 0.75rem;
+}
+
+.viewerBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 140px;
+  gap: 1rem;
+}
+
+.viewerStage {
+  position: relative;
+  min-width: 0;
+}
+
+.viewerImageFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 0;
+  overflow: hidden;
+  background: #ece7dd;
+  border: 1px solid rgba(30, 39, 53, 0.08);
+}
+
+.viewerImage {
+  object-fit: cover;
+}
+
+.viewerNav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(30, 39, 53, 0.14);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.96);
+  color: #1e2735;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.viewerPrev {
+  inset-inline-start: 1rem;
+}
+
+.viewerNext {
+  inset-inline-end: 1rem;
+}
+
+.viewerRail {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.viewerRailLabel {
+  margin: 0 0 0.75rem;
+  color: #b8942f;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 20px;
+  text-align: left;
+}
+
+.viewerThumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.viewerThumb {
+  position: relative;
+  width: 100%;
+  min-width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+  border: 1px solid rgba(30, 39, 53, 0.1);
+  overflow: hidden;
+  padding: 0;
+  background: #f5f0e7;
+  opacity: 0.72;
+}
+
+.viewerThumbActive {
+  opacity: 1;
+  border-color: #b8942f;
+  box-shadow: 0 12px 26px rgba(184, 148, 47, 0.18);
+}
+
+.viewerThumbImage {
+  object-fit: cover;
+}
+
+@media (min-width: 992px) {
+  .card {
+    min-height: 100%;
+  }
+
+  .cardBody {
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .listItem {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .listCity {
+    margin-inline-start: 0;
+    text-align: start;
+  }
+
+  .viewerDialog {
+    padding: 1rem;
+  }
+
+  .viewerHeader,
+  .viewerBody {
+    grid-template-columns: 1fr;
+  }
+
+  .viewerNav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .viewerThumbs {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .viewerThumb {
+    width: 96px;
+    min-width: 96px;
+  }
+
+  .viewerPrev {
+    inset-inline-start: 0.6rem;
+  }
+
+  .viewerNext {
+    inset-inline-end: 0.6rem;
+  }
+}

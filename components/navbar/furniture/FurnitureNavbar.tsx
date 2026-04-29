@@ -109,6 +109,12 @@ export default function FurnitureNavbar() {
               {t("nav.showrooms")}
             </Nav.Link>
             <Nav.Link
+              href="/projects"
+              className={`${styles.navLink} ${styles.ft14} fw-normal`}
+            >
+              {t("nav.projects")}
+            </Nav.Link>
+            <Nav.Link
               href="/about-us"
               className={`${styles.navLink} ${styles.ft14} fw-normal`}
             >

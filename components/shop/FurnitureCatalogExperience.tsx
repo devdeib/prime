@@ -171,7 +171,7 @@ export default function FurnitureCatalogExperience({
     (category) => category.alias === HOME_FEATURED_ALIAS
   );
   const homeSectionTitle =
-    i18n.language === "ar" ? "منتجاتنا المختارة" : "Our Featured Products";
+    i18n.language === "ar" ? "منتجاتنا المختارة" : "Featured Products";
   const homeSectionSubcopy =
     i18n.language === "ar"
       ? "قمنا باختيار القطع التي تعبّر بأفضل صورة عن لغتنا التصميمية. كل قطعة تمثل انسجامًا راقيًا بين الشكل والخامة والحرفية."
@@ -280,15 +280,7 @@ export default function FurnitureCatalogExperience({
         </nav>
       ) : (
         <section className={styles.featuredIntro}>
-          <p className={styles.featuredEyebrow}>
-            {featuredCategory
-              ? pickLocalized(
-                  i18n.language,
-                  featuredCategory.name,
-                  featuredCategory.name_ar
-                )
-              : HOME_FEATURED_ALIAS}
-          </p>
+          
           <h2 className={styles.featuredTitle}>{homeSectionTitle}</h2>
           <p className={styles.featuredSubcopy}>{homeSectionSubcopy}</p>
         </section>

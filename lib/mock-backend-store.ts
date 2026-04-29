@@ -60,17 +60,35 @@ export type MockStoredShowroom = {
   sort_order: number;
 };
 
+/** Project listing for storefront + dashboard CRUD */
+export type MockStoredProject = {
+  id: number;
+  name: string;
+  name_ar?: string;
+  city?: string;
+  city_ar?: string;
+  address?: string;
+  address_ar?: string;
+  description?: string;
+  description_ar?: string;
+  images?: string[];
+  image_url?: string;
+  sort_order: number;
+};
+
 type StoreFile = {
   users: MockStoredUser[];
   products: MockStoredProduct[];
   categories: MockStoredCategory[];
   heroSlides: MockStoredHeroSlide[];
   showrooms: MockStoredShowroom[];
+  projects: MockStoredProject[];
   nextUserId: number;
   nextProductId: number;
   nextCategoryId: number;
   nextHeroSlideId: number;
   nextShowroomId: number;
+  nextProjectId: number;
 };
 
 export const DEFAULT_CATEGORIES: MockStoredCategory[] = [
@@ -105,6 +123,29 @@ const DEFAULT_SHOWROOMS: MockStoredShowroom[] = [
     sort_order: 1,
     description: "Experience materials and finishes in person.",
     description_ar: "اختبر المواد واللمسات عن قرب.",
+  },
+];
+
+const DEFAULT_PROJECTS: MockStoredProject[] = [
+  {
+    id: 1,
+    name: "Palm Residence",
+    name_ar: "سكن بالم",
+    city: "Riyadh",
+    city_ar: "الرياض",
+    sort_order: 0,
+    description: "A warm residential installation blending dining, lounge, and bedroom pieces.",
+    description_ar: "مشروع سكني دافئ يجمع بين قطع الطعام والمعيشة وغرف النوم.",
+  },
+  {
+    id: 2,
+    name: "Coastal Majlis",
+    name_ar: "مجلس ساحلي",
+    city: "Jeddah",
+    city_ar: "جدة",
+    sort_order: 1,
+    description: "Custom seating and tables prepared for a hospitality-style private lounge.",
+    description_ar: "جلسات وطاولات مخصصة لمساحة ضيافة خاصة بطابع أنيق.",
   },
 ];
 
@@ -245,11 +286,13 @@ function seedStore(): StoreFile {
     categories: DEFAULT_CATEGORIES.map((c) => ({ ...c })),
     heroSlides: DEFAULT_HERO_SLIDES.map((h) => ({ ...h })),
     showrooms: DEFAULT_SHOWROOMS.map((s) => ({ ...s })),
+    projects: DEFAULT_PROJECTS.map((p) => ({ ...p })),
     nextUserId: 3,
     nextProductId: 13,
     nextCategoryId: 8,
     nextHeroSlideId: 5,
     nextShowroomId: 3,
+    nextProjectId: 3,
   };
 }
 
@@ -260,6 +303,7 @@ function normalizeStore(parsed: Partial<StoreFile>): StoreFile {
   if (!parsed.categories?.length) parsed.categories = base.categories;
   if (!parsed.heroSlides?.length) parsed.heroSlides = base.heroSlides;
   if (!parsed.showrooms?.length) parsed.showrooms = base.showrooms;
+  if (!parsed.projects?.length) parsed.projects = base.projects;
   if (parsed.nextUserId == null) parsed.nextUserId = base.nextUserId;
   if (parsed.nextProductId == null) parsed.nextProductId = base.nextProductId;
   if (parsed.nextCategoryId == null) {
@@ -273,6 +317,10 @@ function normalizeStore(parsed: Partial<StoreFile>): StoreFile {
   if (parsed.nextShowroomId == null) {
     const maxS = Math.max(0, ...(parsed.showrooms ?? []).map((s) => s.id));
     parsed.nextShowroomId = maxS + 1;
+  }
+  if (parsed.nextProjectId == null) {
+    const maxP = Math.max(0, ...(parsed.projects ?? []).map((p) => p.id));
+    parsed.nextProjectId = maxP + 1;
   }
   return enrichBilingualDefaults(parsed as StoreFile);
 }
@@ -318,7 +366,21 @@ function enrichBilingualDefaults(store: StoreFile): StoreFile {
     };
   });
 
-  return { ...store, categories, products, showrooms };
+  const projects = store.projects.map((p) => {
+    const normalizedImages = Array.isArray(p.images)
+      ? p.images.map((img) => String(img).trim()).filter(Boolean)
+      : p.image_url?.trim()
+        ? [p.image_url.trim()]
+        : [];
+
+    return {
+      ...p,
+      images: normalizedImages,
+      image_url: normalizedImages[0],
+    };
+  });
+
+  return { ...store, categories, products, showrooms, projects };
 }
 
 export function loadStore(): StoreFile {
@@ -337,8 +399,10 @@ export function loadStore(): StoreFile {
       !Array.isArray(parsed.products) ||
       !Array.isArray(parsed.heroSlides) ||
       !Array.isArray(parsed.showrooms) ||
+      !Array.isArray(parsed.projects) ||
       parsed.nextHeroSlideId == null ||
-      parsed.nextShowroomId == null;
+      parsed.nextShowroomId == null ||
+      parsed.nextProjectId == null;
     const normalized = normalizeStore(parsed);
     if (needsMigration) saveStore(normalized);
     return normalized;

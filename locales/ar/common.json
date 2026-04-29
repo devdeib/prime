@@ -8,6 +8,8 @@
     "signUp": "إنشاء حساب",
     "brand": "La Dolce Casa",
     "showroom": "المعرض",
+    "showrooms": "المعارض",
+    "projects": "المشاريع",
     "langEn": "EN",
     "langAr": "AR"
   },
@@ -76,6 +78,8 @@
     "editProduct": "تعديل المنتج",
     "addShowroom": "إضافة معرض",
     "editShowroom": "تعديل المعرض",
+    "addProject": "إضافة مشروع",
+    "editProject": "تعديل المشروع",
     "save": "حفظ",
     "saving": "جاري الحفظ...",
     "add": "إضافة",
@@ -87,11 +91,13 @@
     "deleteCategoryConfirm": "هل تريد حذف هذا التصنيف؟",
     "deleteProductConfirm": "هل تريد حذف هذا المنتج؟",
     "deleteShowroomConfirm": "هل تريد حذف هذا المعرض؟",
+    "deleteProjectConfirm": "هل تريد حذف هذا المشروع؟",
     "deleteSlideConfirm": "هل تريد إزالة هذه الشريحة من سلايدر الصفحة الرئيسية؟",
     "loading": "جاري التحميل...",
     "failedToLoadCategories": "تعذر تحميل التصنيفات",
     "failedToLoadHeroSlides": "تعذر تحميل شرائح الصفحة الرئيسية",
     "failedToLoadShowrooms": "تعذر تحميل المعارض",
+    "failedToLoadProjects": "تعذر تحميل المشاريع",
     "failedToLoadUsers": "تعذر تحميل المستخدمين.",
     "pleaseSignInAgain": "يرجى تسجيل الدخول مرة أخرى.",
     "couldNotCreate": "تعذر الإنشاء",
@@ -117,6 +123,7 @@
     "removeSavedImage": "إزالة الصورة المحفوظة",
     "imageHelp": "اتركه فارغًا لاستخدام الصورة الافتراضية في المتجر.",
     "showroomImagesHelp": "يمكنك رفع عدة صور لنفس المعرض.",
+    "projectImagesHelp": "يمكنك رفع عدة صور لنفس المشروع.",
     "navSection": {
       "main": "رئيسي",
       "list": "الإدارة",
@@ -134,12 +141,18 @@
     "pickFromLibrary": "اختر من المكتبة",
     "addSlide": "إضافة شريحة",
     "showroomsMenu": "المعارض",
+    "projectsMenu": "المشاريع",
     "sortOrder": "الترتيب"
   },
   "showroomsPage": {
     "title": "المعارض",
     "subtitle": "زرنا واستكشف المجموعات على أرض الواقع.",
     "empty": "لا توجد معارض مضافة بعد."
+  },
+  "projectsPage": {
+    "title": "المشاريع",
+    "subtitle": "تصفح المساحات والأعمال التي أنجزناها سابقاً.",
+    "empty": "لا توجد مشاريع مضافة بعد."
   },
   "about": {
     "metaTitle": "لا دولتشي كازا | من نحن",
