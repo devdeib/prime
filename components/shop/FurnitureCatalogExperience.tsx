@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import HeroImageCarousel from "@/components/header/HeroImageCarousel";
+import HomeShowroomsSection from "@/components/home/HomeShowroomsSection";
 import {
   MOCK_HOME_CAROUSEL_SLIDES,
   type HomeCarouselSlide,
@@ -31,6 +33,7 @@ type Product = {
   quantity?: number;
   weight?: number;
   sku?: string;
+  external_url?: string | null;
   storage_files?: Array<{
     id: number;
     type: string;
@@ -39,24 +42,25 @@ type Product = {
   }>;
 };
 
+type HeroCopy = {
+  title_en?: string;
+  title_ar?: string;
+  subtitle_en?: string;
+  subtitle_ar?: string;
+};
+
 export type FurnitureCatalogExperienceProps = {
-  /**
-   * Segment from `/products/[category]` — keeps the category bar in sync with the URL.
-   * Omit on the home page.
-   */
   routeCategorySlug?: string;
-  /** When true, changing the category updates `router.push(/products/...)` */
   syncRouteOnCategoryChange?: boolean;
-  /**
-   * Hero image-only carousel at the top (legacy home behaviour).
-   * Defaults to true only on the home shop view (no `routeCategorySlug`).
-   */
   showTopImageCarousel?: boolean;
-  /** Server-provided hero slides to avoid client-side fallback flash on first paint. */
   initialHeroSlides?: HomeCarouselSlide[];
 };
 
-const HOME_FEATURED_ALIAS = "featured";
+const ALL_ITEMS_ALIAS = "all-items";
+
+function inferHeroMediaType(url: string): "image" | "video" {
+  return /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(url) ? "video" : "image";
+}
 
 function productImageUrl(product: Product) {
   if (
@@ -79,38 +83,60 @@ export default function FurnitureCatalogExperience({
   initialHeroSlides,
 }: FurnitureCatalogExperienceProps = {}) {
   const { t, i18n } = useTranslation("common");
-  const topCarousel = showTopImageCarousel ?? routeCategorySlug === undefined;
+  const { data: session } = useSession();
   const router = useRouter();
+  const topCarousel = showTopImageCarousel ?? routeCategorySlug === undefined;
+  const isAdmin = (session as { role?: string } | null)?.role === "admin";
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [productsError, setProductsError] = useState<string | null>(null);
-  const [activeCategoryAlias, setActiveCategoryAlias] = useState<string | null>(
-    routeCategorySlug ?? (topCarousel ? HOME_FEATURED_ALIAS : null)
+  const [activeCategoryAlias, setActiveCategoryAlias] = useState<string>(
+    routeCategorySlug ?? ALL_ITEMS_ALIAS
   );
   const [selected, setSelected] = useState<Product | null>(null);
-  const [heroSlides, setHeroSlides] =
-    useState<HomeCarouselSlide[]>(
-      initialHeroSlides?.length ? initialHeroSlides : MOCK_HOME_CAROUSEL_SLIDES
-    );
+  const [heroSlides, setHeroSlides] = useState<HomeCarouselSlide[]>(
+    initialHeroSlides?.length ? initialHeroSlides : MOCK_HOME_CAROUSEL_SLIDES
+  );
+  const [heroCopy, setHeroCopy] = useState<HeroCopy>({});
+  const [heroEditorOpen, setHeroEditorOpen] = useState(false);
+  const [heroDraft, setHeroDraft] = useState<HeroCopy>({});
+  const [heroSaving, setHeroSaving] = useState(false);
 
   useEffect(() => {
     if (!topCarousel) return;
-    const c = new AbortController();
-    fetch("/api/be/hero-slides", { signal: c.signal })
-      .then((r) => r.json())
-      .then((j) => {
-        const rows = j as Array<{ id: number; image_url: string }>;
+    const controller = new AbortController();
+
+    fetch("/api/be/hero-slides", { signal: controller.signal })
+      .then((res) => res.json())
+      .then((json) => {
+        const rows = json as Array<{ id: number; image_url: string }>;
         if (!Array.isArray(rows) || rows.length === 0) return;
         setHeroSlides(
-          rows.map((h) => ({ id: h.id, imageUrl: h.image_url }))
+          rows.map((row) => ({
+            id: row.id,
+            imageUrl: row.image_url,
+            mediaType: inferHeroMediaType(row.image_url),
+          }))
         );
       })
       .catch(() => {
-        /* keep mock */
+        /* keep current slides */
       });
-    return () => c.abort();
+
+    fetch("/api/be/home-hero", { signal: controller.signal })
+      .then((res) => res.json())
+      .then((json) => {
+        setHeroCopy(json ?? {});
+        setHeroDraft(json ?? {});
+      })
+      .catch(() => {
+        setHeroCopy({});
+        setHeroDraft({});
+      });
+
+    return () => controller.abort();
   }, [topCarousel]);
 
   useEffect(() => {
@@ -127,17 +153,18 @@ export default function FurnitureCatalogExperience({
   }, []);
 
   useEffect(() => {
-    setActiveCategoryAlias(routeCategorySlug ?? (topCarousel ? HOME_FEATURED_ALIAS : null));
-  }, [routeCategorySlug, topCarousel]);
+    setActiveCategoryAlias(routeCategorySlug ?? ALL_ITEMS_ALIAS);
+  }, [routeCategorySlug]);
 
   useEffect(() => {
     const controller = new AbortController();
     let url = "/api/be/products";
-    if (activeCategoryAlias && activeCategoryAlias !== "all-items") {
+    if (activeCategoryAlias !== ALL_ITEMS_ALIAS) {
       url += `?category=${encodeURIComponent(activeCategoryAlias)}`;
     }
     setLoadingProducts(true);
     setProductsError(null);
+
     fetch(url, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
@@ -151,31 +178,9 @@ export default function FurnitureCatalogExperience({
       .finally(() => {
         setLoadingProducts(false);
       });
+
     return () => controller.abort();
   }, [activeCategoryAlias]);
-
-  const selectCategory = useCallback(
-    (alias: string | null) => {
-      setActiveCategoryAlias(alias);
-      if (syncRouteOnCategoryChange) {
-        const segment = alias ?? "all-items";
-        router.push(`/products/${segment}`);
-      }
-    },
-    [router, syncRouteOnCategoryChange]
-  );
-
-  const closePanel = useCallback(() => setSelected(null), []);
-
-  const featuredCategory = categories.find(
-    (category) => category.alias === HOME_FEATURED_ALIAS
-  );
-  const homeSectionTitle =
-    i18n.language === "ar" ? "منتجاتنا المختارة" : "Featured Products";
-  const homeSectionSubcopy =
-    i18n.language === "ar"
-      ? "قمنا باختيار القطع التي تعبّر بأفضل صورة عن لغتنا التصميمية. كل قطعة تمثل انسجامًا راقيًا بين الشكل والخامة والحرفية."
-      : "We've curated the pieces that best express our design language. Each one is a refined harmony of form, material, and craftsmanship.";
 
   useEffect(() => {
     if (!selected) return;
@@ -188,12 +193,27 @@ export default function FurnitureCatalogExperience({
 
   useEffect(() => {
     if (!selected) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closePanel();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelected(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selected, closePanel]);
+  }, [selected]);
+
+  const selectCategory = useCallback(
+    (alias: string) => {
+      setActiveCategoryAlias(alias);
+      if (syncRouteOnCategoryChange) {
+        router.push(`/products/${alias}`);
+      }
+    },
+    [router, syncRouteOnCategoryChange]
+  );
+
+  const displayProducts = useMemo(
+    () => (topCarousel ? products.slice(0, 8) : products),
+    [products, topCarousel]
+  );
 
   const marqueeItems = [
     t("catalog.marquee1"),
@@ -204,13 +224,73 @@ export default function FurnitureCatalogExperience({
     t("catalog.marquee6"),
   ];
 
-  const priceFmt = useCallback(
-    (n: number) =>
-      new Intl.NumberFormat(i18n.language === "ar" ? "ar" : "en", {
-        maximumFractionDigits: 0,
-      }).format(n),
-    [i18n.language]
-  );
+  const homeSectionTitle =
+    i18n.language === "ar" ? "منتجاتنا المختارة" : "Featured Products";
+  const homeSectionSubcopy =
+    i18n.language === "ar"
+      ? "مجموعة مختارة بعناية تعكس روح لا دولتشي كازا وتمنح الواجهة حضورًا أخف وأكثر دقة."
+      : "A tighter selection of standout pieces, curated to bring a more refined rhythm to the home page.";
+  const editHeroLabel =
+    t("catalog.editHero") === "catalog.editHero"
+      ? "Edit Hero Text"
+      : t("catalog.editHero");
+  const closeEditorLabel =
+    t("catalog.closeEditor") === "catalog.closeEditor"
+      ? "Close Editor"
+      : t("catalog.closeEditor");
+  const titleEnLabel =
+    t("catalog.titleEn") === "catalog.titleEn"
+      ? "Title (English)"
+      : t("catalog.titleEn");
+  const titleArLabel =
+    t("catalog.titleAr") === "catalog.titleAr"
+      ? "Title (Arabic)"
+      : t("catalog.titleAr");
+  const subtitleEnLabel =
+    t("catalog.subtitleEn") === "catalog.subtitleEn"
+      ? "Subtitle (English)"
+      : t("catalog.subtitleEn");
+  const subtitleArLabel =
+    t("catalog.subtitleAr") === "catalog.subtitleAr"
+      ? "Subtitle (Arabic)"
+      : t("catalog.subtitleAr");
+
+  const heroTitle =
+    i18n.language === "ar"
+      ? heroCopy.title_ar || t("catalog.heroTitle")
+      : heroCopy.title_en || t("catalog.heroTitle");
+  const heroSubtitle =
+    i18n.language === "ar"
+      ? heroCopy.subtitle_ar || t("catalog.heroSub")
+      : heroCopy.subtitle_en || t("catalog.heroSub");
+
+  const closePanel = useCallback(() => setSelected(null), []);
+
+  const saveHeroCopy = async () => {
+    setHeroSaving(true);
+    try {
+      const res = await fetch("/api/be/home-hero", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(heroDraft),
+      });
+      if (!res.ok) return;
+      const next = (await res.json()) as HeroCopy;
+      setHeroCopy(next);
+      setHeroDraft(next);
+      setHeroEditorOpen(false);
+    } finally {
+      setHeroSaving(false);
+    }
+  };
+
+  const onProductActivate = (product: Product) => {
+    if (product.external_url) {
+      window.location.href = product.external_url;
+      return;
+    }
+    setSelected(product);
+  };
 
   return (
     <div className={styles.root}>
@@ -218,27 +298,118 @@ export default function FurnitureCatalogExperience({
         <div className={styles.heroStage}>
           <HeroImageCarousel slides={heroSlides} />
           <header className={styles.heroOverlay}>
-            {/* <p className={styles.heroEyebrow}>{t("catalog.heroEyebrow")}</p> */}
-            <h1 className={styles.heroTitle}>{t("catalog.heroTitle")}</h1>
-            <p className={styles.heroSub}>{t("catalog.heroSub")}</p>
+            <div className={styles.heroText}>
+              <h1 className={styles.heroTitle}>{heroTitle}</h1>
+              <p className={styles.heroSub}>{heroSubtitle}</p>
+            </div>
+
+            {isAdmin ? (
+              <div className={styles.heroAdminBar}>
+                <button
+                  type="button"
+                  className={styles.heroAdminBtn}
+                  onClick={() => setHeroEditorOpen((value) => !value)}
+                >
+                  {heroEditorOpen ? closeEditorLabel : editHeroLabel}
+                </button>
+              </div>
+            ) : null}
           </header>
+
+          {isAdmin && heroEditorOpen ? (
+            <div className={styles.heroEditor}>
+              <div className={styles.heroEditorCard}>
+                <h2 className={styles.heroEditorTitle}>{editHeroLabel}</h2>
+                <div className={styles.heroEditorGrid}>
+                  <label className={styles.heroField}>
+                    <span>{titleEnLabel}</span>
+                    <input
+                      value={heroDraft.title_en ?? ""}
+                      onChange={(event) =>
+                        setHeroDraft((current) => ({
+                          ...current,
+                          title_en: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className={styles.heroField}>
+                    <span>{titleArLabel}</span>
+                    <input
+                      value={heroDraft.title_ar ?? ""}
+                      onChange={(event) =>
+                        setHeroDraft((current) => ({
+                          ...current,
+                          title_ar: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className={styles.heroField}>
+                    <span>{subtitleEnLabel}</span>
+                    <textarea
+                      rows={3}
+                      value={heroDraft.subtitle_en ?? ""}
+                      onChange={(event) =>
+                        setHeroDraft((current) => ({
+                          ...current,
+                          subtitle_en: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                  <label className={styles.heroField}>
+                    <span>{subtitleArLabel}</span>
+                    <textarea
+                      rows={3}
+                      value={heroDraft.subtitle_ar ?? ""}
+                      onChange={(event) =>
+                        setHeroDraft((current) => ({
+                          ...current,
+                          subtitle_ar: event.target.value,
+                        }))
+                      }
+                    />
+                  </label>
+                </div>
+                <div className={styles.heroEditorActions}>
+                  <button
+                    type="button"
+                    className={styles.heroEditorGhost}
+                    onClick={() => {
+                      setHeroDraft(heroCopy);
+                      setHeroEditorOpen(false);
+                    }}
+                  >
+                    {t("dashboard.cancel")}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.heroEditorPrimary}
+                    onClick={() => void saveHeroCopy()}
+                    disabled={heroSaving}
+                  >
+                    {heroSaving ? t("dashboard.saving") : t("dashboard.save")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
-      ) : null}
-      {!topCarousel ? (
+      ) : (
         <header className={styles.hero}>
-          {/* <p className={styles.heroEyebrow}>{t("catalog.heroEyebrow")}</p> */}
-          <h1 className={styles.heroTitle}>{t("catalog.heroTitle")}</h1>
-          <p className={styles.heroSub}>{t("catalog.heroSub")}</p>
+          <h1 className={styles.heroTitle}>{heroTitle}</h1>
+          <p className={styles.heroSub}>{heroSubtitle}</p>
         </header>
-      ) : null}
+      )}
 
       <div className={styles.marqueeWrap} aria-hidden>
         <div className={styles.marqueeTrack}>
-          {[...marqueeItems, ...marqueeItems].map((label, i) => (
+          {[...marqueeItems, ...marqueeItems].map((label, index) => (
             <span
-              key={`${label}-${i}`}
+              key={`${label}-${index}`}
               className={
-                i % 3 === 0
+                index % 3 === 0
                   ? `${styles.marqueeItem} ${styles.marqueeItemAccent}`
                   : styles.marqueeItem
               }
@@ -256,31 +427,32 @@ export default function FurnitureCatalogExperience({
             <button
               type="button"
               className={`${styles.categoryBtn} ${
-                !activeCategoryAlias ? styles.categoryBtnActive : ""
+                activeCategoryAlias === ALL_ITEMS_ALIAS
+                  ? styles.categoryBtnActive
+                  : ""
               }`}
-              onClick={() => selectCategory(null)}
+              onClick={() => selectCategory(ALL_ITEMS_ALIAS)}
             >
               {t("catalog.all")}
             </button>
-            {categories.map((cat) => (
+            {categories.map((category) => (
               <button
-                key={cat.id}
+                key={category.id}
                 type="button"
                 className={`${styles.categoryBtn} ${
-                  activeCategoryAlias === cat.alias
+                  activeCategoryAlias === category.alias
                     ? styles.categoryBtnActive
                     : ""
                 }`}
-                onClick={() => selectCategory(cat.alias)}
+                onClick={() => selectCategory(category.alias)}
               >
-                {pickLocalized(i18n.language, cat.name, cat.name_ar)}
+                {pickLocalized(i18n.language, category.name, category.name_ar)}
               </button>
             ))}
           </div>
         </nav>
       ) : (
         <section className={styles.featuredIntro}>
-          
           <h2 className={styles.featuredTitle}>{homeSectionTitle}</h2>
           <p className={styles.featuredSubcopy}>{homeSectionSubcopy}</p>
         </section>
@@ -291,52 +463,81 @@ export default function FurnitureCatalogExperience({
           <p className={styles.infoState}>Loading products...</p>
         ) : null}
         {productsError ? <p className={styles.infoState}>{productsError}</p> : null}
-        <div className={styles.grid} key={activeCategoryAlias ?? "all"}>
-          {products.map((product, index) => {
+
+        <div
+          className={`${styles.grid} ${topCarousel ? styles.gridCompact : ""}`}
+          key={activeCategoryAlias}
+        >
+          {displayProducts.map((product, index) => {
             const displayName = pickLocalized(
               i18n.language,
               product.name,
               product.name_ar
             );
-            return (
-            <button
-              key={product.id}
-              type="button"
-              className={styles.card}
-              onClick={() => setSelected(product)}
-              style={{
-                animationDelay: `${Math.min(index, 12) * 0.055}s`,
-              }}
-            >
-              <div className={styles.cardImageWrap}>
-                <Image
-                  className={styles.cardImage}
-                  src={productImageUrl(product)}
-                  alt={displayName}
-                  fill
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                />
-                <div className={styles.cardOverlay} aria-hidden />
-              </div>
-              <div className={styles.cardBody}>
-                <h2
-                  className={`${styles.cardName} ${
-                    i18n.language === "ar" ? styles.cardNameArabic : ""
+
+            const content = (
+              <>
+                <div className={styles.cardImageWrap}>
+                  <Image
+                    className={styles.cardImage}
+                    src={productImageUrl(product)}
+                    alt={displayName}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  />
+                  <div className={styles.cardOverlay} aria-hidden />
+                </div>
+                <div className={styles.cardBody}>
+                  <h2
+                    className={`${styles.cardName} ${
+                      i18n.language === "ar" ? styles.cardNameArabic : ""
+                    }`}
+                  >
+                    {displayName}
+                  </h2>
+                </div>
+              </>
+            );
+
+            if (product.external_url) {
+              return (
+                <a
+                  key={product.id}
+                  href={product.external_url}
+                  className={`${styles.card} ${
+                    topCarousel ? styles.cardCompact : ""
                   }`}
+                  style={{
+                    animationDelay: `${Math.min(index, 12) * 0.055}s`,
+                  }}
                 >
-                  {displayName}
-                </h2>
-                {/* <p className={styles.cardPrice}>
-                  ৳ {priceFmt(product.price)}
-                </p> */}
-              </div>
-            </button>
+                  {content}
+                </a>
+              );
+            }
+
+            return (
+              <button
+                key={product.id}
+                type="button"
+                className={`${styles.card} ${
+                  topCarousel ? styles.cardCompact : ""
+                }`}
+                onClick={() => onProductActivate(product)}
+                style={{
+                  animationDelay: `${Math.min(index, 12) * 0.055}s`,
+                }}
+              >
+                {content}
+              </button>
             );
           })}
         </div>
       </section>
 
-      {selected && (
+      {topCarousel ? <HomeShowroomsSection /> : null}
+
+      {selected ? (
         <>
           <button
             type="button"
@@ -362,11 +563,7 @@ export default function FurnitureCatalogExperience({
               <Image
                 className={styles.panelImage}
                 src={productImageUrl(selected)}
-                alt={pickLocalized(
-                  i18n.language,
-                  selected.name,
-                  selected.name_ar
-                )}
+                alt={pickLocalized(i18n.language, selected.name, selected.name_ar)}
                 fill
                 sizes="(max-width: 900px) 100vw, 55vw"
                 priority
@@ -375,15 +572,8 @@ export default function FurnitureCatalogExperience({
             <div className={styles.panelContent}>
               <p className={styles.panelEyebrow}>{t("catalog.detailEyebrow")}</p>
               <h2 id="product-detail-title" className={styles.panelTitle}>
-                {pickLocalized(
-                  i18n.language,
-                  selected.name,
-                  selected.name_ar
-                )}
+                {pickLocalized(i18n.language, selected.name, selected.name_ar)}
               </h2>
-              {/* <p className={styles.panelPrice}>
-                ৳ {priceFmt(selected.price)}
-              </p> */}
               <p className={styles.panelDesc}>
                 {pickLocalized(
                   i18n.language,
@@ -391,45 +581,10 @@ export default function FurnitureCatalogExperience({
                   selected.descriptions_ar
                 ) || t("catalog.noDescription")}
               </p>
-              <div className={styles.specs}>
-                {/* {selected.sku && (
-                  <div className={styles.specRow}>
-                    <span className={styles.specLabel}>{t("catalog.sku")}</span>
-                    <span>{selected.sku}</span>
-                  </div>
-                )} */}
-                {/* {typeof selected.quantity === "number" && (
-                  <div className={styles.specRow}>
-                    <span className={styles.specLabel}>
-                      {t("catalog.quantity")}
-                    </span>
-                    <span>{selected.quantity}</span>
-                  </div>
-                )} */}
-                {/* {typeof selected.weight === "number" && (
-                  <div className={styles.specRow}>
-                    <span className={styles.specLabel}>
-                      {t("catalog.weight")}
-                    </span>
-                    <span>
-                      {selected.weight}{" "}
-                      {i18n.language === "ar" ? "كجم" : "kg"}
-                    </span>
-                  </div>
-                )} */}
-              </div>
-              <div className={styles.cta}>
-                {/* <button type="button" className={styles.ctaBtn}>
-                  Add to cart
-                </button>
-                <p className={styles.ctaHint}>
-                  Mock checkout — wire to your cart when ready.
-                </p> */}
-              </div>
             </div>
           </div>
         </>
-      )}
+      ) : null}
     </div>
   );
 }

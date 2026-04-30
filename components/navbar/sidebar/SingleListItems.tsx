@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Nav } from "react-bootstrap";
+import { usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { SingleItemProps } from "./SideNavBar";
 import styles from "./sidebar.module.css";
@@ -13,6 +14,7 @@ type SingleListProps = {
 
 const SingleListItems: React.FC<SingleListProps> = ({ data, sectionKey }) => {
   const { t } = useTranslation("common");
+  const pathname = usePathname();
   const sectionTitle = t(`dashboard.navSection.${sectionKey}`, {
     defaultValue: sectionKey,
   });
@@ -24,8 +26,19 @@ const SingleListItems: React.FC<SingleListProps> = ({ data, sectionKey }) => {
           <div className={styles.sectionTitle}>{sectionTitle}</div>
           <Nav className={`flex-column ${styles.navList}`}>
             {data.map((item) => {
+              const isActive =
+                item.url !== "#" &&
+                (pathname === item.url ||
+                  (item.url !== "/dashboard/home" &&
+                    pathname.startsWith(item.url)));
               return item.url !== "#" ? (
-                <Nav.Link href={item.url} key={item.id} className={styles.navLink}>
+                <Nav.Link
+                  href={item.url}
+                  key={item.id}
+                  className={`${styles.navLink} ${
+                    isActive ? styles.navLinkActive : ""
+                  }`}
+                >
                   <span className={styles.navIcon}>{item.icon()}</span>
                   <span className={styles.navLabel}>{t(item.labelKey)}</span>
                 </Nav.Link>

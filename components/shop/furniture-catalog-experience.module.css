@@ -40,6 +40,104 @@
   pointer-events: none;
 }
 
+.heroText {
+  pointer-events: none;
+}
+
+.heroAdminBar {
+  position: absolute;
+  inset-inline-end: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  pointer-events: auto;
+}
+
+.heroAdminBtn {
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(8, 12, 19, 0.45);
+  color: #ffffff;
+  padding: 0.8rem 1.05rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heroEditor {
+  position: absolute;
+  inset: auto clamp(1rem, 3vw, 2rem) clamp(4.5rem, 8vw, 6rem) auto;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.heroEditorCard {
+  width: min(92vw, 620px);
+  background: rgba(255, 255, 255, 0.96);
+  color: #1e2735;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 39, 53, 0.1);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.16);
+  padding: 1.15rem;
+}
+
+.heroEditorTitle {
+  margin: 0 0 1rem;
+  font-family: var(--font-display, Didot, Georgia, serif);
+  font-size: 1.5rem;
+  color: #b8942f;
+}
+
+.heroEditorGrid {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.heroField {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #4b5563;
+}
+
+.heroField input,
+.heroField textarea {
+  width: 100%;
+  border: 1px solid rgba(30, 39, 53, 0.12);
+  background: #ffffff;
+  color: #1e2735;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.heroEditorActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.heroEditorGhost,
+.heroEditorPrimary {
+  border: 1px solid rgba(30, 39, 53, 0.12);
+  padding: 0.8rem 1rem;
+  font-size: 0.76rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heroEditorGhost {
+  background: transparent;
+  color: #1e2735;
+}
+
+.heroEditorPrimary {
+  background: #1e2735;
+  border-color: #1e2735;
+  color: #ffffff;
+}
+
 .hero {
   padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1.25rem, 4vw, 3rem) 1.5rem;
   text-align: center;
@@ -173,7 +271,7 @@
 
 .featuredSubcopy {
   margin: 1rem auto 0;
-  max-width: 42rem;
+  max-width: 100%;
   color: var(--shop-muted);
   font-size: 25px;
   line-height: 1.8;
@@ -256,6 +354,10 @@
   border-left: 1px solid rgba(30, 39, 53, 0.12);
 }
 
+.gridCompact {
+  border-top-color: rgba(30, 39, 53, 0.09);
+}
+
 @media (min-width: 640px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
@@ -282,6 +384,7 @@
   transition:
     transform 0.45s var(--ease-out-expo);
   animation: cardEnter 0.65s var(--ease-out-expo) both;
+  text-decoration: none;
 }
 
 .card:hover {
@@ -294,6 +397,10 @@
   overflow: hidden;
   background:#faf9f7;
   padding: clamp(1.5rem, 4vw, 2.6rem);
+}
+
+.cardCompact .cardImageWrap {
+  padding: clamp(1rem, 2.2vw, 1.5rem);
 }
 
 .cardImage {
@@ -327,6 +434,10 @@
   
 }
 
+.cardCompact .cardBody {
+  min-height: 74px;
+}
+
 .cardName {
   font-size: 30px;
   font-weight: 500;
@@ -336,6 +447,10 @@
   margin: 0;
   line-height: 1.3;
   text-align: center;
+}
+
+.cardCompact .cardName {
+  font-size: 1.35rem;
 }
 
 .cardNameArabic {
@@ -563,5 +678,16 @@
 @keyframes panelIn {
   to {
     transform: translateX(0);
+  }
+}
+
+@media (max-width: 575px) {
+  .heroEditor {
+    inset-inline: 1rem;
+    inset-block-end: 4rem;
+  }
+
+  .heroEditorCard {
+    width: auto;
   }
 }

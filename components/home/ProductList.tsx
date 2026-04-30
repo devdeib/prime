@@ -45,6 +45,14 @@ const ProductList: React.FC<ProductListProps> = ({ products, loading }) => {
     setCartShow(true);
   };
 
+  const goToProductLink = (product: Product) => {
+    if (product.external_url) {
+      window.location.href = product.external_url;
+      return true;
+    }
+    return false;
+  };
+
   return (
     <>
       <Row className="py-4 mb-4 border-bottom">
@@ -117,13 +125,17 @@ const ProductList: React.FC<ProductListProps> = ({ products, loading }) => {
                         <div className="mt-3 mb-2">
                           <Row>
                             <Col md="9" xs="9">
-                              <Button
-                                variant="danger"
-                                className="text-center w-100 rounded-0"
-                                onClick={() => showProductModal(product)}
-                              >
-                                <span>Quick View</span>
-                              </Button>
+                                <Button
+                                  variant="danger"
+                                  className="text-center w-100 rounded-0"
+                                  onClick={() => {
+                                    if (!goToProductLink(product)) {
+                                      showProductModal(product);
+                                    }
+                                  }}
+                                >
+                                  <span>Quick View</span>
+                                </Button>
                             </Col>
                             <Col md="3" xs="3">
                               <Button

@@ -1,29 +1,76 @@
 .shell {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top right, rgba(184, 148, 47, 0.12), transparent 24%),
-    linear-gradient(180deg, #f8f5ef 0%, #f2ede4 100%);
+    radial-gradient(circle at top right, rgba(184, 148, 47, 0.14), transparent 24%),
+    linear-gradient(180deg, #fcfaf6 0%, #f6efe3 100%);
 }
 
 .mainRow {
   margin: 0 !important;
+  align-items: flex-start;
 }
 
 .sideCol {
-  border-right: 1px solid rgba(18, 26, 42, 0.08);
-  background: linear-gradient(180deg, #1a2231 0%, #121927 100%);
-  color: #d6dbe3;
-  min-height: calc(100vh - 64px);
-  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.03);
+  padding: 1.5rem 1rem 1.5rem 1.5rem !important;
+}
+
+.sideCard {
+  position: sticky;
+  top: 92px;
+  
+  backdrop-filter: blur(18px);
+  
+  overflow: hidden;
+}
+
+.sideHeader {
+  padding: 1.35rem 1.25rem 1rem;
+  border-bottom: 1px solid rgba(30, 39, 53, 0.08);
+}
+
+.sideEyebrow {
+  margin: 0 0 0.45rem;
+  color: #b8942f;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+}
+
+.sideTitle {
+  margin: 0;
+  color: #1e2735;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.sideBody {
+  padding: 0.6rem 1rem 1rem;
 }
 
 .contentCol {
-  padding: 1.25rem 1.5rem 2rem;
+  padding: 1.5rem 1.5rem 2.4rem !important;
 }
 
 .footer {
-  padding: 1rem 1rem 1.25rem;
-  color: #6f7786;
+  padding: 1rem 1rem 1.4rem;
+  color: #6f6758;
   text-align: center;
-  font-size: 0.92rem;
+  font-size: 1rem;
+}
+
+@media (max-width: 991px) {
+  .sideCol {
+    padding: 1rem !important;
+  }
+
+  .sideCard {
+    position: static;
+    top: auto;
+    border-radius: 24px;
+  }
+
+  .contentCol {
+    padding: 1rem !important;
+  }
 }

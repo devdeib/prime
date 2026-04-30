@@ -9,6 +9,7 @@ export type Product = {
   price: number;
   sku: string;
   category_id: number;
+  external_url?: string | null;
   created_at: string;
   updated_at: string;
   storage_files: StorageFile[];

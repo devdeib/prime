@@ -2,6 +2,7 @@
 export type HomeCarouselSlide = {
   id: number;
   imageUrl: string;
+  mediaType?: "image" | "video";
 };
 
 export const MOCK_HOME_CAROUSEL_SLIDES: HomeCarouselSlide[] = [];

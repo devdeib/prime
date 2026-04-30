@@ -1,7 +1,9 @@
 .shell {
-  background: #ffffff;
+  background:
+    radial-gradient(circle at top right, rgba(184, 148, 47, 0.09), transparent 18%),
+    linear-gradient(180deg, #ffffff 0%, #fbf8f2 100%);
   color: #2b3038;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid rgba(184, 148, 47, 0.14);
   box-shadow: 0 -6px 28px rgba(0, 0, 0, 0.04);
 }
 
@@ -22,7 +24,7 @@
 }
 
 .customIntroInner {
-  max-width: 48rem;
+  max-width: 100%;
   margin: 0 auto;
   text-align: center;
 }
@@ -44,46 +46,44 @@
 
 .customIntroText {
   margin: 1rem auto 0;
-  max-width: 40rem;
+  max-width: 100%;
   color: #858b94;
   font-size: 25px;
   line-height: 1.8;
 }
 
 .inner {
-  padding: 2.25rem 0 1rem;
- 
+  padding: 3rem 0 1.2rem;
 }
 
 .brandWrap {
   display: flex;
-  justify-content: start;
-  margin-bottom: 4rem;
+  justify-content: flex-start;
+  margin-bottom: 3rem;
 }
 
 .brandMark {
   color: #111111;
 }
 
-.brandLine {
-  text-align: center;
-  color: #b8942f;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  font-size: 0.88rem;
-  margin-bottom: 2rem;
+.linkGrid {
+  align-items: start;
+}
+
+.linkCol {
+  position: relative;
 }
 
 .title {
   color: #1e2735;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 1.05rem;
-  margin-bottom: 0.85rem;
+  font-size: 1.02rem;
+  margin-bottom: 1rem;
 }
 
 :global(html[lang="ar"]) .title {
-  font-size: 30px;
+  font-size: 1.24rem;
   letter-spacing: 0.04em;
 }
 
@@ -91,13 +91,12 @@
   display: block;
   color: #4a5568;
   text-decoration: none;
-  font-size: 1.08rem;
-  letter-spacing: 0.04em;
-  margin-bottom: 0.7rem;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.82rem;
 }
 
 :global(html[lang="ar"]) .link {
-  font-size: 1.08rem;
   letter-spacing: 0;
 }
 
@@ -107,24 +106,73 @@
 
 .socials {
   display: flex;
-  gap: 0.8rem;
-  margin-top: 0.65rem;
+  gap: 0.9rem;
+  margin-top: 0.8rem;
 }
 
 .socialIcon {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: #b8942f;
-  font-size: 1.05rem;
+  border: 1px solid rgba(184, 148, 47, 0.24);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
 }
 
 .bottom {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
-  margin-top: 1.5rem;
-  padding-top: 0.9rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
   text-align: center;
   color: #6b7280;
-  font-size: 1rem;
+  font-size: 0.98rem;
 }
 
-:global(html[lang="ar"]) .bottom {
-  font-size: 1rem;
+@media (max-width: 767px) {
+  .inner {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .brandWrap {
+    margin-bottom: 1.75rem;
+    justify-content: center;
+  }
+
+  .brandMark {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .linkGrid {
+    row-gap: 0.2rem;
+  }
+
+  .linkCol {
+    padding: 1.15rem 1rem 1rem;
+    
+  }
+
+  .title {
+    margin-bottom: 0.8rem;
+    font-size: 0.96rem;
+  }
+
+  .link {
+    font-size: 0.96rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .socials {
+    margin-top: 0.4rem;
+  }
+
+  .bottom {
+    margin-top: 1.4rem;
+    font-size: 0.9rem;
+  }
 }

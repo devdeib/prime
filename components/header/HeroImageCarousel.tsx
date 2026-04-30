@@ -10,6 +10,15 @@ type HeroImageCarouselProps = {
   slides: HomeCarouselSlide[];
 };
 
+function inferMediaType(
+  slide: HomeCarouselSlide
+): "image" | "video" {
+  if (slide.mediaType) return slide.mediaType;
+  return /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(slide.imageUrl)
+    ? "video"
+    : "image";
+}
+
 /**
  * Image-only hero carousel (legacy HomeCarousel behaviour): only the background
  * image changes per slide; no captions.
@@ -35,12 +44,26 @@ export default function HeroImageCarousel({ slides }: HeroImageCarouselProps) {
             className={styles.item}
           >
             <Row className="g-0">
-              <Col
-                className={`py-0 ${styles.slideCol}`}
-                style={{
-                  backgroundImage: `url(${item.imageUrl})`,
-                }}
-              />
+              <Col className={`py-0 ${styles.slideCol}`}>
+                {inferMediaType(item) === "video" ? (
+                  <video
+                    className={styles.video}
+                    src={item.imageUrl}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                  />
+                ) : (
+                  <div
+                    className={styles.imageFill}
+                    style={{
+                      backgroundImage: `url(${item.imageUrl})`,
+                    }}
+                  />
+                )}
+              </Col>
             </Row>
             <Carousel.Caption className={styles.caption} />
           </Carousel.Item>

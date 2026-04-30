@@ -1,32 +1,81 @@
 .bar {
-  background: rgba(18, 25, 39, 0.94) !important;
-  border-bottom: 1px solid rgba(184, 148, 47, 0.22);
-  backdrop-filter: blur(10px);
+  background:
+    radial-gradient(circle at top right, rgba(184, 148, 47, 0.12), transparent 20%),
+    rgba(255, 255, 255, 0.82) !important;
+  border-bottom: 1px solid rgba(184, 148, 47, 0.16);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 10px 32px rgba(17, 24, 39, 0.04);
+  padding-top: 0.8rem !important;
+  padding-bottom: 0.8rem !important;
 }
 
 .brand {
-  color: #f6f3ed !important;
+  color: #1e2735 !important;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 500;
+  font-size: 1.08rem;
 }
 
 .ghostInput {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  color: #fff !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 1px solid rgba(184, 148, 47, 0.18) !important;
+  color: #1e2735 !important;
+  min-width: 250px;
+  padding-block: 0.72rem !important;
+  font-size: 0.98rem !important;
+  
 }
 
 .ghostInput::placeholder {
-  color: rgba(255, 255, 255, 0.65) !important;
+  color: rgba(30, 39, 53, 0.52) !important;
 }
 
 .backBtn {
-  border-color: rgba(184, 148, 47, 0.55) !important;
-  color: #f1e7d4 !important;
-  border-radius: 0 !important;
+  
+  color: #1e2735 !important;
+  background: rgba(255, 255, 255, 0.72) !important;
+
+  font-size: 0.95rem !important;
+  padding: 0.68rem 1rem !important;
 }
 
 .backBtn:hover {
-  background: rgba(184, 148, 47, 0.16) !important;
+  background: rgba(184, 148, 47, 0.14) !important;
+}
+
+.bar :global(.btn-outline-light) {
+  
+  color: #1e2735 !important;
+  
+ 
+  padding-inline: 1rem !important;
+}
+
+.bar :global(.btn-outline-light:hover) {
+  background: #b8942f !important;
+  border-color: #b8942f !important;
+  color: #ffffff !important;
+}
+
+.bar :global(.navbar-toggler) {
+  border-color: rgba(184, 148, 47, 0.24) !important;
+ 
+}
+
+.bar :global(.navbar-toggler-icon) {
+  filter: invert(13%) sepia(14%) saturate(880%) hue-rotate(180deg)
+    brightness(95%) contrast(89%);
+}
+
+@media (max-width: 991px) {
+  .ghostInput {
+    min-width: 0;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+
+  .backBtn {
+    width: 100%;
+  }
 }

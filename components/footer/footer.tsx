@@ -27,23 +27,23 @@ const Footer = () => {
             logoWidth={48}
           />
         </div>
-        <Row className="g-4">
-          <Col md={3}>
+        <Row className={`g-4 ${styles.linkGrid}`}>
+          <Col md={6} lg={3} className={styles.linkCol}>
             <h3 className={styles.title}>{t("footer.mainMenu")}</h3>
+            <Link href="/projects" className={styles.link}>
+              {t("nav.projects")}
+            </Link>
             <Link href="/products/all-items" className={styles.link}>
               {t("nav.products")}
-            </Link>
-            <Link href="/about-us" className={styles.link}>
-              {t("nav.about")}
             </Link>
             <Link href="/showrooms" className={styles.link}>
               {t("nav.showrooms")}
             </Link>
-            <Link href="/projects" className={styles.link}>
-              {t("nav.projects")}
+            <Link href="/about-us" className={styles.link}>
+              {t("nav.about")}
             </Link>
           </Col>
-          <Col md={3}>
+          <Col md={6} lg={3} className={styles.linkCol}>
             <h3 className={styles.title}>{t("footer.support")}</h3>
             <a href="#" className={styles.link}>
               {t("footer.help")}
@@ -52,16 +52,14 @@ const Footer = () => {
               {t("footer.faq")}
             </a>
           </Col>
-          <Col md={3}>
+          <Col md={6} lg={3} className={styles.linkCol}>
             <h3 className={styles.title}>{t("footer.links")}</h3>
-            {/* <Link href="/contact-us" className={styles.link}>
+            <Link href="/contact" className={styles.link}>
               {t("nav.contact")}
-            </Link> */}
-            <Link href="/products/others" className={styles.link}>
-              {t("footer.othersLink")}
             </Link>
+            
           </Col>
-          <Col md={3}>
+          <Col md={6} lg={3} className={styles.linkCol}>
             <h3 className={styles.title}>{t("footer.socials")}</h3>
             <div className={styles.socials}>
               <a href="#" className={styles.socialIcon}>

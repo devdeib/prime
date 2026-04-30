@@ -15,14 +15,18 @@ const AdminLayout: React.FC<ChildProps> = ({ children }) => {
     <div className={styles.shell}>
       <AdminNavbar />
       <Row className={styles.mainRow}>
-        <Col md="2" className={styles.sideCol}>
-          <Row>
-            <Col className="min-vh-100">
+        <Col lg="3" xl="2" className={styles.sideCol}>
+          <div className={styles.sideCard}>
+            <div className={styles.sideHeader}>
+              <p className={styles.sideEyebrow}>La Dolce Casa</p>
+              <h2 className={styles.sideTitle}>{t("dashboard.dashboard")}</h2>
+            </div>
+            <div className={styles.sideBody}>
               <SideNavBar />
-            </Col>
-          </Row>
+            </div>
+          </div>
         </Col>
-        <Col md="10" className={styles.contentCol}>
+        <Col lg="9" xl="10" className={styles.contentCol}>
           {children}
         </Col>
       </Row>

@@ -2,12 +2,13 @@
   "nav": {
     "home": "Home",
     "products": "PRODUCTS",
+    "productsFeatured": "FEATURED PRODUCTS",
     "about": "ABOUT US",
     "contact": "Contact Us",
     "signIn": "SIGN IN",
     "signUp": "SIGN UP",
     "brand": "La Dolce Casa",
-    "showrooms": "SHOWROOM",
+    "showrooms": "SHOWROOMS",
     "projects": "PROJECTS",
     "langEn": "EN",
     "langAr": "AR"
@@ -15,7 +16,7 @@
   "catalog": {
     "heroEyebrow": "La dolce casa",
     "heroTitle": "CURATED FURNITURE FOR A MODERN HOME.",
-    "heroSub": "Browse by furniture category. Tap a product for full info — rebuilt for our new collection.",
+    "heroSub": "",
     "all": "All",
     "marquee1": "Quality furniture daily",
     "marquee2": "Loved By Everyone",
@@ -29,7 +30,17 @@
     "quantity": "Quantity",
     "weight": "Weight",
     "close": "Close product details",
-    "closeBtn": "Close"
+    "closeBtn": "Close",
+    "editHero": "Edit Hero Text",
+    "closeEditor": "Close Editor",
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "subtitleEn": "Subtitle (English)",
+    "subtitleAr": "Subtitle (Arabic)"
+  },
+  "homeShowrooms": {
+    "title": "SHOWROOMS",
+    "subtitle": "You can visit us in one of our curated showrooms and explore how each collection comes to life in a real interior setting."
   },
   "footer": {
     "mainMenu": "Main Menu",
@@ -121,6 +132,10 @@
     "city": "City",
     "removeSavedImage": "Remove saved image",
     "imageHelp": "Leave empty to use the default placeholder on the storefront.",
+    "productLink": "Product link",
+    "productLinkHelp": "When customers click this product, they will be redirected to this external store URL.",
+    "productLinkPlaceholder": "https://store.example.com/product-name",
+    "openLink": "Open link",
     "showroomImagesHelp": "You can upload multiple images for the same showroom.",
     "projectImagesHelp": "You can upload multiple images for the same project.",
     "navSection": {
@@ -139,9 +154,22 @@
     "heroSlidesHelp": "Choose slides from images you already use on products or upload a new image. Order is controlled by sort order.",
     "pickFromLibrary": "Pick from library",
     "addSlide": "Add slide",
+    "uploadNewMedia": "Upload new image or video",
     "showroomsMenu": "Showrooms",
     "projectsMenu": "Projects",
     "sortOrder": "Sort order"
+  },
+  "contactPage": {
+    "title": "CONTACT",
+    "headquarters": "HEADQUARTERS",
+    "headquartersValue": "Rome, Italy",
+    "phone": "PHONE NUMBER",
+    "phoneValue": "+39 998 656 6333 44",
+    "email": "EMAIL",
+    "emailValue": "info@ladolcecasa.net",
+    "hours": "OPENING HOURS",
+    "hoursValue": "Monday - Friday: 09:30 - 19:00\nSaturday: 10:00 - 17:00",
+    "visualAlt": "La Dolce Casa contact visual"
   },
   "showroomsPage": {
     "title": "SHOWROOM",

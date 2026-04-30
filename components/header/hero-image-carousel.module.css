@@ -10,6 +10,7 @@
 .carousel :global(.carousel-control-prev),
 .carousel :global(.carousel-control-next) {
   width: 8%;
+  z-index: 25;
   opacity: 0.85;
   transition: opacity 0.3s ease;
 }
@@ -44,10 +45,26 @@
 }
 
 .slideCol {
+  position: relative;
+  min-height: 100vh;
+}
+
+.imageFill,
+.video {
+  width: 100%;
+  min-height: 100vh;
+  height: 100%;
+}
+
+.imageFill {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  min-height: 100vh;
+}
+
+.video {
+  display: block;
+  object-fit: cover;
 }
 
 .caption {

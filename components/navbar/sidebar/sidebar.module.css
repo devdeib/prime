@@ -1,37 +1,53 @@
 .sectionTitle {
-  padding: 0 1rem;
-  margin-top: 1.8rem;
-  color: rgba(255, 255, 255, 0.48);
-  letter-spacing: 0.18em;
+  padding: 0 0.35rem;
+  margin-top: 1.6rem;
+  color: rgba(30, 39, 53, 0.45);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  font-size: 0.72rem;
+  font-size: 0.76rem;
 }
 
 .navList {
-  padding: 0.8rem 0.75rem 0;
-  gap: 0.35rem;
+  padding: 0.8rem 0 0;
+  gap: 0.45rem;
 }
 
 .navLink {
   display: flex !important;
   align-items: center;
-  gap: 0.7rem;
-  border-left: 2px solid transparent;
-  color: rgba(255, 255, 255, 0.84) !important;
-  padding: 0.85rem 0.9rem !important;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  gap: 0.82rem;
+  color: #394454 !important;
+  padding: 0.95rem 1rem !important;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition:
+    background 0.22s ease,
+    border-color 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .navLink:hover,
 .navLink:focus {
-  background: rgba(255, 255, 255, 0.05);
-  border-left-color: #b8942f;
-  color: #ffffff !important;
+  background: rgba(184, 148, 47, 0.1);
+  border-color: rgba(184, 148, 47, 0.18);
+  color: #1e2735 !important;
+  transform: translateX(2px);
+}
+
+.navLinkActive {
+  background: #e7e2d5;
+  border-color: rgba(184, 148, 47, 0.2);
+  color: #1e2735 !important;
+  box-shadow: 0 12px 28px rgba(17, 24, 39, 0.05);
 }
 
 .navLabel {
   color: inherit;
-  font-size: 0.96rem;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
 }
 
 .navIcon {

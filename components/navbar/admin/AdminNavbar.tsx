@@ -34,7 +34,7 @@ const AdminNavbar = () => {
                   aria-label={t("dashboard.search")}
                 />
                 <Button variant="outline-light" className="rounded-0">
-                  <span className="text-white">{t("dashboard.search")}</span>
+                  <span>{t("dashboard.search")}</span>
                 </Button>
               </Form>
               <Nav.Link as={Link} href="/" className="ms-2">

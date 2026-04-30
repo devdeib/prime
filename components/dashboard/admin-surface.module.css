@@ -1,5 +1,7 @@
 .page {
-  padding: 2rem;
+  padding: 2.2rem;
+  color: #263143;
+  font-size: 1.05rem;
 }
 
 .hero {
@@ -8,10 +10,13 @@
   align-items: end;
   gap: 1.5rem;
   margin-bottom: 1.75rem;
-  padding: 1.5rem 1.75rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f5efe3 100%);
-  border: 1px solid rgba(184, 148, 47, 0.18);
-  box-shadow: 0 18px 45px rgba(17, 24, 39, 0.05);
+  padding: 1.85rem 2rem;
+  background:
+    radial-gradient(circle at top right, rgba(184, 148, 47, 0.18), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f8f1e3 100%);
+  border: 1px solid rgba(184, 148, 47, 0.24);
+  border-radius: 22px;
+  box-shadow: 0 18px 45px rgba(17, 24, 39, 0.06);
 }
 
 .eyebrow {
@@ -19,44 +24,48 @@
   color: #b8942f;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  font-size: 0.74rem;
+  font-size: 0.82rem;
 }
 
 .title {
   margin: 0;
   color: #1e2735;
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: clamp(2rem, 3vw, 2.7rem);
+  font-size: clamp(2.15rem, 3vw, 2.95rem);
   font-weight: 400;
 }
 
 .subtle {
   margin: 0.6rem 0 0;
-  color: #6b7280;
-  line-height: 1.75;
+  color: #5f6775;
+  line-height: 1.85;
   max-width: 48rem;
+  font-size: 1.03rem;
 }
 
 .panel {
-  border: 1px solid rgba(30, 39, 53, 0.08) !important;
-  border-radius: 0 !important;
+  border: 1px solid rgba(184, 148, 47, 0.18) !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.96) !important;
   box-shadow: 0 18px 40px rgba(17, 24, 39, 0.05) !important;
 }
 
 .panel :global(.card-body) {
-  padding: 1.5rem;
+  padding: 1.8rem;
 }
 
 .panelTitle {
   color: #1e2735;
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: 1.6rem;
+  font-size: 1.85rem;
   font-weight: 400;
+  margin-bottom: 1.1rem;
 }
 
 .tableWrap {
   overflow: hidden;
-  border: 1px solid rgba(30, 39, 53, 0.08);
+  border: 1px solid rgba(184, 148, 47, 0.16);
+  border-radius: 22px;
   background: #ffffff;
   box-shadow: 0 18px 40px rgba(17, 24, 39, 0.05);
 }
@@ -66,25 +75,44 @@
 }
 
 .tableWrap :global(thead th) {
-  background: #f7f1e6;
+  background: linear-gradient(180deg, #fbf6ea 0%, #f6edd9 100%);
   border-bottom-color: rgba(184, 148, 47, 0.22);
   color: #1e2735;
+  font-size: 0.98rem;
+  padding-top: 0.95rem;
+  padding-bottom: 0.95rem;
+}
+
+.tableWrap :global(tbody td) {
+  vertical-align: middle;
+  font-size: 1rem;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+.tableWrap :global(.table-hover tbody tr:hover) {
+  background: rgba(184, 148, 47, 0.05);
 }
 
 .primaryBtn {
-  border-radius: 0 !important;
-  background: #1e2735 !important;
-  border-color: #1e2735 !important;
+ 
+  background: #b8942f !important;
+  border-color: #b8942f !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  padding: 0.8rem 1.35rem !important;
 }
 
 .primaryBtn:hover,
 .primaryBtn:focus {
-  background: #b8942f !important;
-  border-color: #b8942f !important;
+  background: #9f7f26 !important;
+  border-color: #9f7f26 !important;
 }
 
 .secondaryBtn {
-  border-radius: 0 !important;
+ 
+  font-size: 1rem !important;
+  padding: 0.78rem 1.3rem !important;
 }
 
 .previewCard {
@@ -92,6 +120,58 @@
   width: 160px;
   height: 120px;
   margin-bottom: 1rem;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.progressShell {
+  position: relative;
+  margin-top: 0.85rem;
+  height: 38px;
+  border-radius: 999px;
+  background: #f7f1e6;
+  overflow: hidden;
+  border: 1px solid rgba(184, 148, 47, 0.2);
+}
+
+.progressBar {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  background: linear-gradient(90deg, #d6b35a 0%, #b8942f 100%);
+  transition: width 0.18s ease;
+}
+
+.progressLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e2735;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.page :global(.form-label) {
+  color: #1e2735;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.page :global(.form-control),
+.page :global(.form-select) {
+  border-radius: 14px !important;
+  border-color: rgba(30, 39, 53, 0.14) !important;
+  padding: 0.82rem 0.95rem !important;
+  font-size: 1rem !important;
+}
+
+.page :global(.form-control:focus),
+.page :global(.form-select:focus) {
+  border-color: rgba(184, 148, 47, 0.6) !important;
+  box-shadow: 0 0 0 0.2rem rgba(184, 148, 47, 0.12) !important;
 }
 
 @media (max-width: 767px) {

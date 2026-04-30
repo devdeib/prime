@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button, Card, Col, Form, Row, Table, Alert } from "react-bootstrap";
 import { useSession } from "next-auth/react";
 import AdminAccessHint from "@/components/dashboard/AdminAccessHint";
+import { uploadMediaWithProgress } from "@/components/dashboard/upload-media";
 import { useTranslation } from "react-i18next";
 import styles from "@/components/dashboard/admin-surface.module.css";
 
@@ -24,35 +25,38 @@ type ProductRow = {
   descriptions?: string;
   descriptions_ar?: string | null;
   thumbUrl?: string;
+  external_url?: string | null;
 };
-
-async function uploadProductImage(file: File): Promise<string> {
-  const fd = new FormData();
-  fd.append("file", file);
-  const res = await fetch("/api/be/upload/product-image", {
-    method: "POST",
-    body: fd,
-    credentials: "include",
-  });
-  const json = (await res.json()) as { url?: string; message?: string; error?: string };
-  if (!res.ok) {
-    throw new Error(json.message ?? json.error ?? "Upload failed");
-  }
-  if (!json.url) throw new Error("No URL returned");
-  return json.url;
-}
 
 export default function DashboardProductsPage() {
   const { t } = useTranslation("common");
   const { data: session, status } = useSession();
   const role = (session as { role?: string } | null)?.role;
   const isAdmin = role === "admin";
+  const productLinkLabel =
+    t("dashboard.productLink") === "dashboard.productLink"
+      ? "Product link"
+      : t("dashboard.productLink");
+  const productLinkHelp =
+    t("dashboard.productLinkHelp") === "dashboard.productLinkHelp"
+      ? "When customers click this product, they will be redirected to this external store URL."
+      : t("dashboard.productLinkHelp");
+  const productLinkPlaceholder =
+    t("dashboard.productLinkPlaceholder") ===
+    "dashboard.productLinkPlaceholder"
+      ? "https://store.example.com/product-name"
+      : t("dashboard.productLinkPlaceholder");
+  const openLinkLabel =
+    t("dashboard.openLink") === "dashboard.openLink"
+      ? "Open link"
+      : t("dashboard.openLink");
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   const [name, setName] = useState("");
   const [nameAr, setNameAr] = useState("");
@@ -60,6 +64,7 @@ export default function DashboardProductsPage() {
   const [category, setCategory] = useState("sofas");
   const [descriptions, setDescriptions] = useState("");
   const [descriptionsAr, setDescriptionsAr] = useState("");
+  const [externalUrl, setExternalUrl] = useState("");
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
@@ -92,6 +97,7 @@ export default function DashboardProductsPage() {
               category: p.category ?? "others",
               descriptions: p.descriptions,
               descriptions_ar: p.descriptions_ar,
+              external_url: p.external_url,
               thumbUrl:
                 p.storage_files?.[0]?.image_url ??
                 (p as { image_url?: string }).image_url,
@@ -125,6 +131,7 @@ export default function DashboardProductsPage() {
     setCategory(categories[0]?.alias ?? "sofas");
     setDescriptions("");
     setDescriptionsAr("");
+    setExternalUrl("");
     setEditingId(null);
     setExistingImageUrl(null);
     setPickedFile(null);
@@ -162,7 +169,8 @@ export default function DashboardProductsPage() {
     try {
       let imageUrl: string | undefined;
       if (pickedFile) {
-        imageUrl = await uploadProductImage(pickedFile);
+        setUploadProgress(0);
+        imageUrl = await uploadMediaWithProgress(pickedFile, setUploadProgress);
       }
       const res = await fetch("/api/be/products", {
         method: "POST",
@@ -175,6 +183,7 @@ export default function DashboardProductsPage() {
           category,
           descriptions: descriptions || undefined,
           descriptions_ar: descriptionsAr.trim() || undefined,
+          external_url: externalUrl.trim() || undefined,
           ...(imageUrl ? { image_url: imageUrl } : {}),
         }),
       });
@@ -192,6 +201,7 @@ export default function DashboardProductsPage() {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t("dashboard.couldNotCreateProduct"));
     } finally {
+      setUploadProgress(null);
       setSaving(false);
     }
   };
@@ -204,6 +214,7 @@ export default function DashboardProductsPage() {
     setCategory(p.category ?? "sofas");
     setDescriptions(p.descriptions ?? "");
     setDescriptionsAr(p.descriptions_ar ?? "");
+    setExternalUrl(p.external_url ?? "");
     setPickedFile(null);
     setRemoveImage(false);
     if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
@@ -223,7 +234,8 @@ export default function DashboardProductsPage() {
       if (removeImage) {
         imagePatch = { image_url: "" };
       } else if (pickedFile) {
-        const url = await uploadProductImage(pickedFile);
+        setUploadProgress(0);
+        const url = await uploadMediaWithProgress(pickedFile, setUploadProgress);
         imagePatch = { image_url: url };
       }
 
@@ -234,6 +246,7 @@ export default function DashboardProductsPage() {
         category,
         descriptions,
         descriptions_ar: descriptionsAr,
+        external_url: externalUrl.trim(),
       };
       if (imagePatch) body.image_url = imagePatch.image_url;
 
@@ -257,6 +270,7 @@ export default function DashboardProductsPage() {
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t("dashboard.couldNotUpdateProduct"));
     } finally {
+      setUploadProgress(null);
       setSaving(false);
     }
   };
@@ -367,6 +381,20 @@ export default function DashboardProductsPage() {
                 />
               </Col>
             </Row>
+            <Row className="g-2 mb-2">
+              <Col md={12}>
+                <Form.Label>{productLinkLabel}</Form.Label>
+                <Form.Control
+                  type="url"
+                  value={externalUrl}
+                  onChange={(e) => setExternalUrl(e.target.value)}
+                  placeholder={productLinkPlaceholder}
+                />
+                <Form.Text className="text-muted">
+                  {productLinkHelp}
+                </Form.Text>
+              </Col>
+            </Row>
             <Row className="g-2 mb-3 align-items-end">
               <Col md={6}>
                 <Form.Label>{t("dashboard.productImage")}</Form.Label>
@@ -379,6 +407,17 @@ export default function DashboardProductsPage() {
                 <Form.Text className="text-muted">
                   {t("dashboard.imageHelp")}
                 </Form.Text>
+                {uploadProgress != null ? (
+                  <div className={styles.progressShell}>
+                    <div
+                      className={styles.progressBar}
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                    <span className={styles.progressLabel}>
+                      Uploading... {uploadProgress}%
+                    </span>
+                  </div>
+                ) : null}
               </Col>
               <Col md={6}>
                 {editingId != null && existingImageUrl && (
@@ -454,6 +493,7 @@ export default function DashboardProductsPage() {
             <th>{t("dashboard.nameAr")}</th>
             <th>{t("dashboard.price")}</th>
             <th>{t("dashboard.category")}</th>
+            <th>{productLinkLabel}</th>
             <th />
           </tr>
         </thead>
@@ -487,6 +527,15 @@ export default function DashboardProductsPage() {
               <td>{p.name_ar ?? "—"}</td>
               <td>{p.price}</td>
               <td>{p.category}</td>
+              <td>
+                {p.external_url ? (
+                  <a href={p.external_url} target="_blank" rel="noreferrer">
+                    {openLinkLabel}
+                  </a>
+                ) : (
+                  "â€”"
+                )}
+              </td>
               <td>
                 <Button
                   size="sm"

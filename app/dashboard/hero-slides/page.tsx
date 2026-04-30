@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import { useSession } from "next-auth/react";
 import AdminAccessHint from "@/components/dashboard/AdminAccessHint";
+import { uploadMediaWithProgress } from "@/components/dashboard/upload-media";
 import { useTranslation } from "react-i18next";
 import styles from "@/components/dashboard/admin-surface.module.css";
 
@@ -22,18 +23,8 @@ type HeroSlide = {
   sort_order: number;
 };
 
-async function uploadProductImage(file: File): Promise<string> {
-  const fd = new FormData();
-  fd.append("file", file);
-  const res = await fetch("/api/be/upload/product-image", {
-    method: "POST",
-    body: fd,
-    credentials: "include",
-  });
-  const json = (await res.json()) as { url?: string; message?: string; error?: string };
-  if (!res.ok) throw new Error(json.message ?? json.error ?? "Upload failed");
-  if (!json.url) throw new Error("No URL returned");
-  return json.url;
+function isVideoUrl(url: string) {
+  return /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(url);
 }
 
 export default function DashboardHeroSlidesPage() {
@@ -41,6 +32,10 @@ export default function DashboardHeroSlidesPage() {
   const { data: session, status } = useSession();
   const role = (session as { role?: string } | null)?.role;
   const isAdmin = role === "admin";
+  const uploadMediaLabel =
+    t("dashboard.uploadNewMedia") === "dashboard.uploadNewMedia"
+      ? "Upload new image or video"
+      : t("dashboard.uploadNewMedia");
 
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [candidates, setCandidates] = useState<string[]>([]);
@@ -48,6 +43,7 @@ export default function DashboardHeroSlidesPage() {
   const [error, setError] = useState<string | null>(null);
   const [pickUrl, setPickUrl] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
@@ -143,10 +139,13 @@ export default function DashboardHeroSlidesPage() {
     const f = e.target.files?.[0];
     if (!f) return;
     try {
-      const url = await uploadProductImage(f);
+      setUploadProgress(0);
+      const url = await uploadMediaWithProgress(f, setUploadProgress);
       await addSlide(url);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t("dashboard.uploadFailed"));
+    } finally {
+      setUploadProgress(null);
     }
     e.target.value = "";
   };
@@ -206,13 +205,24 @@ export default function DashboardHeroSlidesPage() {
             </Col>
           </Row>
           <div>
-            <Form.Label className="small text-muted">{t("dashboard.uploadNewImage")}</Form.Label>
+            <Form.Label className="small text-muted">{uploadMediaLabel}</Form.Label>
             <Form.Control
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/ogg,video/quicktime"
               onChange={onUpload}
               disabled={saving}
             />
+            {uploadProgress != null ? (
+              <div className={styles.progressShell}>
+                <div
+                  className={styles.progressBar}
+                  style={{ width: `${uploadProgress}%` }}
+                />
+                <span className={styles.progressLabel}>
+                  Uploading... {uploadProgress}%
+                </span>
+              </div>
+            ) : null}
           </div>
         </Card.Body>
       </Card>
@@ -238,17 +248,28 @@ export default function DashboardHeroSlidesPage() {
                     className="position-relative rounded overflow-hidden bg-light"
                     style={{ width: 100, height: 56 }}
                   >
-                    <Image
-                      src={s.image_url}
-                      alt=""
-                      fill
-                      style={{ objectFit: "cover" }}
-                      sizes="100px"
-                      unoptimized={
-                        s.image_url.startsWith("/uploads/") ||
-                        s.image_url.startsWith("http")
-                      }
-                    />
+                    {isVideoUrl(s.image_url) ? (
+                      <video
+                        src={s.image_url}
+                        className="w-100 h-100"
+                        muted
+                        playsInline
+                        preload="metadata"
+                        style={{ objectFit: "cover" }}
+                      />
+                    ) : (
+                      <Image
+                        src={s.image_url}
+                        alt=""
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="100px"
+                        unoptimized={
+                          s.image_url.startsWith("/uploads/") ||
+                          s.image_url.startsWith("http")
+                        }
+                      />
+                    )}
                   </div>
                 </td>
                 <td>{s.id}</td>

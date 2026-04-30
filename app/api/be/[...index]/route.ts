@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import {
+  loadStorefrontContent,
+  saveStorefrontContent,
+  type StorefrontHeroCopy,
+} from '@/lib/storefront-content'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -93,14 +98,33 @@ function formatProjectRow(row: Record<string, unknown>) {
 
 function formatProductRow(row: Record<string, unknown>) {
   const imageUrl = normalizeImageUrl(row.image_url)
+  const externalUrl = typeof row.external_url === 'string' && row.external_url.trim()
+    ? row.external_url.trim()
+    : null
 
   return {
     ...row,
     image_url: imageUrl,
+    external_url: externalUrl,
     storage_files: imageUrl
       ? [{ id: row.id, type: 'product', image_url: imageUrl }]
       : [],
   }
+}
+
+function normalizeExternalUrl(value: unknown) {
+  return typeof value === 'string' && value.trim() ? value.trim() : null
+}
+
+function mergeProductLinks<T extends Record<string, unknown>>(rows: T[]) {
+  const content = loadStorefrontContent()
+  return rows.map((row) => ({
+    ...row,
+    external_url:
+      content.productLinks[String(row.id)] ??
+      normalizeExternalUrl(row.external_url) ??
+      null,
+  }))
 }
 
 async function getMediaCandidates() {
@@ -179,13 +203,20 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
     if (category) query = query.eq('category', category)
     const { data, error } = await query
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json((data ?? []).map((row) => formatProductRow(row)))
+    return NextResponse.json(
+      mergeProductLinks((data ?? []).map((row) => formatProductRow(row)))
+    )
   }
 
   if (resource === 'hero-slides') {
     const { data, error } = await supabase.from('hero_slides').select('*').order('sort_order')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
+  }
+
+  if (resource === 'home-hero') {
+    const content = loadStorefrontContent()
+    return NextResponse.json(content.heroCopy)
   }
 
   if (resource === 'hero-image-candidates') {
@@ -239,9 +270,19 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
   const body = await req.json()
 
   if (resource === 'products') {
-    const { data, error } = await supabase.from('products').insert([body]).select().single()
+    const externalUrl = normalizeExternalUrl(body.external_url)
+    const productPayload = { ...(body as Record<string, unknown>) }
+    delete productPayload.external_url
+    const { data, error } = await supabase.from('products').insert([productPayload]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json(formatProductRow(data))
+    if (externalUrl && data?.id != null) {
+      const content = loadStorefrontContent()
+      content.productLinks[String(data.id)] = externalUrl
+      saveStorefrontContent(content)
+    }
+    return NextResponse.json(
+      mergeProductLinks([formatProductRow(data)])[0]
+    )
   }
 
   if (resource === 'categories') {
@@ -265,6 +306,27 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
     const { data, error } = await supabase.from('hero_slides').insert([body]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
+  }
+
+  if (resource === 'home-hero') {
+    const current = loadStorefrontContent()
+    const heroCopy: StorefrontHeroCopy = {
+      title_en: typeof body.title_en === 'string' ? body.title_en.trim() || undefined : current.heroCopy.title_en,
+      title_ar: typeof body.title_ar === 'string' ? body.title_ar.trim() || undefined : current.heroCopy.title_ar,
+      subtitle_en:
+        typeof body.subtitle_en === 'string'
+          ? body.subtitle_en.trim() || undefined
+          : current.heroCopy.subtitle_en,
+      subtitle_ar:
+        typeof body.subtitle_ar === 'string'
+          ? body.subtitle_ar.trim() || undefined
+          : current.heroCopy.subtitle_ar,
+    }
+    saveStorefrontContent({
+      ...current,
+      heroCopy,
+    })
+    return NextResponse.json(heroCopy)
   }
 
   if (resource === 'showrooms') {
@@ -296,9 +358,21 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
   const body = await req.json()
 
   if (resource === 'products') {
-    const { data, error } = await supabase.from('products').update(body).eq('id', id).select().single()
+    const externalUrl = normalizeExternalUrl(body.external_url)
+    const productPayload = { ...(body as Record<string, unknown>) }
+    delete productPayload.external_url
+    const { data, error } = await supabase.from('products').update(productPayload).eq('id', id).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json(formatProductRow(data))
+    const content = loadStorefrontContent()
+    if (externalUrl) {
+      content.productLinks[String(id)] = externalUrl
+    } else if ('external_url' in body) {
+      delete content.productLinks[String(id)]
+    }
+    saveStorefrontContent(content)
+    return NextResponse.json(
+      mergeProductLinks([formatProductRow(data)])[0]
+    )
   }
 
   if (resource === 'categories') {
@@ -323,6 +397,33 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
     const { data, error } = await supabase.from('hero_slides').update(body).eq('id', id).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
+  }
+
+  if (resource === 'home-hero') {
+    const current = loadStorefrontContent()
+    const heroCopy: StorefrontHeroCopy = {
+      title_en:
+        typeof body.title_en === 'string'
+          ? body.title_en.trim() || undefined
+          : current.heroCopy.title_en,
+      title_ar:
+        typeof body.title_ar === 'string'
+          ? body.title_ar.trim() || undefined
+          : current.heroCopy.title_ar,
+      subtitle_en:
+        typeof body.subtitle_en === 'string'
+          ? body.subtitle_en.trim() || undefined
+          : current.heroCopy.subtitle_en,
+      subtitle_ar:
+        typeof body.subtitle_ar === 'string'
+          ? body.subtitle_ar.trim() || undefined
+          : current.heroCopy.subtitle_ar,
+    }
+    saveStorefrontContent({
+      ...current,
+      heroCopy,
+    })
+    return NextResponse.json(heroCopy)
   }
 
   if (resource === 'showrooms') {
@@ -355,6 +456,9 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ inde
   if (resource === 'products') {
     const { error } = await supabase.from('products').delete().eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    const content = loadStorefrontContent()
+    delete content.productLinks[String(id)]
+    saveStorefrontContent(content)
     return NextResponse.json({ success: true })
   }
 

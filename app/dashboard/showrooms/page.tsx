@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import { useSession } from "next-auth/react";
 import AdminAccessHint from "@/components/dashboard/AdminAccessHint";
+import { uploadMediaWithProgress } from "@/components/dashboard/upload-media";
 import { useTranslation } from "react-i18next";
 import styles from "@/components/dashboard/admin-surface.module.css";
 
@@ -31,20 +32,6 @@ type ShowroomRow = {
   sort_order: number;
 };
 
-async function uploadProductImage(file: File): Promise<string> {
-  const fd = new FormData();
-  fd.append("file", file);
-  const res = await fetch("/api/be/upload/product-image", {
-    method: "POST",
-    body: fd,
-    credentials: "include",
-  });
-  const json = (await res.json()) as { url?: string; message?: string; error?: string };
-  if (!res.ok) throw new Error(json.message ?? json.error ?? "Upload failed");
-  if (!json.url) throw new Error("No URL returned");
-  return json.url;
-}
-
 export default function DashboardShowroomsPage() {
   const { t } = useTranslation("common");
   const { data: session, status } = useSession();
@@ -56,6 +43,7 @@ export default function DashboardShowroomsPage() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -227,12 +215,14 @@ export default function DashboardShowroomsPage() {
     if (!f) return;
     try {
       setUploadingImage(true);
-      const url = await uploadProductImage(f);
+      setUploadProgress(0);
+      const url = await uploadMediaWithProgress(f, setUploadProgress);
       setForm((prev) => ({ ...prev, images: [...prev.images, url] }));
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t("dashboard.uploadFailed"));
     } finally {
       setUploadingImage(false);
+      setUploadProgress(null);
     }
     e.target.value = "";
   };
@@ -385,6 +375,17 @@ export default function DashboardShowroomsPage() {
                 <Form.Text>{t("dashboard.showroomImagesHelp")}</Form.Text>
                 {uploadingImage ? (
                   <div className="small text-muted mt-2">Uploading image...</div>
+                ) : null}
+                {uploadProgress != null ? (
+                  <div className={styles.progressShell}>
+                    <div
+                      className={styles.progressBar}
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                    <span className={styles.progressLabel}>
+                      Uploading... {uploadProgress}%
+                    </span>
+                  </div>
                 ) : null}
                 {form.images.length > 0 ? (
                   <div className="d-flex gap-2 flex-wrap mt-2">
