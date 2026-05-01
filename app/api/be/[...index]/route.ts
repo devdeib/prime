@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -20,7 +19,6 @@ function slugifyAlias(value: string) {
 async function ensureUniqueCategoryAlias(alias: string, excludeId?: string) {
   let candidate = alias
   let suffix = 2
-
   while (true) {
     let query = supabase.from('categories').select('id').eq('alias', candidate)
     if (excludeId) query = query.neq('id', excludeId)
@@ -48,18 +46,12 @@ function normalizeShowroomPayload(body: Record<string, unknown>) {
   const normalizedImages =
     images.length > 0 ? images : fallbackImageUrl ? [fallbackImageUrl] : []
   const leadImageUrl = normalizedImages[0] ?? null
-
-  return {
-    ...body,
-    images: normalizedImages,
-    image_url: leadImageUrl,
-  }
+  return { ...body, images: normalizedImages, image_url: leadImageUrl }
 }
 
 function formatShowroomRow(row: Record<string, unknown>) {
   const images = normalizeImageList(row.images)
   const imageUrl = images[0] ?? normalizeImageUrl(row.image_url)
-
   return {
     ...row,
     images: imageUrl && images.length === 0 ? [imageUrl] : images,
@@ -73,18 +65,12 @@ function normalizeProjectPayload(body: Record<string, unknown>) {
   const normalizedImages =
     images.length > 0 ? images : fallbackImageUrl ? [fallbackImageUrl] : []
   const leadImageUrl = normalizedImages[0] ?? null
-
-  return {
-    ...body,
-    images: normalizedImages,
-    image_url: leadImageUrl,
-  }
+  return { ...body, images: normalizedImages, image_url: leadImageUrl }
 }
 
 function formatProjectRow(row: Record<string, unknown>) {
   const images = normalizeImageList(row.images)
   const imageUrl = images[0] ?? normalizeImageUrl(row.image_url)
-
   return {
     ...row,
     images: imageUrl && images.length === 0 ? [imageUrl] : images,
@@ -94,10 +80,10 @@ function formatProjectRow(row: Record<string, unknown>) {
 
 function formatProductRow(row: Record<string, unknown>) {
   const imageUrl = normalizeImageUrl(row.image_url)
-  const externalUrl = typeof row.external_url === 'string' && row.external_url.trim()
-    ? row.external_url.trim()
-    : null
-
+  const externalUrl =
+    typeof row.external_url === 'string' && row.external_url.trim()
+      ? row.external_url.trim()
+      : null
   return {
     ...row,
     image_url: imageUrl,
@@ -108,21 +94,6 @@ function formatProductRow(row: Record<string, unknown>) {
   }
 }
 
-function normalizeExternalUrl(value: unknown) {
-  return typeof value === 'string' && value.trim() ? value.trim() : null
-}
-
-function mergeProductLinks<T extends Record<string, unknown>>(rows: T[]) {
-  const content = loadStorefrontContent()
-  return rows.map((row) => ({
-    ...row,
-    external_url:
-      content.productLinks[String(row.id)] ??
-      normalizeExternalUrl(row.external_url) ??
-      null,
-  }))
-}
-
 async function getMediaCandidates() {
   const [productsRes, heroSlidesRes, showroomsRes, projectsRes] = await Promise.all([
     supabase.from('products').select('image_url'),
@@ -130,38 +101,32 @@ async function getMediaCandidates() {
     supabase.from('showrooms').select('image_url,images'),
     supabase.from('projects').select('image_url,images'),
   ])
-
   if (productsRes.error) throw productsRes.error
   if (heroSlidesRes.error) throw heroSlidesRes.error
   if (showroomsRes.error) throw showroomsRes.error
   if (projectsRes.error) throw projectsRes.error
 
   const urls = new Set<string>()
-
   for (const row of productsRes.data ?? []) {
     const imageUrl = normalizeImageUrl(row.image_url)
     if (imageUrl) urls.add(imageUrl)
   }
-
   for (const row of heroSlidesRes.data ?? []) {
     const imageUrl = normalizeImageUrl(row.image_url)
     if (imageUrl) urls.add(imageUrl)
   }
-
   for (const row of showroomsRes.data ?? []) {
     const images = normalizeImageList(row.images)
     for (const image of images) urls.add(image)
     const imageUrl = normalizeImageUrl(row.image_url)
     if (imageUrl) urls.add(imageUrl)
   }
-
   for (const row of projectsRes.data ?? []) {
     const images = normalizeImageList(row.images)
     for (const image of images) urls.add(image)
     const imageUrl = normalizeImageUrl(row.image_url)
     if (imageUrl) urls.add(imageUrl)
   }
-
   return Array.from(urls)
 }
 
@@ -175,7 +140,6 @@ function buildStorageFileRows(type: string | null, urls: string[]) {
       : Array.from({ length: fallbackCount }, (_, index) =>
           `https://picsum.photos/seed/${type ?? 'banner'}-${index + 1}/1200/700`
         )
-
   return selected.map((image_url, index) => ({
     id: index + 1,
     type: type ?? 'banner',
@@ -199,9 +163,7 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
     if (category) query = query.eq('category', category)
     const { data, error } = await query
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json(
-      mergeProductLinks((data ?? []).map((row) => formatProductRow(row)))
-    )
+    return NextResponse.json((data ?? []).map((row) => formatProductRow(row)))
   }
 
   if (resource === 'hero-slides') {
@@ -211,8 +173,9 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
   }
 
   if (resource === 'home-hero') {
-    const content = loadStorefrontContent()
-    return NextResponse.json(content.heroCopy)
+    const { data, error } = await supabase.from('hero_copy').select('*').eq('id', 1).single()
+    if (error) return NextResponse.json({}, { status: 200 })
+    return NextResponse.json(data)
   }
 
   if (resource === 'hero-image-candidates') {
@@ -277,12 +240,7 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
       typeof body.alias === 'string' && body.alias.trim() ? body.alias : name
     )
     const alias = await ensureUniqueCategoryAlias(aliasBase)
-    const payload = {
-      ...body,
-      name,
-      alias,
-    }
-
+    const payload = { ...body, name, alias }
     const { data, error } = await supabase.from('categories').insert([payload]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
@@ -297,8 +255,9 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
   if (resource === 'home-hero') {
     const { data, error } = await supabase
       .from('hero_copy')
-      .select('*')
+      .update(body)
       .eq('id', 1)
+      .select()
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
@@ -345,12 +304,7 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
       typeof body.alias === 'string' && body.alias.trim() ? body.alias : currentName
     )
     const alias = await ensureUniqueCategoryAlias(aliasBase, id)
-    const payload = {
-      ...body,
-      name: currentName,
-      alias,
-    }
-
+    const payload = { ...body, name: currentName, alias }
     const { data, error } = await supabase.from('categories').update(payload).eq('id', id).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
@@ -363,30 +317,14 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
   }
 
   if (resource === 'home-hero') {
-    const current = loadStorefrontContent()
-    const heroCopy: StorefrontHeroCopy = {
-      title_en:
-        typeof body.title_en === 'string'
-          ? body.title_en.trim() || undefined
-          : current.heroCopy.title_en,
-      title_ar:
-        typeof body.title_ar === 'string'
-          ? body.title_ar.trim() || undefined
-          : current.heroCopy.title_ar,
-      subtitle_en:
-        typeof body.subtitle_en === 'string'
-          ? body.subtitle_en.trim() || undefined
-          : current.heroCopy.subtitle_en,
-      subtitle_ar:
-        typeof body.subtitle_ar === 'string'
-          ? body.subtitle_ar.trim() || undefined
-          : current.heroCopy.subtitle_ar,
-    }
-    saveStorefrontContent({
-      ...current,
-      heroCopy,
-    })
-    return NextResponse.json(heroCopy)
+    const { data, error } = await supabase
+      .from('hero_copy')
+      .update(body)
+      .eq('id', 1)
+      .select()
+      .single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
   }
 
   if (resource === 'showrooms') {
