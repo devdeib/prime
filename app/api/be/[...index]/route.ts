@@ -297,9 +297,8 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
   if (resource === 'home-hero') {
     const { data, error } = await supabase
       .from('hero_copy')
-      .update(body)
+      .select('*')
       .eq('id', 1)
-      .select()
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
