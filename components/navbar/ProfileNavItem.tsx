@@ -7,7 +7,7 @@ import { MdDashboard, MdLogout } from "react-icons/md";
 import { FaUserCog } from "react-icons/fa";
 import styles from "./profile-nav-item.module.css";
 
-const ProfileNavItem = () => {
+const ProfileNavItem = ({ onLight = false }: { onLight?: boolean }) => {
   const { t } = useTranslation("common");
   const { data: session } = useSession();
 
@@ -32,7 +32,7 @@ const ProfileNavItem = () => {
           <Dropdown.Toggle
             variant="link"
             id="dropdown-basic"
-            className={styles.trigger}
+            className={`${styles.trigger} ${onLight ? styles.triggerOnLight : ""}`}
           >
             <span className="ft-15 fw-normal">{user.first_name}</span>
           </Dropdown.Toggle>

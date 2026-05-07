@@ -10,6 +10,7 @@
     "brand": "La Dolce Casa",
     "showrooms": "SHOWROOMS",
     "projects": "PROJECTS",
+    "services": "SERVICES",
     "langEn": "EN",
     "langAr": "AR"
   },
@@ -41,6 +42,10 @@
   "homeShowrooms": {
     "title": "SHOWROOMS",
     "subtitle": "You can visit us in one of our curated showrooms and explore how each collection comes to life in a real interior setting."
+  },
+  "homeProjects": {
+    "title": "PROJECTS",
+    "subtitle": "Explore selected projects and completed interiors shaped with the same care as our showroom experiences."
   },
   "footer": {
     "mainMenu": "Main Menu",
@@ -157,6 +162,7 @@
     "uploadNewMedia": "Upload new image or video",
     "showroomsMenu": "Showrooms",
     "projectsMenu": "Projects",
+    "contentMenu": "Content",
     "sortOrder": "Sort order"
   },
   "contactPage": {

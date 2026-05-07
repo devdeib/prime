@@ -40,7 +40,11 @@ const SingleListItems: React.FC<SingleListProps> = ({ data, sectionKey }) => {
                   }`}
                 >
                   <span className={styles.navIcon}>{item.icon()}</span>
-                  <span className={styles.navLabel}>{t(item.labelKey)}</span>
+                  <span className={styles.navLabel}>
+                    {t(item.labelKey, {
+                      defaultValue: item.labelKey.split(".").pop() ?? item.labelKey,
+                    })}
+                  </span>
                 </Nav.Link>
               ) : (
                 <a
@@ -54,7 +58,11 @@ const SingleListItems: React.FC<SingleListProps> = ({ data, sectionKey }) => {
                   style={{ cursor: "pointer" }}
                 >
                   <span className={styles.navIcon}>{item.icon()}</span>
-                  <span className={styles.navLabel}>{t(item.labelKey)}</span>
+                  <span className={styles.navLabel}>
+                    {t(item.labelKey, {
+                      defaultValue: item.labelKey.split(".").pop() ?? item.labelKey,
+                    })}
+                  </span>
                 </a>
               );
             })}

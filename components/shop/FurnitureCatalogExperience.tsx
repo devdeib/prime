@@ -3,10 +3,12 @@
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import HeroImageCarousel from "@/components/header/HeroImageCarousel";
-import HomeShowroomsSection from "@/components/home/HomeShowroomsSection";
+import HomeShowroomsSection, {
+  HomeProjectsSection,
+} from "@/components/home/HomeShowroomsSection";
 import {
   MOCK_HOME_CAROUSEL_SLIDES,
   type HomeCarouselSlide,
@@ -28,6 +30,7 @@ type Product = {
   price: number;
   category: string;
   image_url?: string | null;
+  video_url?: string | null;
   descriptions?: string;
   descriptions_ar?: string | null;
   quantity?: number;
@@ -76,6 +79,10 @@ function productImageUrl(product: Product) {
   return `https://picsum.photos/seed/product-${product.id}/800/1000`;
 }
 
+function isVideoUrl(url: string | null | undefined) {
+  return Boolean(url && /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(url));
+}
+
 export default function FurnitureCatalogExperience({
   routeCategorySlug,
   syncRouteOnCategoryChange = false,
@@ -103,6 +110,7 @@ export default function FurnitureCatalogExperience({
   const [heroEditorOpen, setHeroEditorOpen] = useState(false);
   const [heroDraft, setHeroDraft] = useState<HeroCopy>({});
   const [heroSaving, setHeroSaving] = useState(false);
+  const featuredRailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!topCarousel) return;
@@ -292,6 +300,15 @@ export default function FurnitureCatalogExperience({
     setSelected(product);
   };
 
+  const scrollFeatured = (direction: -1 | 1) => {
+    const rail = featuredRailRef.current;
+    if (!rail) return;
+    rail.scrollBy({
+      left: direction * Math.max(rail.clientWidth * 0.82, 320),
+      behavior: "smooth",
+    });
+  };
+
   return (
     <div className={styles.root}>
       {topCarousel ? (
@@ -464,10 +481,30 @@ export default function FurnitureCatalogExperience({
         ) : null}
         {productsError ? <p className={styles.infoState}>{productsError}</p> : null}
 
-        <div
-          className={`${styles.grid} ${topCarousel ? styles.gridCompact : ""}`}
-          key={activeCategoryAlias}
-        >
+        <div className={topCarousel ? styles.sliderShell : undefined}>
+          {topCarousel ? (
+            <>
+              <button
+                type="button"
+                className={`${styles.sliderArrow} ${styles.sliderArrowPrev}`}
+                aria-label="Previous featured products"
+                onClick={() => scrollFeatured(-1)}
+              />
+              <button
+                type="button"
+                className={`${styles.sliderArrow} ${styles.sliderArrowNext}`}
+                aria-label="Next featured products"
+                onClick={() => scrollFeatured(1)}
+              />
+            </>
+          ) : null}
+          <div
+            ref={topCarousel ? featuredRailRef : undefined}
+            className={`${styles.grid} ${
+              topCarousel ? `${styles.gridCompact} ${styles.featuredRail}` : ""
+            }`}
+            key={activeCategoryAlias}
+          >
           {displayProducts.map((product, index) => {
             const displayName = pickLocalized(
               i18n.language,
@@ -478,13 +515,26 @@ export default function FurnitureCatalogExperience({
             const content = (
               <>
                 <div className={styles.cardImageWrap}>
-                  <Image
-                    className={styles.cardImage}
-                    src={productImageUrl(product)}
-                    alt={displayName}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  />
+                  {isVideoUrl(product.video_url) ? (
+                    <video
+                      className={styles.cardVideo}
+                      src={product.video_url ?? undefined}
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onMouseEnter={(event) => void event.currentTarget.play()}
+                      onMouseLeave={(event) => event.currentTarget.pause()}
+                    />
+                  ) : (
+                    <Image
+                      className={styles.cardImage}
+                      src={productImageUrl(product)}
+                      alt={displayName}
+                      fill
+                      sizes="(max-width: 640px) 72vw, (max-width: 1024px) 40vw, 24vw"
+                    />
+                  )}
                   <div className={styles.cardOverlay} aria-hidden />
                 </div>
                 <div className={styles.cardBody}>
@@ -532,10 +582,16 @@ export default function FurnitureCatalogExperience({
               </button>
             );
           })}
+          </div>
         </div>
       </section>
 
-      {topCarousel ? <HomeShowroomsSection /> : null}
+      {topCarousel ? (
+        <>
+          <HomeShowroomsSection />
+          <HomeProjectsSection />
+        </>
+      ) : null}
 
       {selected ? (
         <>
@@ -560,14 +616,25 @@ export default function FurnitureCatalogExperience({
               >
                 ×
               </button>
-              <Image
-                className={styles.panelImage}
-                src={productImageUrl(selected)}
-                alt={pickLocalized(i18n.language, selected.name, selected.name_ar)}
-                fill
-                sizes="(max-width: 900px) 100vw, 55vw"
-                priority
-              />
+              {isVideoUrl(selected.video_url) ? (
+                <video
+                  className={styles.panelVideo}
+                  src={selected.video_url ?? undefined}
+                  controls
+                  autoPlay
+                  muted
+                  playsInline
+                />
+              ) : (
+                <Image
+                  className={styles.panelImage}
+                  src={productImageUrl(selected)}
+                  alt={pickLocalized(i18n.language, selected.name, selected.name_ar)}
+                  fill
+                  sizes="(max-width: 900px) 100vw, 55vw"
+                  priority
+                />
+              )}
             </div>
             <div className={styles.panelContent}>
               <p className={styles.panelEyebrow}>{t("catalog.detailEyebrow")}</p>

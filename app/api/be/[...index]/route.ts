@@ -33,6 +33,10 @@ function normalizeImageUrl(value: unknown) {
   return typeof value === 'string' && value.trim() ? value.trim() : null
 }
 
+function normalizeVideoUrl(value: unknown) {
+  return typeof value === 'string' && value.trim() ? value.trim() : null
+}
+
 function normalizeImageList(value: unknown) {
   if (!Array.isArray(value)) return []
   return value
@@ -80,6 +84,7 @@ function formatProjectRow(row: Record<string, unknown>) {
 
 function formatProductRow(row: Record<string, unknown>) {
   const imageUrl = normalizeImageUrl(row.image_url)
+  const videoUrl = normalizeVideoUrl(row.video_url)
   const externalUrl =
     typeof row.external_url === 'string' && row.external_url.trim()
       ? row.external_url.trim()
@@ -87,11 +92,81 @@ function formatProductRow(row: Record<string, unknown>) {
   return {
     ...row,
     image_url: imageUrl,
+    video_url: videoUrl,
     external_url: externalUrl,
     storage_files: imageUrl
       ? [{ id: row.id, type: 'product', image_url: imageUrl }]
       : [],
   }
+}
+
+const DEFAULT_SITE_CONTENT: Record<string, unknown> = {
+  about: {
+    eyebrow_en: 'Our Story',
+    eyebrow_ar: '',
+    title_en: 'About La Dolce Casa',
+    title_ar: '',
+    body_en:
+      'La Dolce Casa creates curated furniture experiences for homes, showrooms, and refined interior projects. Our work brings together quality materials, thoughtful detailing, and a warm sense of living.',
+    body_ar: '',
+    image_url: '',
+  },
+  services: {
+    eyebrow_en: 'Services',
+    eyebrow_ar: '',
+    title_en: 'Interior Services',
+    title_ar: '',
+    body_en:
+      'From furniture selection to showroom consultation and project support, our team helps shape complete interiors with practical guidance and a refined visual direction.',
+    body_ar: '',
+    image_url: '',
+  },
+  contact: {
+    title_en: 'CONTACT',
+    title_ar: '',
+    headquarters_en: 'HEADQUARTERS',
+    headquarters_ar: '',
+    headquarters_value_en: 'Rome, Italy',
+    headquarters_value_ar: '',
+    phone_label_en: 'PHONE NUMBER',
+    phone_label_ar: '',
+    phone_value_en: '+39 998 656 6333 44',
+    phone_value_ar: '',
+    email_label_en: 'EMAIL',
+    email_label_ar: '',
+    email_value_en: 'info@ladolcecasa.net',
+    email_value_ar: '',
+    hours_label_en: 'OPENING HOURS',
+    hours_label_ar: '',
+    hours_value_en: 'Monday - Friday: 09:30 - 19:00\nSaturday: 10:00 - 17:00',
+    hours_value_ar: '',
+    map_embed_url: '',
+  },
+  footer_socials: {
+    facebook: '',
+    instagram: '',
+    twitter: '',
+    linkedin: '',
+  },
+}
+
+function sanitizeSiteContentKey(key: string | undefined) {
+  return key && Object.prototype.hasOwnProperty.call(DEFAULT_SITE_CONTENT, key)
+    ? key
+    : null
+}
+
+async function readSiteContent(key: string) {
+  const fallback = DEFAULT_SITE_CONTENT[key] ?? {}
+  const { data, error } = await supabase
+    .from('site_content')
+    .select('value')
+    .eq('key', key)
+    .maybeSingle()
+
+  if (error) return fallback
+  if (!data || typeof data.value !== 'object' || data.value === null) return fallback
+  return { ...(fallback as Record<string, unknown>), ...(data.value as Record<string, unknown>) }
 }
 
 async function getMediaCandidates() {
@@ -166,6 +241,23 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
     return NextResponse.json((data ?? []).map((row) => formatProductRow(row)))
   }
 
+  if (resource === 'site-content') {
+    const [, key] = index
+    if (key) {
+      const normalizedKey = sanitizeSiteContentKey(key)
+      if (!normalizedKey) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      return NextResponse.json(await readSiteContent(normalizedKey))
+    }
+
+    const entries = await Promise.all(
+      Object.keys(DEFAULT_SITE_CONTENT).map(async (contentKey) => [
+        contentKey,
+        await readSiteContent(contentKey),
+      ])
+    )
+    return NextResponse.json(Object.fromEntries(entries))
+  }
+
   if (resource === 'hero-slides') {
     const { data, error } = await supabase.from('hero_slides').select('*').order('sort_order')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -229,7 +321,18 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
   const body = await req.json()
 
   if (resource === 'products') {
-    const { data, error } = await supabase.from('products').insert([body]).select().single()
+    const payload = {
+      ...body,
+      external_url:
+        typeof body.external_url === 'string' && body.external_url.trim()
+          ? body.external_url.trim()
+          : null,
+      video_url:
+        typeof body.video_url === 'string' && body.video_url.trim()
+          ? body.video_url.trim()
+          : null,
+    }
+    const { data, error } = await supabase.from('products').insert([payload]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(formatProductRow(data))
   }
@@ -292,9 +395,32 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
   const body = await req.json()
 
   if (resource === 'products') {
-    const { data, error } = await supabase.from('products').update(body).eq('id', id).select().single()
+    const payload = {
+      ...body,
+      external_url:
+        typeof body.external_url === 'string' && body.external_url.trim()
+          ? body.external_url.trim()
+          : null,
+      video_url:
+        typeof body.video_url === 'string' && body.video_url.trim()
+          ? body.video_url.trim()
+          : null,
+    }
+    const { data, error } = await supabase.from('products').update(payload).eq('id', id).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(formatProductRow(data))
+  }
+
+  if (resource === 'site-content') {
+    const normalizedKey = sanitizeSiteContentKey(id)
+    if (!normalizedKey) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    const { data, error } = await supabase
+      .from('site_content')
+      .upsert({ key: normalizedKey, value: body }, { onConflict: 'key' })
+      .select('value')
+      .single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data.value)
   }
 
   if (resource === 'categories') {

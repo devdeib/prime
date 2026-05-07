@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { pickLocalized } from "@/lib/bilingual";
 import styles from "./home-showrooms-section.module.css";
@@ -24,6 +24,13 @@ const FALLBACK_SHOWROOMS: ShowroomItem[] = [
   { id: 4, name: "Showroom", city: "Dubai" },
 ];
 
+const FALLBACK_PROJECTS: ShowroomItem[] = [
+  { id: 1, name: "Residential Project", city: "Riyadh" },
+  { id: 2, name: "Villa Interior", city: "Jeddah" },
+  { id: 3, name: "Private Residence", city: "Dubai" },
+  { id: 4, name: "Apartment Styling", city: "Rome" },
+];
+
 function showroomImage(showroom: ShowroomItem) {
   const image = showroom.images?.find(Boolean) || showroom.image_url;
   if (image) return image;
@@ -31,36 +38,66 @@ function showroomImage(showroom: ShowroomItem) {
 }
 
 export default function HomeShowroomsSection() {
+  return <HomeCollectionSection kind="showrooms" />;
+}
+
+export function HomeProjectsSection() {
+  return <HomeCollectionSection kind="projects" />;
+}
+
+function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
   const { t, i18n } = useTranslation("common");
-  const [showrooms, setShowrooms] = useState<ShowroomItem[]>([]);
+  const [items, setItems] = useState<ShowroomItem[]>([]);
+  const railRef = useRef<HTMLDivElement>(null);
+  const isProjects = kind === "projects";
   const title =
-    t("homeShowrooms.title") === "homeShowrooms.title"
-      ? "SHOWROOMS"
-      : t("homeShowrooms.title");
+    t(isProjects ? "homeProjects.title" : "homeShowrooms.title") ===
+    (isProjects ? "homeProjects.title" : "homeShowrooms.title")
+      ? isProjects
+        ? "PROJECTS"
+        : "SHOWROOMS"
+      : t(isProjects ? "homeProjects.title" : "homeShowrooms.title");
   const subtitle =
-    t("homeShowrooms.subtitle") === "homeShowrooms.subtitle"
-      ? "You can visit us in one of our curated showrooms and explore how each collection comes to life in a real interior setting."
-      : t("homeShowrooms.subtitle");
+    t(isProjects ? "homeProjects.subtitle" : "homeShowrooms.subtitle") ===
+    (isProjects ? "homeProjects.subtitle" : "homeShowrooms.subtitle")
+      ? isProjects
+        ? "Explore selected projects and completed interiors shaped with the same care as our showroom experiences."
+        : "You can visit us in one of our curated showrooms and explore how each collection comes to life in a real interior setting."
+      : t(isProjects ? "homeProjects.subtitle" : "homeShowrooms.subtitle");
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/be/showrooms", { signal: controller.signal })
+    fetch(`/api/be/${kind}`, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setShowrooms(data);
+          setItems(data);
         }
       })
       .catch(() => {
-        setShowrooms([]);
+        setItems([]);
       });
     return () => controller.abort();
-  }, []);
+  }, [kind]);
 
   const cards = useMemo(
-    () => (showrooms.length > 0 ? showrooms : FALLBACK_SHOWROOMS),
-    [showrooms]
+    () =>
+      items.length > 0
+        ? items
+        : isProjects
+          ? FALLBACK_PROJECTS
+          : FALLBACK_SHOWROOMS,
+    [isProjects, items]
   );
+
+  const scrollRail = (direction: -1 | 1) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    rail.scrollBy({
+      left: direction * Math.max(rail.clientWidth * 0.82, 320),
+      behavior: "smooth",
+    });
+  };
 
   return (
     <section className={styles.section}>
@@ -70,11 +107,24 @@ export default function HomeShowroomsSection() {
           <p className={styles.subtitle}>{subtitle}</p>
         </header>
 
-        <div className={styles.rail}>
+        <div className={styles.sliderShell}>
+          <button
+            type="button"
+            className={`${styles.arrow} ${styles.arrowPrev}`}
+            aria-label={`Previous ${title.toLowerCase()}`}
+            onClick={() => scrollRail(-1)}
+          />
+          <button
+            type="button"
+            className={`${styles.arrow} ${styles.arrowNext}`}
+            aria-label={`Next ${title.toLowerCase()}`}
+            onClick={() => scrollRail(1)}
+          />
+          <div className={styles.rail} ref={railRef}>
           {cards.map((showroom) => (
             <Link
               key={showroom.id}
-              href="/showrooms"
+              href={isProjects ? "/projects" : "/showrooms"}
               className={styles.card}
               aria-label={pickLocalized(
                 i18n.language,
@@ -102,6 +152,7 @@ export default function HomeShowroomsSection() {
               </div>
             </Link>
           ))}
+          </div>
         </div>
       </div>
     </section>

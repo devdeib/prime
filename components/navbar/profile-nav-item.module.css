@@ -28,6 +28,19 @@
   box-shadow: none !important;
 }
 
+.triggerOnLight {
+  border-color: rgba(30, 39, 53, 0.45) !important;
+  color: #1e2735 !important;
+}
+
+.triggerOnLight:hover,
+.triggerOnLight:focus,
+.triggerOnLight:active,
+.triggerOnLight:focus-visible {
+  border-color: #1e2735 !important;
+  color: #1e2735 !important;
+}
+
 .menu {
   min-width: 13rem !important;
   border: 1px solid rgba(30, 39, 53, 0.12) !important;

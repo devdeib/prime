@@ -89,10 +89,10 @@ export default function FurnitureNavbar() {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              href="/about-us"
+              href="/services"
               className={`${styles.navLink} ${styles.ft14} fw-normal`}
             >
-              {t("nav.about")}
+              {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
             </Nav.Link>
           </Nav>
 
@@ -113,7 +113,7 @@ export default function FurnitureNavbar() {
                   {t("nav.signIn")}
                 </Nav.Link>
               )}
-            {session && <ProfileNavItem />}
+            {session && <ProfileNavItem onLight={useLightNavbar} />}
           </Nav>
         </Navbar.Collapse>
       </Container>

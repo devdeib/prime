@@ -9,6 +9,7 @@ import {
   FaLinkedinIn,
 } from "react-icons/fa";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BrandMark from "@/components/brand/BrandMark";
 import styles from "./footer.module.css";
@@ -16,6 +17,28 @@ import styles from "./footer.module.css";
 const Footer = () => {
   const { t } = useTranslation("common");
   const year = new Date().getFullYear();
+  const [socials, setSocials] = useState({
+    facebook: "",
+    instagram: "",
+    twitter: "",
+    linkedin: "",
+  });
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/be/site-content/footer_socials", { signal: controller.signal })
+      .then((res) => res.json())
+      .then((json) =>
+        setSocials({
+          facebook: json?.facebook ?? "",
+          instagram: json?.instagram ?? "",
+          twitter: json?.twitter ?? "",
+          linkedin: json?.linkedin ?? "",
+        })
+      )
+      .catch(() => {});
+    return () => controller.abort();
+  }, []);
 
   return (
     <footer className={styles.shell}>
@@ -42,15 +65,9 @@ const Footer = () => {
             <Link href="/about-us" className={styles.link}>
               {t("nav.about")}
             </Link>
-          </Col>
-          <Col md={6} lg={3} className={styles.linkCol}>
-            <h3 className={styles.title}>{t("footer.support")}</h3>
-            <a href="#" className={styles.link}>
-              {t("footer.help")}
-            </a>
-            <a href="#" className={styles.link}>
-              {t("footer.faq")}
-            </a>
+            <Link href="/services" className={styles.link}>
+              {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
+            </Link>
           </Col>
           <Col md={6} lg={3} className={styles.linkCol}>
             <h3 className={styles.title}>{t("footer.links")}</h3>
@@ -62,16 +79,16 @@ const Footer = () => {
           <Col md={6} lg={3} className={styles.linkCol}>
             <h3 className={styles.title}>{t("footer.socials")}</h3>
             <div className={styles.socials}>
-              <a href="#" className={styles.socialIcon}>
+              <a href={socials.facebook || "#"} className={styles.socialIcon}>
                 <FaFacebookF />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href={socials.instagram || "#"} className={styles.socialIcon}>
                 <FaInstagram />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href={socials.twitter || "#"} className={styles.socialIcon}>
                 <FaTwitter />
               </a>
-              <a href="#" className={styles.socialIcon}>
+              <a href={socials.linkedin || "#"} className={styles.socialIcon}>
                 <FaLinkedinIn />
               </a>
             </div>

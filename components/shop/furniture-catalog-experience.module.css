@@ -338,6 +338,58 @@
   padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem) 4rem;
 }
 
+.sliderShell {
+  position: relative;
+}
+
+.sliderArrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  width: 54px;
+  height: 76px;
+  border: 0;
+  background: transparent;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  cursor: pointer;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.55));
+  opacity: 0.9;
+  transition: opacity 0.25s ease;
+}
+
+.sliderArrow:hover {
+  opacity: 1;
+}
+
+.sliderArrow::before {
+  content: "";
+  width: 26px;
+  height: 26px;
+  border-top: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+  display: block;
+}
+
+.sliderArrowPrev {
+  left: 0.85rem;
+}
+
+.sliderArrowPrev::before {
+  transform: rotate(-135deg);
+}
+
+.sliderArrowNext {
+  right: 0.85rem;
+}
+
+.sliderArrowNext::before {
+  transform: rotate(45deg);
+}
+
 .infoState {
   margin: 0 0 0.8rem;
   color: var(--shop-muted);
@@ -358,6 +410,22 @@
   border-top-color: rgba(30, 39, 53, 0.09);
 }
 
+.featuredRail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 24vw);
+  grid-template-columns: none;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  align-items: stretch;
+}
+
+.featuredRail::-webkit-scrollbar {
+  display: none;
+}
+
 @media (min-width: 640px) {
   .grid {
     grid-template-columns: repeat(3, 1fr);
@@ -370,9 +438,13 @@
   }
 }
 
+.grid.featuredRail {
+  grid-template-columns: none;
+}
+
 .card {
   border: 0;
-  background: var(--shop-surface);
+  background: #faf9f7;
   cursor: pointer;
   text-align: center;
   padding: 0;
@@ -385,6 +457,23 @@
     transform 0.45s var(--ease-out-expo);
   animation: cardEnter 0.65s var(--ease-out-expo) both;
   text-decoration: none;
+  min-width: 0;
+}
+
+.featuredRail .card {
+  scroll-snap-align: start;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) 112px;
+}
+
+.featuredRail .cardImageWrap {
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+}
+
+.featuredRail .cardBody {
+  min-height: 112px;
+  height: 112px;
 }
 
 .card:hover {
@@ -406,6 +495,15 @@
 .cardImage {
   object-fit: contain;
   transition: transform 0.7s var(--ease-out-expo);
+}
+
+.cardVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #faf9f7;
 }
 
 .card:hover .cardImage {
@@ -519,6 +617,13 @@
 
 .panelImage {
   object-fit: cover;
+}
+
+.panelVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #111827;
 }
 
 .panelContent {
@@ -682,6 +787,75 @@
 }
 
 @media (max-width: 575px) {
+  .heroStage {
+    min-height: 78vh;
+  }
+
+  .heroTitle {
+    font-size: clamp(2rem, 13vw, 3.5rem);
+    max-width: 11ch;
+  }
+
+  .heroSub,
+  .featuredSubcopy {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .featuredTitle {
+    font-size: clamp(2.4rem, 15vw, 4.2rem);
+  }
+
+  .gridSection {
+    padding-inline: 0.75rem;
+  }
+
+  .featuredRail {
+    grid-auto-columns: minmax(220px, 72vw);
+    grid-template-columns: none;
+  }
+
+  .sliderArrow {
+    width: 42px;
+    height: 60px;
+  }
+
+  .sliderArrow::before {
+    width: 20px;
+    height: 20px;
+    border-width: 2px 2px 0 0;
+  }
+
+  .sliderArrowPrev {
+    left: 0.25rem;
+  }
+
+  .sliderArrowNext {
+    right: 0.25rem;
+  }
+
+  .featuredRail .card {
+    grid-template-rows: minmax(0, 1fr) 92px;
+  }
+
+  .featuredRail .cardBody {
+    min-height: 92px;
+    height: 92px;
+  }
+
+  .cardName,
+  .cardNameArabic {
+    font-size: 1.2rem;
+  }
+
+  .panel {
+    top: 82px;
+  }
+
+  .backdrop {
+    inset: 82px 0 0 0;
+  }
+
   .heroEditor {
     inset-inline: 1rem;
     inset-block-end: 4rem;

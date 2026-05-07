@@ -2,20 +2,18 @@
 
 import {
   MdDashboard,
-  MdOutlinePhotoLibrary,
   MdStoreMallDirectory,
-  MdCall,
-  MdLogin,
-  MdManageAccounts,
-  MdOutlineSettingsSystemDaydream,
-  MdOutlineAnalytics,
-  MdSettingsApplications,
-  MdAutoGraph,
-  MdNotificationsActive,
+  MdEditNote,
+  MdCategory,
+  MdInventory2,
+  MdSlideshow,
+  MdPeople,
+  MdAccountCircle,
+  MdLogout,
+  MdWork,
 } from "react-icons/md";
-import { FaRegUser, FaBuilding, FaHandshake, FaImages } from "react-icons/fa";
 import SingleListItems from "./SingleListItems";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Button, Spinner } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
@@ -48,13 +46,13 @@ export const sideNavItems = (role: string): SideNavItems => {
         id: 9,
         labelKey: "dashboard.profile",
         url: "/dashboard/users/profile",
-        icon: (size: number = 21) => <MdManageAccounts size={size} />,
+        icon: (size: number = 21) => <MdAccountCircle size={size} />,
       },
       {
         id: 10,
         labelKey: "dashboard.logout",
         url: "#",
-        icon: (size: number = 21) => <MdLogin size={size} />,
+        icon: (size: number = 21) => <MdLogout size={size} />,
         onClickFn: async () => await signOut(),
       },
     ],
@@ -66,25 +64,25 @@ export const sideNavItems = (role: string): SideNavItems => {
         id: 2,
         labelKey: "dashboard.users",
         url: "/dashboard/users",
-        icon: (size: number = 21) => <FaRegUser size={size} />,
+        icon: (size: number = 21) => <MdPeople size={size} />,
       },
       {
         id: 3,
         labelKey: "dashboard.categories",
         url: "/dashboard/categories",
-        icon: (size: number = 21) => <FaHandshake size={size} />,
+        icon: (size: number = 21) => <MdCategory size={size} />,
       },
       {
         id: 4,
         labelKey: "dashboard.products",
         url: "/dashboard/products",
-        icon: (size: number = 21) => <FaBuilding size={size} />,
+        icon: (size: number = 21) => <MdInventory2 size={size} />,
       },
       {
         id: 5,
         labelKey: "dashboard.heroSlides",
         url: "/dashboard/hero-slides",
-        icon: (size: number = 21) => <MdOutlinePhotoLibrary size={size} />,
+        icon: (size: number = 21) => <MdSlideshow size={size} />,
       },
       {
         id: 6,
@@ -96,7 +94,13 @@ export const sideNavItems = (role: string): SideNavItems => {
         id: 7,
         labelKey: "dashboard.projectsMenu",
         url: "/dashboard/projects",
-        icon: (size: number = 21) => <FaImages size={size} />,
+        icon: (size: number = 21) => <MdWork size={size} />,
+      },
+      {
+        id: 8,
+        labelKey: "dashboard.contentMenu",
+        url: "/dashboard/content",
+        icon: (size: number = 21) => <MdEditNote size={size} />,
       },
     ];
     navItems.list = adminRoutes;

@@ -25,6 +25,7 @@ type ProductRow = {
   descriptions?: string;
   descriptions_ar?: string | null;
   thumbUrl?: string;
+  video_url?: string | null;
   external_url?: string | null;
 };
 
@@ -65,6 +66,7 @@ export default function DashboardProductsPage() {
   const [descriptions, setDescriptions] = useState("");
   const [descriptionsAr, setDescriptionsAr] = useState("");
   const [externalUrl, setExternalUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
@@ -98,6 +100,7 @@ export default function DashboardProductsPage() {
               descriptions: p.descriptions,
               descriptions_ar: p.descriptions_ar,
               external_url: p.external_url,
+              video_url: p.video_url,
               thumbUrl:
                 p.storage_files?.[0]?.image_url ??
                 (p as { image_url?: string }).image_url,
@@ -132,6 +135,7 @@ export default function DashboardProductsPage() {
     setDescriptions("");
     setDescriptionsAr("");
     setExternalUrl("");
+    setVideoUrl("");
     setEditingId(null);
     setExistingImageUrl(null);
     setPickedFile(null);
@@ -168,9 +172,12 @@ export default function DashboardProductsPage() {
     setSaving(true);
     try {
       let imageUrl: string | undefined;
+      let uploadedVideoUrl: string | undefined;
       if (pickedFile) {
         setUploadProgress(0);
-        imageUrl = await uploadMediaWithProgress(pickedFile, setUploadProgress);
+        const uploadedUrl = await uploadMediaWithProgress(pickedFile, setUploadProgress);
+        if (pickedFile.type.startsWith("video/")) uploadedVideoUrl = uploadedUrl;
+        else imageUrl = uploadedUrl;
       }
       const res = await fetch("/api/be/products", {
         method: "POST",
@@ -184,6 +191,7 @@ export default function DashboardProductsPage() {
           descriptions: descriptions || undefined,
           descriptions_ar: descriptionsAr.trim() || undefined,
           external_url: externalUrl.trim() || undefined,
+          video_url: uploadedVideoUrl ?? (videoUrl.trim() || undefined),
           ...(imageUrl ? { image_url: imageUrl } : {}),
         }),
       });
@@ -215,6 +223,7 @@ export default function DashboardProductsPage() {
     setDescriptions(p.descriptions ?? "");
     setDescriptionsAr(p.descriptions_ar ?? "");
     setExternalUrl(p.external_url ?? "");
+    setVideoUrl(p.video_url ?? "");
     setPickedFile(null);
     setRemoveImage(false);
     if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
@@ -231,12 +240,14 @@ export default function DashboardProductsPage() {
     setSaving(true);
     try {
       let imagePatch: { image_url: string } | undefined;
+      let videoPatch: { video_url: string } | undefined;
       if (removeImage) {
         imagePatch = { image_url: "" };
       } else if (pickedFile) {
         setUploadProgress(0);
         const url = await uploadMediaWithProgress(pickedFile, setUploadProgress);
-        imagePatch = { image_url: url };
+        if (pickedFile.type.startsWith("video/")) videoPatch = { video_url: url };
+        else imagePatch = { image_url: url };
       }
 
       const body: Record<string, unknown> = {
@@ -247,6 +258,7 @@ export default function DashboardProductsPage() {
         descriptions,
         descriptions_ar: descriptionsAr,
         external_url: externalUrl.trim(),
+        video_url: videoPatch?.video_url ?? videoUrl.trim(),
       };
       if (imagePatch) body.image_url = imagePatch.image_url;
 
@@ -395,17 +407,31 @@ export default function DashboardProductsPage() {
                 </Form.Text>
               </Col>
             </Row>
+            <Row className="g-2 mb-2">
+              <Col md={12}>
+                <Form.Label>Product video link</Form.Label>
+                <Form.Control
+                  type="url"
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  placeholder="https://store.example.com/product-video.mp4"
+                />
+                <Form.Text className="text-muted">
+                  Optional. Upload a video below or paste an existing video URL.
+                </Form.Text>
+              </Col>
+            </Row>
             <Row className="g-2 mb-3 align-items-end">
               <Col md={6}>
-                <Form.Label>{t("dashboard.productImage")}</Form.Label>
+                <Form.Label>{t("dashboard.productImage")} / video</Form.Label>
                 <Form.Control
                   ref={fileInputRef}
                   type="file"
-                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm,video/ogg,video/quicktime"
                   onChange={onPickFile}
                 />
                 <Form.Text className="text-muted">
-                  {t("dashboard.imageHelp")}
+                  Uploading a video saves it as the product video. Uploading an image saves it as the product image.
                 </Form.Text>
                 {uploadProgress != null ? (
                   <div className={styles.progressShell}>
@@ -443,17 +469,27 @@ export default function DashboardProductsPage() {
             </Row>
             {previewUrl && (
               <div className={styles.previewCard}>
-                <Image
-                  src={previewUrl}
-                  alt={t("dashboard.preview")}
-                  fill
-                  className="rounded border bg-light"
-                  style={{ objectFit: "contain" }}
-                  unoptimized={
-                    previewUrl.startsWith("blob:") ||
-                    previewUrl.startsWith("/uploads/")
-                  }
-                />
+                {pickedFile?.type.startsWith("video/") ||
+                /\.(mp4|webm|ogg|mov|m4v)(\?.*)?$/i.test(previewUrl) ? (
+                  <video
+                    src={previewUrl}
+                    controls
+                    className="rounded border bg-light w-100 h-100"
+                    style={{ objectFit: "contain" }}
+                  />
+                ) : (
+                  <Image
+                    src={previewUrl}
+                    alt={t("dashboard.preview")}
+                    fill
+                    className="rounded border bg-light"
+                    style={{ objectFit: "contain" }}
+                    unoptimized={
+                      previewUrl.startsWith("blob:") ||
+                      previewUrl.startsWith("/uploads/")
+                    }
+                  />
+                )}
               </div>
             )}
               <Button
@@ -494,6 +530,7 @@ export default function DashboardProductsPage() {
             <th>{t("dashboard.price")}</th>
             <th>{t("dashboard.category")}</th>
             <th>{productLinkLabel}</th>
+            <th>Video</th>
             <th />
           </tr>
         </thead>
@@ -534,6 +571,15 @@ export default function DashboardProductsPage() {
                   </a>
                 ) : (
                   "â€”"
+                )}
+              </td>
+              <td>
+                {p.video_url ? (
+                  <a href={p.video_url} target="_blank" rel="noreferrer">
+                    Video
+                  </a>
+                ) : (
+                  "-"
                 )}
               </td>
               <td>
