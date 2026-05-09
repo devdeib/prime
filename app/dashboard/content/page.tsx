@@ -38,13 +38,13 @@ const SECTIONS = [
   {
     key: "footer_socials",
     title: "Footer social links",
-    fields: ["facebook", "instagram", "twitter", "linkedin"],
+    fields: ["facebook", "instagram", "snapchat", "linkedin"],
   },
 ] as const;
 
 function localizedFieldNames(field: string) {
   if (field === "image_url" || field === "map_embed_url") return [field];
-  if (["facebook", "instagram", "twitter", "linkedin"].includes(field)) {
+  if (["facebook", "instagram", "snapchat", "linkedin"].includes(field)) {
     return [field];
   }
   return [`${field}_en`, `${field}_ar`];

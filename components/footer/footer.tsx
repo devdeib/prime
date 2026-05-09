@@ -5,7 +5,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import {
   FaFacebookF,
   FaInstagram,
-  FaTwitter,
+  FaSnapchat,
   FaLinkedinIn,
 } from "react-icons/fa";
 import Link from "next/link";
@@ -20,7 +20,7 @@ const Footer = () => {
   const [socials, setSocials] = useState({
     facebook: "",
     instagram: "",
-    twitter: "",
+    snapchat: "",
     linkedin: "",
   });
 
@@ -32,7 +32,7 @@ const Footer = () => {
         setSocials({
           facebook: json?.facebook ?? "",
           instagram: json?.instagram ?? "",
-          twitter: json?.twitter ?? "",
+          snapchat: json?.snapchat ?? "",
           linkedin: json?.linkedin ?? "",
         })
       )
@@ -85,8 +85,8 @@ const Footer = () => {
               <a href={socials.instagram || "#"} className={styles.socialIcon}>
                 <FaInstagram />
               </a>
-              <a href={socials.twitter || "#"} className={styles.socialIcon}>
-                <FaTwitter />
+              <a href={socials.snapchat || "#"} className={styles.socialIcon}>
+                <FaSnapchat />
               </a>
               <a href={socials.linkedin || "#"} className={styles.socialIcon}>
                 <FaLinkedinIn />

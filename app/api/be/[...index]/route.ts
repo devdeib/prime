@@ -145,7 +145,7 @@ const DEFAULT_SITE_CONTENT: Record<string, unknown> = {
   footer_socials: {
     facebook: '',
     instagram: '',
-    twitter: '',
+    snapchat: '',
     linkedin: '',
   },
 }

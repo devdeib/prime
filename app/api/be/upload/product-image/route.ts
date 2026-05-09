@@ -6,6 +6,8 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+const MAX_UPLOAD_BYTES = 200 * 1024 * 1024
+
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData()
@@ -13,6 +15,13 @@ export async function POST(req: NextRequest) {
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    }
+
+    if (file.size > MAX_UPLOAD_BYTES) {
+      return NextResponse.json(
+        { error: 'Upload failed: this file is larger than 200MB.' },
+        { status: 413 }
+      )
     }
 
     const fileExt = file.name.split('.').pop()

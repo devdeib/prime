@@ -39,6 +39,25 @@ const FALLBACK_VISUAL = "https://picsum.photos/seed/la-dolce-contact/1000/1200";
 function findLeadImage(row: VisualRow) {
   return row.images?.find(Boolean) || row.image_url || null;
 }
+function toEmbedUrl(url: string): string {
+  const trimmed = url.trim();
+  // Already a valid embed URL
+  if (trimmed.includes("/maps/embed")) return trimmed;
+  // Try to extract coordinates
+  const coordMatch = trimmed.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if (coordMatch) {
+    const [, lat, lng] = coordMatch;
+    return `https://www.google.com/maps/embed/v1/view?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&center=${lat},${lng}&zoom=15`;
+  }
+  // Try to extract place name
+  const placeMatch = trimmed.match(/\/place\/([^/@?]+)/);
+  if (placeMatch) {
+    const place = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
+    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=${encodeURIComponent(place)}`;
+  }
+  // Fallback: return as-is and hope for the best
+  return trimmed;
+}
 
 export default function ContactPage() {
   const { t, i18n } = useTranslation("common");
@@ -165,7 +184,7 @@ export default function ContactPage() {
             <div className={styles.visual}>
               {content.map_embed_url?.trim() ? (
                 <iframe
-                  src={content.map_embed_url}
+                  src={toEmbedUrl(content.map_embed_url)}
                   title={copy.title}
                   className={styles.map}
                   loading="lazy"

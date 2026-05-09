@@ -11,6 +11,9 @@ const supabaseHost = (() => {
 })();
 
 const nextConfig: NextConfig = {
+  experimental: {
+    proxyClientMaxBodySize: "200mb",
+  },
   images: {
     remotePatterns: [
       {
