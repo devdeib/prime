@@ -31,9 +31,6 @@ const AdminNavbar = () => {
               <Nav.Link as={Link} href="/" className={styles.navLink}>
                 {t("dashboard.backToStore")}
               </Nav.Link>
-              <Nav.Link as={Link} href="/dashboard/home" className={styles.navLink}>
-                {t("dashboard.dashboard")}
-              </Nav.Link>
             </Nav>
             <Nav className={`align-items-center flex-wrap ${styles.rightLinks}`}>
               <LanguageToggle />

@@ -15,6 +15,22 @@ type PageContent = {
   body_en?: string;
   body_ar?: string;
   image_url?: string;
+  stat_primary_value_en?: string;
+  stat_primary_value_ar?: string;
+  stat_primary_label_en?: string;
+  stat_primary_label_ar?: string;
+  stat_1_value_en?: string;
+  stat_1_value_ar?: string;
+  stat_1_label_en?: string;
+  stat_1_label_ar?: string;
+  stat_2_value_en?: string;
+  stat_2_value_ar?: string;
+  stat_2_label_en?: string;
+  stat_2_label_ar?: string;
+  stat_3_value_en?: string;
+  stat_3_value_ar?: string;
+  stat_3_label_en?: string;
+  stat_3_label_ar?: string;
 };
 
 type Props = {
@@ -51,6 +67,30 @@ export default function EditableContentPage({
       title: pickLocalized(i18n.language, current.title_en, current.title_ar),
       body: pickLocalized(i18n.language, current.body_en, current.body_ar),
       image: current.image_url?.trim() || fallbackImage,
+      statPrimaryValue: pickLocalized(
+        i18n.language,
+        current.stat_primary_value_en,
+        current.stat_primary_value_ar
+      ),
+      statPrimaryLabel: pickLocalized(
+        i18n.language,
+        current.stat_primary_label_en,
+        current.stat_primary_label_ar
+      ),
+      stats: [
+        {
+          value: pickLocalized(i18n.language, current.stat_1_value_en, current.stat_1_value_ar),
+          label: pickLocalized(i18n.language, current.stat_1_label_en, current.stat_1_label_ar),
+        },
+        {
+          value: pickLocalized(i18n.language, current.stat_2_value_en, current.stat_2_value_ar),
+          label: pickLocalized(i18n.language, current.stat_2_label_en, current.stat_2_label_ar),
+        },
+        {
+          value: pickLocalized(i18n.language, current.stat_3_value_en, current.stat_3_value_ar),
+          label: pickLocalized(i18n.language, current.stat_3_label_en, current.stat_3_label_ar),
+        },
+      ].filter((item) => Boolean(item.value || item.label)),
     };
   }, [content, fallbackImage, i18n.language]);
 
@@ -69,11 +109,33 @@ export default function EditableContentPage({
               />
             </div>
             <article className={styles.copy}>
-              {copy.eyebrow ? (
-                <p className={styles.eyebrow}>{copy.eyebrow}</p>
-              ) : null}
+              {copy.eyebrow ? <p className={styles.eyebrow}>{copy.eyebrow}</p> : null}
               <h1 className={styles.title}>{copy.title}</h1>
               <div className={styles.body}>{copy.body}</div>
+
+              {(copy.statPrimaryValue || copy.stats.length > 0) && (
+                <div className={styles.numbers}>
+                  {copy.statPrimaryValue ? (
+                    <div className={styles.primaryStat}>
+                      <div className={styles.primaryValue}>{copy.statPrimaryValue}</div>
+                      {copy.statPrimaryLabel ? (
+                        <div className={styles.primaryLabel}>{copy.statPrimaryLabel}</div>
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  {copy.stats.length > 0 ? (
+                    <div className={styles.statsGrid}>
+                      {copy.stats.map((stat, idx) => (
+                        <div className={styles.statCard} key={`${idx}-${stat.value}-${stat.label}`}>
+                          {stat.value ? <div className={styles.statValue}>{stat.value}</div> : null}
+                          {stat.label ? <div className={styles.statLabel}>{stat.label}</div> : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              )}
             </article>
           </div>
         </div>

@@ -145,15 +145,15 @@
 
 @media (max-width: 991px) {
   .navShell {
-    padding: 0.95rem 0 !important;
+    padding: 0.7rem 0 !important;
     background: rgba(255, 255, 255, 0.98) !important;
     border-bottom: 1px solid rgba(17, 24, 39, 0.08);
     box-shadow: 0 8px 24px rgba(17, 24, 39, 0.06);
-    height: 138px;
+    height: 112px;
   }
 
   .navContainer {
-    min-height: 108px;
+    min-height: 92px;
     justify-content: center;
   }
 
@@ -224,7 +224,7 @@
     border: 1px solid rgba(184, 148, 47, 0.16);
     
     box-shadow: 0 24px 60px rgba(17, 24, 39, 0.12);
-    padding: 1.35rem 1.25rem 1.1rem !important;
+    padding: 1.05rem 1.1rem 0.9rem !important;
   }
 
   .leftLinks,
@@ -245,7 +245,7 @@
 
   .leftLinks :global(.nav-link),
   .rightLinks :global(.nav-link) {
-    padding: 0.95rem 0.35rem !important;
+    padding: 0.78rem 0.35rem !important;
     border-bottom: 1px solid rgba(30, 39, 53, 0.06);
     font-size: 1.18rem !important;
     letter-spacing: 0.08em;
@@ -258,7 +258,7 @@
 
   .languageWrap {
     justify-content: flex-start;
-    padding: 0.95rem 0.35rem 0.3rem;
+    padding: 0.78rem 0.35rem 0.25rem;
     color: #1e2735;
   }
 }

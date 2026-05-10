@@ -27,6 +27,9 @@ html[lang="en"] body {
 }
 html[lang="ar"] body {
   font-family: var(--font-body-ar), var(--font-body-ar-alt), ui-sans-serif, system-ui, sans-serif;
+  font-style: normal;
+  font-synthesis: none;
+  font-variation-settings: "slnt" 0;
 }
 h1,
 h2,

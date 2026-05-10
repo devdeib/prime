@@ -59,6 +59,62 @@
   overflow-wrap: anywhere;
 }
 
+.numbers {
+  margin-top: clamp(1.35rem, 3vw, 2.25rem);
+}
+
+.primaryStat {
+  padding: 0.25rem 0;
+}
+
+.primaryValue {
+  font-family: var(--font-display, Didot, Georgia, serif);
+  color: #b8942f;
+  font-size: clamp(2.1rem, 3vw, 2.75rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+}
+
+.primaryLabel {
+  margin-top: 0.5rem;
+  color: #6a7280;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+}
+
+.statsGrid {
+  margin-top: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.statCard {
+  border-radius: 14px;
+  border: 1px solid rgba(184, 148, 47, 0.18);
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 14px 34px rgba(17, 24, 39, 0.05);
+  padding: 1rem 1.05rem;
+}
+
+.statValue {
+  font-family: var(--font-display, Didot, Georgia, serif);
+  color: #1e2735;
+  font-size: 1.65rem;
+  line-height: 1.1;
+}
+
+.statLabel {
+  margin: 0;
+  margin-top: 0.45rem;
+  color: #7a8597;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
 @media (min-width: 900px) {
   .grid {
     grid-template-columns: minmax(320px, 0.9fr) minmax(0, 1fr);
@@ -72,5 +128,9 @@
 
   .media {
     min-height: 260px;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
   }
 }

@@ -13,6 +13,7 @@
   font-family: "Cairo";
   src: url("/fonts/Cairo/Cairo-VariableFont_slnt,wght.ttf") format("truetype");
   font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -21,6 +22,7 @@
   src: url("/fonts/Noto_Kufi_Arabic/NotoKufiArabic-VariableFont_wght.ttf")
     format("truetype");
   font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
 }
 

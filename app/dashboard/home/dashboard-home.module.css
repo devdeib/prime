@@ -1,123 +1,121 @@
 .page {
-  padding: 0.2rem;
+  padding: 0;
 }
 
-.hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
+.header {
+  margin: 0 0 1.25rem;
 }
 
-.panel,
-.stat,
-.note {
-  border-radius: 26px;
-  border: 1px solid rgba(184, 148, 47, 0.16);
-  background:
-    radial-gradient(circle at top right, rgba(184, 148, 47, 0.1), transparent 26%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(249, 243, 232, 0.96) 100%);
-  box-shadow: 0 20px 48px rgba(17, 24, 39, 0.06);
-}
-
-.panel {
-  padding: 2rem;
-}
-
-.eyebrow {
-  margin: 0 0 0.7rem;
-  color: #b8942f;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  font-size: 0.78rem;
-}
-
-.title {
+.pageTitle {
   margin: 0;
   color: #1e2735;
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: clamp(2.4rem, 4vw, 3.7rem);
+  font-size: 2.25rem;
   font-weight: 400;
-  line-height: 0.98;
+  letter-spacing: 0.02em;
 }
 
-.text {
-  margin: 1rem 0 0;
-  color: #5f6775;
-  line-height: 1.9;
-  max-width: 46rem;
-  font-size: 1.05rem;
+.card {
+  background: #ffffff;
+  border: 1px solid rgba(30, 39, 53, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 28px 60px rgba(17, 24, 39, 0.08);
+  overflow: hidden;
 }
 
-.stats {
+.statsRow {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding: 2.2rem 1.5rem;
+  align-items: center;
 }
 
-.stat {
-  padding: 1.4rem;
+.statCell {
+  text-align: center;
+  position: relative;
 }
 
-.statValue {
-  display: block;
-  color: #1e2735;
+.statCellWithDivider::after {
+  content: "";
+  position: absolute;
+  top: 14%;
+  bottom: 14%;
+  inset-inline-end: 0;
+  width: 1px;
+  background: rgba(30, 39, 53, 0.22);
+}
+
+.statNumber {
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: 2.6rem;
+  font-size: 3.2rem;
   line-height: 1;
+  color: #1e2735;
 }
 
-.statLabel {
-  display: block;
-  margin-top: 0.5rem;
-  color: #7a8597;
+.statName {
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  font-size: 0.74rem;
+  color: #1e2735;
 }
 
-.grid {
+.featureGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 2.2rem;
+  padding: 1.4rem 1.6rem 2.2rem;
 }
 
-.note {
-  padding: 1.5rem;
+.feature {
+  min-width: 0;
 }
 
-.noteTitle {
-  margin: 0 0 0.8rem;
-  color: #1e2735;
+.featureTitle {
+  margin: 0 0 0.6rem;
+  color: #b8942f;
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: 1.4rem;
   font-weight: 400;
+  font-size: 1.6rem;
 }
 
-.noteText {
+.featureText {
   margin: 0;
-  color: #667085;
-  line-height: 1.8;
+  color: #1e2735;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  max-width: 18rem;
 }
 
 @media (max-width: 1199px) {
-  .grid {
+  .featureGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
   }
 }
 
 @media (max-width: 900px) {
-  .hero,
-  .grid {
+  .statsRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem 0;
+    padding: 1.6rem 1.2rem;
+  }
+
+  .statCellWithDivider::after {
+    display: none;
+  }
+
+  .featureGrid {
     grid-template-columns: 1fr;
   }
+}
 
-  .panel,
-  .stat,
-  .note {
-    border-radius: 22px;
+@media (max-width: 520px) {
+  .statsRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .panel {
-    padding: 1.5rem;
+  .statNumber {
+    font-size: 2.7rem;
   }
 }

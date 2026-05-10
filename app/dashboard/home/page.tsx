@@ -1,62 +1,136 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./dashboard-home.module.css";
+
+type DashboardCounts = {
+  users: number;
+  categories: number;
+  products: number;
+  heroSlides: number;
+  showrooms: number;
+  projects: number;
+};
 
 export default function DashboardHomePage() {
   const { t } = useTranslation("common");
+  const [counts, setCounts] = useState<DashboardCounts | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        const [
+          usersRes,
+          categoriesRes,
+          productsRes,
+          heroSlidesRes,
+          showroomsRes,
+          projectsRes,
+        ] = await Promise.all([
+          fetch("/api/be/users", { credentials: "include" }),
+          fetch("/api/be/categories", { credentials: "include" }),
+          fetch("/api/be/products", { credentials: "include" }),
+          fetch("/api/be/hero-slides", { credentials: "include" }),
+          fetch("/api/be/showrooms", { credentials: "include" }),
+          fetch("/api/be/projects", { credentials: "include" }),
+        ]);
+
+        const [
+          usersJson,
+          categoriesJson,
+          productsJson,
+          heroSlidesJson,
+          showroomsJson,
+          projectsJson,
+        ] = await Promise.all([
+          usersRes.json().catch(() => []),
+          categoriesRes.json().catch(() => []),
+          productsRes.json().catch(() => []),
+          heroSlidesRes.json().catch(() => []),
+          showroomsRes.json().catch(() => []),
+          projectsRes.json().catch(() => []),
+        ]);
+
+        if (!mounted) return;
+        setCounts({
+          users: Array.isArray(usersJson) ? usersJson.length : 0,
+          categories: Array.isArray(categoriesJson) ? categoriesJson.length : 0,
+          products: Array.isArray(productsJson) ? productsJson.length : 0,
+          heroSlides: Array.isArray(heroSlidesJson) ? heroSlidesJson.length : 0,
+          showrooms: Array.isArray(showroomsJson) ? showroomsJson.length : 0,
+          projects: Array.isArray(projectsJson) ? projectsJson.length : 0,
+        });
+      } catch {
+        if (mounted) setCounts(null);
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const cards = useMemo(
+    () => [
+      { label: t("dashboard.users") === "dashboard.users" ? "Users" : t("dashboard.users"), value: counts?.users ?? "—" },
+      { label: t("dashboard.categories") === "dashboard.categories" ? "Categories" : t("dashboard.categories"), value: counts?.categories ?? "—" },
+      { label: t("dashboard.products") === "dashboard.products" ? "Products" : t("dashboard.products"), value: counts?.products ?? "—" },
+      { label: t("dashboard.heroSlides") === "dashboard.heroSlides" ? "Hero slides" : t("dashboard.heroSlides"), value: counts?.heroSlides ?? "—" },
+      { label: t("dashboard.showroomsMenu") === "dashboard.showroomsMenu" ? "Showrooms" : t("dashboard.showroomsMenu"), value: counts?.showrooms ?? "—" },
+      { label: t("dashboard.projectsMenu") === "dashboard.projectsMenu" ? "Projects" : t("dashboard.projectsMenu"), value: counts?.projects ?? "—" },
+    ],
+    [counts, t]
+  );
 
   return (
     <section className={styles.page}>
-      <div className={styles.hero}>
-        <div className={styles.panel}>
-          <p className={styles.eyebrow}>La Dolce Casa</p>
-          <h1 className={styles.title}>{t("dashboard.dashboard")}</h1>
-          <p className={styles.text}>
-            A calmer control room for products, categories, hero images, and
-            showroom and project content. The goal here is a cleaner administrative
-            experience that feels connected to the storefront instead of a
-            separate generic tool.
-          </p>
+      <header className={styles.header}>
+        <h1 className={styles.pageTitle}>DASBOARD</h1>
+      </header>
+
+      <div className={styles.card}>
+        <div className={styles.statsRow} aria-label="Website summary">
+          {cards.map((card, index) => (
+            <div
+              key={card.label}
+              className={`${styles.statCell} ${
+                index < cards.length - 1 ? styles.statCellWithDivider : ""
+              }`}
+            >
+              <div className={styles.statNumber}>{card.value}</div>
+              <div className={styles.statName}>{card.label}</div>
+            </div>
+          ))}
         </div>
 
-        <div className={styles.stats}>
-          <div className={styles.stat}>
-            <span className={styles.statValue}>01</span>
-            <span className={styles.statLabel}>Storefront theme aligned</span>
-          </div>
-          <div className={styles.stat}>
-            <span className={styles.statValue}>05</span>
-            <span className={styles.statLabel}>Core admin sections ready</span>
-          </div>
+        <div className={styles.featureGrid}>
+          <article className={styles.feature}>
+            <h2 className={styles.featureTitle}>{t("dashboard.products")}</h2>
+            <p className={styles.featureText}>
+              Manage catalog items with clearer hierarchy and better media handling.
+            </p>
+          </article>
+          <article className={styles.feature}>
+            <h2 className={styles.featureTitle}>{t("dashboard.categories")}</h2>
+            <p className={styles.featureText}>
+              Keep naming and aliases consistent across the bilingual storefront.
+            </p>
+          </article>
+          <article className={styles.feature}>
+            <h2 className={styles.featureTitle}>{t("dashboard.showroomsMenu")}</h2>
+            <p className={styles.featureText}>
+              Curate showroom content with the same visual language as the public site.
+            </p>
+          </article>
+          <article className={styles.feature}>
+            <h2 className={styles.featureTitle}>{t("dashboard.projectsMenu")}</h2>
+            <p className={styles.featureText}>
+              Publish completed work with consistent bilingual presentation.
+            </p>
+          </article>
         </div>
-      </div>
-
-      <div className={styles.grid}>
-        <article className={styles.note}>
-          <h2 className={styles.noteTitle}>{t("dashboard.products")}</h2>
-          <p className={styles.noteText}>
-            Manage catalog items with a lighter form surface and clearer table hierarchy.
-          </p>
-        </article>
-        <article className={styles.note}>
-          <h2 className={styles.noteTitle}>{t("dashboard.categories")}</h2>
-          <p className={styles.noteText}>
-            Keep category naming and aliases organized without the old cluttered feel.
-          </p>
-        </article>
-        <article className={styles.note}>
-          <h2 className={styles.noteTitle}>{t("dashboard.showroomsMenu")}</h2>
-          <p className={styles.noteText}>
-            Curate showroom information and media in a layout that better matches the public site.
-          </p>
-        </article>
-        <article className={styles.note}>
-          <h2 className={styles.noteTitle}>{t("dashboard.projectsMenu")}</h2>
-          <p className={styles.noteText}>
-            Publish completed work using the same bilingual gallery flow available for showrooms.
-          </p>
-        </article>
       </div>
     </section>
   );

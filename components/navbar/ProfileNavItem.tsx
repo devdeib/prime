@@ -36,16 +36,27 @@ const ProfileNavItem = ({ onLight = false }: { onLight?: boolean }) => {
           >
             <span className="ft-15 fw-normal">{user.first_name}</span>
           </Dropdown.Toggle>
-          <Dropdown.Menu className={styles.menu}>
-            <Dropdown.Item href="/dashboard/users/profile" className={styles.menuItem}>
+          <Dropdown.Menu
+            className={`${styles.menu} ${onLight ? styles.menuOnLight : styles.menuOnDark}`}
+          >
+            <Dropdown.Item
+              href="/dashboard/users/profile"
+              className={`${styles.menuItem} ${onLight ? styles.menuItemOnLight : styles.menuItemOnDark}`}
+            >
               <FaUserCog size={18} className={styles.icon} />
               <span className={`${styles.label} ft-14 fw-normal`}>{t("profile.profile")}</span>
             </Dropdown.Item>
-            <Dropdown.Item href="/dashboard/home" className={styles.menuItem}>
+            <Dropdown.Item
+              href="/dashboard/home"
+              className={`${styles.menuItem} ${onLight ? styles.menuItemOnLight : styles.menuItemOnDark}`}
+            >
               <MdDashboard size={18} className={styles.icon} />
               <span className={`${styles.label} ft-14 fw-normal`}>{t("profile.dashboard")}</span>
             </Dropdown.Item>
-            <Dropdown.Item onClick={() => signOut()} className={styles.menuItem}>
+            <Dropdown.Item
+              onClick={() => signOut()}
+              className={`${styles.menuItem} ${onLight ? styles.menuItemOnLight : styles.menuItemOnDark}`}
+            >
               <MdLogout size={18} className={styles.icon} />
               <span className={`${styles.label} ft-14 fw-normal`}>{t("profile.logout")}</span>
             </Dropdown.Item>

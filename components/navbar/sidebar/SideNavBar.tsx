@@ -1,17 +1,17 @@
 "use client";
 
 import {
-  MdDashboard,
-  MdStoreMallDirectory,
-  MdEditNote,
-  MdCategory,
-  MdInventory2,
-  MdSlideshow,
-  MdPeople,
-  MdAccountCircle,
-  MdLogout,
-  MdWork,
-} from "react-icons/md";
+  FiGrid,
+  FiUsers,
+  FiTag,
+  FiBox,
+  FiImage,
+  FiMapPin,
+  FiBriefcase,
+  FiEdit3,
+  FiUser,
+  FiLogOut,
+} from "react-icons/fi";
 import SingleListItems from "./SingleListItems";
 import { signOut, useSession } from "next-auth/react";
 import { Button, Spinner } from "react-bootstrap";
@@ -37,7 +37,7 @@ export const sideNavItems = (role: string): SideNavItems => {
         id: 1,
         labelKey: "dashboard.dashboard",
         url: "/dashboard/home",
-        icon: (size: number = 21) => <MdDashboard size={size} />,
+        icon: (size: number = 18) => <FiGrid size={size} />,
       },
     ],
     list: [],
@@ -46,13 +46,13 @@ export const sideNavItems = (role: string): SideNavItems => {
         id: 9,
         labelKey: "dashboard.profile",
         url: "/dashboard/users/profile",
-        icon: (size: number = 21) => <MdAccountCircle size={size} />,
+        icon: (size: number = 18) => <FiUser size={size} />,
       },
       {
         id: 10,
         labelKey: "dashboard.logout",
         url: "#",
-        icon: (size: number = 21) => <MdLogout size={size} />,
+        icon: (size: number = 18) => <FiLogOut size={size} />,
         onClickFn: async () => await signOut(),
       },
     ],
@@ -64,43 +64,43 @@ export const sideNavItems = (role: string): SideNavItems => {
         id: 2,
         labelKey: "dashboard.users",
         url: "/dashboard/users",
-        icon: (size: number = 21) => <MdPeople size={size} />,
+        icon: (size: number = 18) => <FiUsers size={size} />,
       },
       {
         id: 3,
         labelKey: "dashboard.categories",
         url: "/dashboard/categories",
-        icon: (size: number = 21) => <MdCategory size={size} />,
+        icon: (size: number = 18) => <FiTag size={size} />,
       },
       {
         id: 4,
         labelKey: "dashboard.products",
         url: "/dashboard/products",
-        icon: (size: number = 21) => <MdInventory2 size={size} />,
+        icon: (size: number = 18) => <FiBox size={size} />,
       },
       {
         id: 5,
         labelKey: "dashboard.heroSlides",
         url: "/dashboard/hero-slides",
-        icon: (size: number = 21) => <MdSlideshow size={size} />,
+        icon: (size: number = 18) => <FiImage size={size} />,
       },
       {
         id: 6,
         labelKey: "dashboard.showroomsMenu",
         url: "/dashboard/showrooms",
-        icon: (size: number = 21) => <MdStoreMallDirectory size={size} />,
+        icon: (size: number = 18) => <FiMapPin size={size} />,
       },
       {
         id: 7,
         labelKey: "dashboard.projectsMenu",
         url: "/dashboard/projects",
-        icon: (size: number = 21) => <MdWork size={size} />,
+        icon: (size: number = 18) => <FiBriefcase size={size} />,
       },
       {
         id: 8,
         labelKey: "dashboard.contentMenu",
         url: "/dashboard/content",
-        icon: (size: number = 21) => <MdEditNote size={size} />,
+        icon: (size: number = 18) => <FiEdit3 size={size} />,
       },
     ];
     navItems.list = adminRoutes;
