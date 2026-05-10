@@ -51,9 +51,9 @@
 
 .menuOnDark {
   background:
-    radial-gradient(circle at top right, rgba(184, 148, 47, 0.22), transparent 38%),
-    linear-gradient(180deg, rgba(10, 16, 26, 0.98) 0%, rgba(7, 12, 22, 0.98) 100%) !important;
-  border-color: rgba(255, 255, 255, 0.16) !important;
+    radial-gradient(circle at top right, rgba(184, 148, 47, 0.1), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(249, 243, 232, 0.99) 100%) !important;
+  border-color: rgba(30, 39, 53, 0.12) !important;
 }
 
 .menuOnLight {
@@ -72,7 +72,7 @@
 }
 
 .menuItemOnDark {
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: #1e2735 !important;
 }
 
 .menuItemOnLight {
