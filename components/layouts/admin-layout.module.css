@@ -16,6 +16,28 @@
   padding-top: 1.25rem;
 }
 
+.sidebarBrand {
+  padding: 0 1.15rem 1rem;
+  margin: 0 0.5rem 0.85rem;
+  border-bottom: 1px solid rgba(30, 39, 53, 0.1);
+}
+
+.sidebarBrandMark {
+  color: #1e2735;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.sidebarBrandMark :global(img) {
+  flex-shrink: 0;
+}
+
+.sidebarBrandMark :global(span:last-child) {
+  font-size: 20px;
+  white-space: normal;
+  line-height: 1.15;
+}
+
 .sideHeader {
   padding: 0 1.4rem 0.85rem;
 }

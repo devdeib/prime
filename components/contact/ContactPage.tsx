@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BaseContainer from "@/components/common/container/BaseContainer";
 import { pickLocalized } from "@/lib/bilingual";
+import { toEmbedUrl } from "@/lib/map-embed-url";
 import styles from "./contact-page.module.css";
 
 type VisualRow = {
@@ -32,6 +33,8 @@ type ContactContent = {
   hours_value_en?: string;
   hours_value_ar?: string;
   map_embed_url?: string;
+  /** Set by GET /api/be/site-content/contact when the URL is resolved server-side. */
+  map_iframe_src?: string;
 };
 
 const FALLBACK_VISUAL = "https://picsum.photos/seed/la-dolce-contact/1000/1200";
@@ -39,30 +42,15 @@ const FALLBACK_VISUAL = "https://picsum.photos/seed/la-dolce-contact/1000/1200";
 function findLeadImage(row: VisualRow) {
   return row.images?.find(Boolean) || row.image_url || null;
 }
-function toEmbedUrl(url: string): string {
-  const trimmed = url.trim();
-  // Already a valid embed URL
-  if (trimmed.includes("/maps/embed")) return trimmed;
-  // Try to extract coordinates
-  const coordMatch = trimmed.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
-  if (coordMatch) {
-    const [, lat, lng] = coordMatch;
-    return `https://www.google.com/maps/embed/v1/view?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&center=${lat},${lng}&zoom=15`;
-  }
-  // Try to extract place name
-  const placeMatch = trimmed.match(/\/place\/([^/@?]+)/);
-  if (placeMatch) {
-    const place = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
-    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY&q=${encodeURIComponent(place)}`;
-  }
-  // Fallback: return as-is and hope for the best
-  return trimmed;
-}
-
 export default function ContactPage() {
   const { t, i18n } = useTranslation("common");
   const [visualUrl, setVisualUrl] = useState(FALLBACK_VISUAL);
   const [content, setContent] = useState<ContactContent>({});
+  const rawMapUrl = content.map_embed_url?.trim() ?? "";
+  const mapEmbedSrc =
+    (typeof content.map_iframe_src === "string" && content.map_iframe_src.trim()) ||
+    (rawMapUrl ? toEmbedUrl(rawMapUrl) : null) ||
+    null;
   const copy = {
     title:
       pickLocalized(i18n.language, content.title_en, content.title_ar) ||
@@ -182,14 +170,40 @@ export default function ContactPage() {
             </div>
 
             <div className={styles.visual}>
-              {content.map_embed_url?.trim() ? (
+              {mapEmbedSrc ? (
                 <iframe
-                  src={toEmbedUrl(content.map_embed_url)}
+                  src={mapEmbedSrc}
                   title={copy.title}
                   className={styles.map}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
                 />
+              ) : content.map_embed_url?.trim() ? (
+                <div className={styles.mapFallback}>
+                  <p className={styles.mapFallbackText}>
+                    This map link cannot be embedded. Open it in Google Maps, or paste
+                    the iframe <strong>src</strong> from Google Maps → Share → Embed a map.
+                  </p>
+                  <a
+                    className={styles.mapFallbackLink}
+                    href={content.map_embed_url.trim()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Open map in new window
+                  </a>
+                  <div className={styles.mapFallbackImage}>
+                    <Image
+                      src={visualUrl}
+                      alt={copy.visualAlt}
+                      fill
+                      sizes="(max-width: 959px) 100vw, 44vw"
+                      className={styles.image}
+                      unoptimized={visualUrl.startsWith("http")}
+                    />
+                  </div>
+                </div>
               ) : (
                 <Image
                   src={visualUrl}

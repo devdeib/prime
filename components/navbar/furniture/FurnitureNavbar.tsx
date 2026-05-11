@@ -19,13 +19,25 @@ export default function FurnitureNavbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
+  const [isNarrow, setIsNarrow] = useState(false);
   const isHome = pathname === "/";
   const useLightNavbar = !isHome || scrolled;
+  /** Mobile menu uses a light panel; profile trigger uses dark text on light. */
+  const profileOnLight = useLightNavbar || isNarrow;
+  const profileHeroFlat = isHome && !scrolled;
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 991px)");
+    const sync = () => setIsNarrow(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
 
   return (
@@ -48,6 +60,7 @@ export default function FurnitureNavbar() {
             text={t("nav.brand")}
             className={styles.brandMark}
             logoWidth={12}
+            priority={isHome}
           />
         </Navbar.Brand>
 
@@ -99,7 +112,7 @@ export default function FurnitureNavbar() {
           <Nav className={`align-items-center flex-wrap ${styles.rightLinks}`}>
             <span
               className={`${styles.languageWrap} ${
-                useLightNavbar ? styles.langOnLight : ""
+                profileOnLight ? styles.langOnLight : ""
               }`}
               >
               <LanguageToggle />
@@ -113,7 +126,9 @@ export default function FurnitureNavbar() {
                   {t("nav.signIn")}
                 </Nav.Link>
               )}
-            {session && <ProfileNavItem onLight={useLightNavbar} />}
+            {session && (
+              <ProfileNavItem onLight={profileOnLight} heroFlat={profileHeroFlat} />
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -24,7 +24,8 @@
 .heroOverlay {
   position: absolute;
   inset: 0;
-  z-index: 15;
+  /* Above carousel slides / video so hero copy stays visible on video backgrounds */
+  z-index: 40;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,6 +50,7 @@
   inset-inline-end: clamp(1rem, 3vw, 2rem);
   bottom: clamp(1rem, 3vw, 2rem);
   pointer-events: auto;
+  z-index: 45;
 }
 
 .heroAdminBtn {

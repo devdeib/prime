@@ -11,6 +11,8 @@ type BrandMarkProps = {
   showText?: boolean;
   text?: string;
   logoWidth?: number;
+  /** Prefer above-the-fold logos (avoids Next.js LCP warning for lazy-loaded LCP). */
+  priority?: boolean;
 };
 
 export default function BrandMark({
@@ -20,7 +22,9 @@ export default function BrandMark({
   showText = true,
   text = "La Dolce Casa",
   logoWidth = 54,
+  priority,
 }: BrandMarkProps) {
+  const eagerLogo = priority === true || logoWidth >= 54;
   const content = (
     <span
       className={`${styles.brandMark} ${stacked ? styles.stacked : styles.inline} ${className ?? ""}`.trim()}
@@ -30,7 +34,7 @@ export default function BrandMark({
         alt="La Dolce Casa logo"
         width={logoWidth}
         height={Math.round((logoWidth * 71) / 63)}
-        priority={logoWidth >= 54}
+        priority={eagerLogo}
         className={styles.logo}
       />
       {showText ? <span className={styles.text}>{text}</span> : null}

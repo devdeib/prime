@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const MAX_UPLOAD_BYTES = 200 * 1024 * 1024
+const MAX_UPLOAD_BYTES = 100 * 1024 * 1024
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     if (file.size > MAX_UPLOAD_BYTES) {
       return NextResponse.json(
-        { error: 'Upload failed: this file is larger than 200MB.' },
+        { error: 'Upload failed: this file is larger than 100MB.' },
         { status: 413 }
       )
     }

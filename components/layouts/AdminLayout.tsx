@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import BrandMark from "@/components/brand/BrandMark";
 import AdminNavbar from "../navbar/admin/AdminNavbar";
 import SideNavBar from "../navbar/sidebar/SideNavBar";
 import styles from "./admin-layout.module.css";
@@ -15,6 +16,16 @@ const AdminLayout: React.FC<ChildProps> = ({ children }) => {
       <AdminNavbar />
       <div className={styles.main}>
         <aside className={styles.sidebar}>
+          <div className={styles.sidebarBrand}>
+            <BrandMark
+              href="/dashboard/home"
+              stacked={false}
+              text="LA DOLCE CASA"
+              logoWidth={28}
+              priority
+              className={styles.sidebarBrandMark}
+            />
+          </div>
           <div className={styles.sideBody}>
             <SideNavBar />
           </div>

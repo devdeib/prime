@@ -1,9 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
 import { useSession } from "next-auth/react";
 import AdminAccessHint from "@/components/dashboard/AdminAccessHint";
+import { uploadMediaWithProgress } from "@/components/dashboard/upload-media";
 import styles from "@/components/dashboard/admin-surface.module.css";
 
 type SiteContent = Record<string, string>;
@@ -85,6 +87,8 @@ export default function DashboardContentPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
+  const imageFileRef = useRef<HTMLInputElement | null>(null);
 
   const load = useCallback(async () => {
     setError(null);
@@ -114,6 +118,22 @@ export default function DashboardContentPage() {
         [name]: value,
       },
     }));
+  };
+
+  const handleContentImagePick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !file.type.startsWith("image/")) return;
+    setImageUploading(true);
+    setError(null);
+    try {
+      const url = await uploadMediaWithProgress(file);
+      updateField("image_url", url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Image upload failed.");
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const save = async () => {
@@ -173,24 +193,85 @@ export default function DashboardContentPage() {
 
           <Row className="g-3">
             {section.fields.flatMap((field) =>
-              localizedFieldNames(field).map((name) => (
-                <Col md={name.includes("body") || name.includes("hours") ? 12 : 6} key={name}>
-                  <Form.Label>{name.replaceAll("_", " ")}</Form.Label>
-                  {name.includes("body") || name.includes("hours") ? (
-                    <Form.Control
-                      as="textarea"
-                      rows={name.includes("body") ? 8 : 3}
-                      value={form[name] ?? ""}
-                      onChange={(event) => updateField(name, event.target.value)}
-                    />
-                  ) : (
-                    <Form.Control
-                      value={form[name] ?? ""}
-                      onChange={(event) => updateField(name, event.target.value)}
-                    />
-                  )}
-                </Col>
-              ))
+              localizedFieldNames(field).map((name) => {
+                const isImageUrlField =
+                  name === "image_url" &&
+                  (section.key === "about" || section.key === "services");
+
+                if (isImageUrlField) {
+                  const preview = (form[name] ?? "").trim();
+                  return (
+                    <Col md={12} key={name}>
+                      <Form.Label>{name.replaceAll("_", " ")}</Form.Label>
+                      <Form.Control
+                        value={form[name] ?? ""}
+                        onChange={(event) => updateField(name, event.target.value)}
+                        placeholder="https://… or upload an image below"
+                      />
+                      <div className="d-flex flex-wrap align-items-center gap-2 mt-2">
+                        <input
+                          ref={imageFileRef}
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp,image/gif"
+                          className="d-none"
+                          disabled={imageUploading}
+                          onChange={(event) => void handleContentImagePick(event)}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline-secondary"
+                          size="sm"
+                          disabled={imageUploading}
+                          onClick={() => imageFileRef.current?.click()}
+                        >
+                          {imageUploading ? "Uploading…" : "Upload from computer"}
+                        </Button>
+                      </div>
+                      <p className="small text-muted mb-2 mt-1">
+                        Uploads go to your Supabase <code>products</code> storage bucket (same
+                        as catalog media). Ensure the bucket allows public read for the returned
+                        URL, or use a pasted URL instead.
+                      </p>
+                      {preview ? (
+                        <div
+                          className="position-relative mt-2 rounded border overflow-hidden bg-light"
+                          style={{ width: 200, height: 140 }}
+                        >
+                          <Image
+                            src={preview}
+                            alt="Preview"
+                            fill
+                            sizes="200px"
+                            style={{ objectFit: "contain", padding: 4 }}
+                            unoptimized={
+                              preview.startsWith("http") || preview.startsWith("/")
+                            }
+                          />
+                        </div>
+                      ) : null}
+                    </Col>
+                  );
+                }
+
+                return (
+                  <Col md={name.includes("body") || name.includes("hours") ? 12 : 6} key={name}>
+                    <Form.Label>{name.replaceAll("_", " ")}</Form.Label>
+                    {name.includes("body") || name.includes("hours") ? (
+                      <Form.Control
+                        as="textarea"
+                        rows={name.includes("body") ? 8 : 3}
+                        value={form[name] ?? ""}
+                        onChange={(event) => updateField(name, event.target.value)}
+                      />
+                    ) : (
+                      <Form.Control
+                        value={form[name] ?? ""}
+                        onChange={(event) => updateField(name, event.target.value)}
+                      />
+                    )}
+                  </Col>
+                );
+              })
             )}
           </Row>
 

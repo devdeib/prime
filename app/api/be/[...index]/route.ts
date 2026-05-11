@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { resolveGoogleMapsShortLinkToEmbedUrl, toEmbedUrl } from '@/lib/map-embed-url'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -198,7 +199,25 @@ async function readSiteContent(key: string) {
 
   if (error) return fallback
   if (!data || typeof data.value !== 'object' || data.value === null) return fallback
-  return { ...(fallback as Record<string, unknown>), ...(data.value as Record<string, unknown>) }
+  const merged = {
+    ...(fallback as Record<string, unknown>),
+    ...(data.value as Record<string, unknown>),
+  }
+
+  if (key !== 'contact') return merged
+
+  const raw = typeof merged.map_embed_url === 'string' ? merged.map_embed_url.trim() : ''
+  if (!raw) return merged
+
+  const direct = toEmbedUrl(raw)
+  if (direct) {
+    return { ...merged, map_iframe_src: direct }
+  }
+  const resolved = await resolveGoogleMapsShortLinkToEmbedUrl(raw)
+  if (resolved) {
+    return { ...merged, map_iframe_src: resolved }
+  }
+  return merged
 }
 
 async function getMediaCandidates() {
@@ -446,9 +465,14 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
   if (resource === 'site-content') {
     const normalizedKey = sanitizeSiteContentKey(id)
     if (!normalizedKey) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    let value: Record<string, unknown> = body
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      const { map_iframe_src: _computedEmbed, ...rest } = value
+      value = rest
+    }
     const { data, error } = await supabase
       .from('site_content')
-      .upsert({ key: normalizedKey, value: body }, { onConflict: 'key' })
+      .upsert({ key: normalizedKey, value }, { onConflict: 'key' })
       .select('value')
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
