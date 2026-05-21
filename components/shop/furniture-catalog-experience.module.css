@@ -411,18 +411,6 @@
   gap: 0;
 }
 
-/* Products listing — even separators via gap (avoids broken border-grid at 3/4 cols) */
-.grid:not(.featuredRail) {
-  gap: 1px;
-  background: rgba(30, 39, 53, 0.1);
-  border-top: 1px solid rgba(30, 39, 53, 0.1);
-  border-bottom: 1px solid rgba(30, 39, 53, 0.1);
-}
-
-.gridCompact:not(.featuredRail) {
-  background: rgba(30, 39, 53, 0.09);
-}
-
 .featuredRail {
   display: grid;
   grid-auto-flow: column;
