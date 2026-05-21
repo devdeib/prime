@@ -345,6 +345,8 @@
 
 .sliderShell {
   position: relative;
+  border-top: 1px solid rgba(30, 39, 53, 0.1);
+  border-bottom: 1px solid rgba(30, 39, 53, 0.1);
 }
 
 .sliderArrow {
@@ -425,9 +427,8 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   align-items: stretch;
-  border-top: 1px solid rgba(30, 39, 53, 0.1);
-  border-left: 1px solid rgba(30, 39, 53, 0.1);
-  background: rgba(30, 39, 53, 0.06);
+  border: none;
+  background: transparent;
 }
 
 .featuredRail::-webkit-scrollbar {
@@ -448,6 +449,7 @@
 
 .grid.featuredRail {
   grid-template-columns: none;
+  border: none;
 }
 
 .card {
@@ -472,8 +474,7 @@
   scroll-snap-align: start;
   display: grid;
   grid-template-rows: minmax(0, 1fr) 112px;
-  border-right: 1px solid rgba(30, 39, 53, 0.1);
-  border-bottom: 1px solid rgba(30, 39, 53, 0.1);
+  border: none;
   background: #faf9f7;
 }
 
