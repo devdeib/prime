@@ -14,7 +14,7 @@
 :global(html:not([lang="ar"])) .shell p,
 :global(html:not([lang="ar"])) .customIntro h2,
 :global(html:not([lang="ar"])) .customIntro p {
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-family: var(--font-ui);
 }
 
 .customIntro {
@@ -38,9 +38,9 @@
 .customIntroTitle {
   margin: 0;
   color: #b8942f;
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: 60px;
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 600;
   line-height: 1.35;
 }
 
@@ -48,8 +48,8 @@
   margin: 1rem auto 0;
   max-width: 100%;
   color: #858b94;
-  font-size: 25px;
-  line-height: 1.8;
+  font-size: var(--text-lead);
+  line-height: 1.65;
 }
 
 .inner {
@@ -174,5 +174,13 @@
   .bottom {
     margin-top: 1.4rem;
     font-size: 0.9rem;
+  }
+
+  .customIntroTitle {
+    font-size: 1.375rem;
+  }
+
+  .customIntroText {
+    font-size: 1rem;
   }
 }

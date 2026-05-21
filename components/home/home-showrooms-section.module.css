@@ -15,7 +15,8 @@
   margin: 0 auto 2.5rem;
 }
 
-.title {
+.title,
+.homeSectionTitle {
   margin: 0;
   color: #b8942f;
   font-family: var(--font-display, Didot, Georgia, serif);
@@ -25,13 +26,27 @@
   line-height: 1;
 }
 
+@media (max-width: 575px) {
+  .title,
+  .homeSectionTitle {
+    font-size: clamp(2rem, 12vw, 3.25rem);
+  }
+}
+
 .subtitle {
   margin: 1rem auto 0;
   max-width: 100%;
   color: var(--shop-muted);
   font-family: var(--font-ui);
-  font-size: 25px;
-  line-height: 1.8;
+  font-size: var(--text-lead);
+  line-height: 1.65;
+}
+
+@media (max-width: 575px) {
+  .subtitle {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
 }
 
 .sliderShell {
@@ -139,10 +154,11 @@
 .cardTitle {
   margin: 0;
   color: #ffffff;
-  font-family: var(--font-display, Didot, Georgia, serif);
-  font-size: clamp(1.45rem, 2vw, 2rem);
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .cardMeta {

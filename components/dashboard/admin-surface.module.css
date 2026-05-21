@@ -28,9 +28,9 @@
 .title {
   margin: 0;
   color: #1e2735;
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: clamp(2.15rem, 3vw, 2.95rem);
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: clamp(1.5rem, 2.5vw, 1.875rem);
+  font-weight: 600;
 }
 
 .subtle {
@@ -54,9 +54,9 @@
 
 .panelTitle {
   color: #1e2735;
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: 1.85rem;
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: 1.25rem;
+  font-weight: 600;
   margin-bottom: 1.1rem;
 }
 
@@ -91,7 +91,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 1rem 1rem 0.85rem;
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-family: var(--font-ui);
 }
 
 .tableWrap :global(tbody td) {

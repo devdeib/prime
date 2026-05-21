@@ -24,9 +24,9 @@
 .title {
   margin: 0;
   color: #b8942f;
-  font-family: var(--font-display, Didot, Georgia, serif);
-  font-size: clamp(2.5rem, 5vw, 4.2rem);
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 600;
   text-transform: uppercase;
   line-height: 1;
 }
@@ -54,9 +54,9 @@
 .panelTitle {
   margin: 0 0 1.25rem;
   color: #1e2735;
-  font-family: var(--font-display, Didot, Georgia, serif);
-  font-size: clamp(1.35rem, 2vw, 2rem);
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: 1.125rem;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -71,9 +71,9 @@
 .monthLabel {
   margin: 0;
   color: #1e2735;
-  font-family: var(--font-display, Didot, Georgia, serif);
-  font-size: 1.35rem;
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .navBtn {

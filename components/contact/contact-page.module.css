@@ -19,11 +19,11 @@
 .title {
   margin: 0 0 2rem;
   color: #b8942f;
-  font-family: var(--font-display, Didot, Georgia, serif);
-  font-size: clamp(2.5rem, 5vw, 4.8rem);
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 600;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .list {
@@ -39,10 +39,11 @@
 .label {
   margin: 0;
   color: #1e2735;
-  font-family: var(--font-display, Didot, Georgia, serif);
-  font-size: clamp(1.35rem, 2.2vw, 2.4rem);
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .value {

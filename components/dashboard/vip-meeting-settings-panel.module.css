@@ -1,9 +1,9 @@
 .sectionTitle {
   margin: 0 0 0.35rem;
   color: #1e2735;
-  font-family: var(--font-display), Didot, Georgia, serif;
-  font-size: 1.35rem;
-  font-weight: 400;
+  font-family: var(--font-ui);
+  font-size: 1.125rem;
+  font-weight: 600;
 }
 
 .sectionHint {
@@ -22,8 +22,9 @@
 }
 
 .monthLabel {
-  font-family: var(--font-display), Didot, Georgia, serif;
-  font-size: 1.1rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
   color: #1e2735;
 }
 

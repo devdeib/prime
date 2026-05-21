@@ -9,7 +9,7 @@
 
 :global(html:not([lang="ar"])) .bar,
 :global(html:not([lang="ar"])) .bar :global(.nav-link) {
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-family: var(--font-ui);
 }
 
 .navContainer {
@@ -41,6 +41,7 @@
 .brandMark span:last-child {
   display: inline;
   color: inherit;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
   font-size: 1.58rem;
   line-height: 0.98;
   max-width: 100%;
@@ -62,7 +63,7 @@
   padding: 0 !important;
   line-height: 1.08;
   letter-spacing: 0.01em;
-  font-size: 18px !important;
+  font-size: var(--text-nav) !important;
   text-transform: uppercase;
 }
 
@@ -86,7 +87,7 @@
   }
 
   .navLink {
-    font-size: 16px !important;
+    font-size: 0.875rem !important;
   }
 }
 

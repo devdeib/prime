@@ -5,6 +5,12 @@
   --foreground: #171717;
   /* Cabinet Grotesk — loaded via Fontshare CDN in layout.tsx */
   --font-ui: "Cabinet Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Standard UI type scale (Didot-era sizes were bumped for legibility) */
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-lg: 1.125rem;
+  --text-lead: clamp(1rem, 1.6vw, 1.125rem);
+  --text-nav: 0.9375rem;
 }
 
 @theme inline {
@@ -26,6 +32,7 @@ body {
 
 html[lang="en"] body {
   font-family: var(--font-ui);
+  font-size: var(--text-body);
 }
 html[lang="ar"] body {
   font-family: var(--font-body-ar), var(--font-body-ar-alt), ui-sans-serif, system-ui, sans-serif;
@@ -34,14 +41,11 @@ html[lang="ar"] body {
   font-variation-settings: "slnt" 0;
 }
 
-/* Serif — logo wordmark, hero copy, and large section headings only */
-h1,
-h2,
-h3,
+/* Italian Didot — storefront hero + featured section headings only */
 .font-display,
 [class*="heroTitle"],
 [class*="featuredTitle"],
-[class*="sectionTitle"] {
+[class*="homeSectionTitle"] {
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
 }
 

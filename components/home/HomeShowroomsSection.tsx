@@ -79,7 +79,7 @@ export function HomeProjectsSection() {
     <section className={`${styles.section} ${styles.sectionProjects}`}>
       <div className={styles.inner}>
         <header className={styles.header}>
-          <h2 className={`${styles.title} ${styles.sectionTitle}`}>{title}</h2>
+          <h2 className={`${styles.title} ${styles.homeSectionTitle}`}>{title}</h2>
           <p className={styles.subtitle}>{subtitle}</p>
         </header>
 
@@ -206,7 +206,7 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
     <section className={styles.section}>
       <div className={styles.inner}>
         <header className={styles.header}>
-          <h2 className={`${styles.title} ${styles.sectionTitle}`}>{title}</h2>
+          <h2 className={`${styles.title} ${styles.homeSectionTitle}`}>{title}</h2>
           <p className={styles.subtitle}>{subtitle}</p>
         </header>
 

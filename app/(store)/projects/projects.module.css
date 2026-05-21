@@ -15,18 +15,19 @@
 }
 
 .eyebrow {
-  font-size: 20px;
-  letter-spacing: 0.32em;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #858b94;
   margin-bottom: 0.75rem;
 }
 
 .title {
-  font-family: var(--font-display, serif);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-family: var(--font-ui);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: 0;
   color: #1e2735;
   margin-bottom: 0.5rem;
 }
@@ -36,7 +37,7 @@
   max-width: 100%;
   margin: 0 auto;
   line-height: 1.6;
-  font-size: 25px;
+  font-size: var(--text-lead);
 }
 
 .list {
@@ -66,14 +67,14 @@
 .listName {
   flex: 2;
   font-weight: 500;
-  font-size: 25px;
+  font-size: 1.125rem;
   color: #1e2735;
 }
 
 .listCity {
   flex: 1;
   color: #b8942f;
-  font-size: 20px;
+  font-size: var(--text-sm);
   text-align: end;
   margin-inline-start: 1.5rem;
 }
@@ -323,7 +324,7 @@
   margin: 0;
   color: #596273;
   line-height: 1.75;
-  font-size: 20px;
+  font-size: var(--text-body);
 }
 
 .viewerAddress + .viewerDescription {
@@ -390,7 +391,7 @@
   color: #b8942f;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  font-size: 20px;
+  font-size: var(--text-sm);
   text-align: left;
 }
 
@@ -436,6 +437,14 @@
 }
 
 @media (max-width: 767px) {
+  .sub {
+    font-size: 1rem;
+  }
+
+  .listName {
+    font-size: 1rem;
+  }
+
   .listItem {
     flex-direction: column;
     align-items: flex-start;
