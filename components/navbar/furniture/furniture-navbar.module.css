@@ -12,7 +12,7 @@
 
 :global(html:not([lang="ar"])) .navShell,
 :global(html:not([lang="ar"])) .navShell :global(.nav-link) {
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-family: var(--font-ui);
 }
 
 .navContainer {
@@ -46,6 +46,7 @@
 .brandMark span:last-child {
   display: inline;
   color: inherit;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
   font-size: 1.58rem;
   line-height: 0.98;
   max-width: 100%;
