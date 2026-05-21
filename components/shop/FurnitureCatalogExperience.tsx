@@ -14,6 +14,10 @@ import {
   type HomeCarouselSlide,
 } from "@/data/mock/home-carousel";
 import { pickLocalized } from "@/lib/bilingual";
+import {
+  buildWhatsAppOrderUrl,
+  fetchContactPhoneDigits,
+} from "@/lib/whatsapp";
 import styles from "./furniture-catalog-experience.module.css";
 
 type Category = {
@@ -110,6 +114,7 @@ export default function FurnitureCatalogExperience({
   const [heroEditorOpen, setHeroEditorOpen] = useState(false);
   const [heroDraft, setHeroDraft] = useState<HeroCopy>({});
   const [heroSaving, setHeroSaving] = useState(false);
+  const [whatsappPhone, setWhatsappPhone] = useState<string | null>(null);
   const featuredRailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -146,6 +151,16 @@ export default function FurnitureCatalogExperience({
 
     return () => controller.abort();
   }, [topCarousel]);
+
+  useEffect(() => {
+    let mounted = true;
+    void fetchContactPhoneDigits().then((digits) => {
+      if (mounted) setWhatsappPhone(digits);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -293,12 +308,28 @@ export default function FurnitureCatalogExperience({
   };
 
   const onProductActivate = (product: Product) => {
-    if (product.external_url) {
-      window.location.href = product.external_url;
-      return;
-    }
     setSelected(product);
   };
+
+  const selectedCategoryLabel = useMemo(() => {
+    if (!selected) return "";
+    const match = categories.find((c) => c.alias === selected.category);
+    if (match) {
+      return pickLocalized(i18n.language, match.name, match.name_ar);
+    }
+    return selected.category;
+  }, [categories, i18n.language, selected]);
+
+  const whatsappLabel =
+    t("catalog.orderWhatsApp") === "catalog.orderWhatsApp"
+      ? "Order on WhatsApp"
+      : t("catalog.orderWhatsApp");
+  const shopLabel =
+    t("catalog.viewOnlineShop") === "catalog.viewOnlineShop"
+      ? "View in our online shop"
+      : t("catalog.viewOnlineShop");
+  const categoryLabel =
+    t("catalog.category") === "catalog.category" ? "Category" : t("catalog.category");
 
   const scrollFeatured = (direction: -1 | 1) => {
     const rail = featuredRailRef.current;
@@ -549,23 +580,6 @@ export default function FurnitureCatalogExperience({
               </>
             );
 
-            if (product.external_url) {
-              return (
-                <a
-                  key={product.id}
-                  href={product.external_url}
-                  className={`${styles.card} ${
-                    topCarousel ? styles.cardCompact : ""
-                  }`}
-                  style={{
-                    animationDelay: `${Math.min(index, 12) * 0.055}s`,
-                  }}
-                >
-                  {content}
-                </a>
-              );
-            }
-
             return (
               <button
                 key={product.id}
@@ -648,6 +662,53 @@ export default function FurnitureCatalogExperience({
                   selected.descriptions_ar
                 ) || t("catalog.noDescription")}
               </p>
+
+              <div className={styles.specs}>
+                {selectedCategoryLabel ? (
+                  <div className={styles.specRow}>
+                    <span className={styles.specLabel}>{categoryLabel}</span>
+                    <span>{selectedCategoryLabel}</span>
+                  </div>
+                ) : null}
+                {selected.sku ? (
+                  <div className={styles.specRow}>
+                    <span className={styles.specLabel}>SKU</span>
+                    <span>{selected.sku}</span>
+                  </div>
+                ) : null}
+                {selected.weight != null && selected.weight > 0 ? (
+                  <div className={styles.specRow}>
+                    <span className={styles.specLabel}>
+                      {t("catalog.weight") === "catalog.weight" ? "Weight" : t("catalog.weight")}
+                    </span>
+                    <span>{selected.weight}</span>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className={styles.panelActions}>
+                <a
+                  className={`${styles.panelBtn} ${styles.panelBtnPrimary}`}
+                  href={buildWhatsAppOrderUrl(
+                    whatsappPhone ?? "",
+                    pickLocalized(i18n.language, selected.name, selected.name_ar)
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {whatsappLabel}
+                </a>
+                {selected.external_url ? (
+                  <a
+                    className={`${styles.panelBtn} ${styles.panelBtnGhost}`}
+                    href={selected.external_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {shopLabel}
+                  </a>
+                ) : null}
+              </div>
             </div>
           </div>
         </>

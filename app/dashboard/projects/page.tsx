@@ -15,6 +15,7 @@ import { useSession } from "next-auth/react";
 import AdminAccessHint from "@/components/dashboard/AdminAccessHint";
 import { uploadMediaWithProgress } from "@/components/dashboard/upload-media";
 import { useTranslation } from "react-i18next";
+import { PROJECT_TYPES, type ProjectType } from "@/lib/project-type";
 import styles from "@/components/dashboard/admin-surface.module.css";
 
 type ProjectRow = {
@@ -30,6 +31,7 @@ type ProjectRow = {
   images?: string[] | null;
   image_url?: string | null;
   sort_order: number;
+  project_type?: string | null;
 };
 
 export default function DashboardProjectsPage() {
@@ -57,6 +59,7 @@ export default function DashboardProjectsPage() {
     description: "",
     descriptionAr: "",
     sortOrder: "0",
+    projectType: "residential" as ProjectType,
     images: [] as string[],
   });
 
@@ -97,6 +100,8 @@ export default function DashboardProjectsPage() {
       description: r.description ?? "",
       descriptionAr: r.description_ar ?? "",
       sortOrder: String(r.sort_order),
+      projectType:
+        r.project_type === "commercial" ? "commercial" : "residential",
       images:
         r.images?.filter(Boolean) ??
         (r.image_url?.trim() ? [r.image_url.trim()] : []),
@@ -130,6 +135,7 @@ export default function DashboardProjectsPage() {
           images: form.images,
           image_url: form.images[0] || undefined,
           sort_order: Number(form.sortOrder),
+          project_type: form.projectType,
         }),
       });
       if (!res.ok) {
@@ -176,6 +182,7 @@ export default function DashboardProjectsPage() {
           images: form.images,
           image_url: form.images[0] || "",
           sort_order: Number(form.sortOrder),
+          project_type: form.projectType,
         }),
       });
       if (!res.ok) {
@@ -316,6 +323,24 @@ export default function DashboardProjectsPage() {
                     setForm((p) => ({ ...p, sortOrder: e.target.value }))
                   }
                 />
+              </Col>
+              <Col md={2}>
+                <Form.Label>Project type</Form.Label>
+                <Form.Select
+                  value={form.projectType}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      projectType: e.target.value as ProjectType,
+                    }))
+                  }
+                >
+                  {PROJECT_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {type === "commercial" ? "Commercial" : "Residential"}
+                    </option>
+                  ))}
+                </Form.Select>
               </Col>
             </Row>
             <Row className="g-2 mb-2">

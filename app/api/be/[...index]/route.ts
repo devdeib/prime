@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { resolveGoogleMapsShortLinkToEmbedUrl, toEmbedUrl } from '@/lib/map-embed-url'
+import { normalizeProjectType } from '@/lib/project-type'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -70,7 +71,12 @@ function normalizeProjectPayload(body: Record<string, unknown>) {
   const normalizedImages =
     images.length > 0 ? images : fallbackImageUrl ? [fallbackImageUrl] : []
   const leadImageUrl = normalizedImages[0] ?? null
-  return { ...body, images: normalizedImages, image_url: leadImageUrl }
+  return {
+    ...body,
+    images: normalizedImages,
+    image_url: leadImageUrl,
+    project_type: normalizeProjectType(body.project_type),
+  }
 }
 
 function formatProjectRow(row: Record<string, unknown>) {
@@ -80,6 +86,7 @@ function formatProjectRow(row: Record<string, unknown>) {
     ...row,
     images: imageUrl && images.length === 0 ? [imageUrl] : images,
     image_url: imageUrl,
+    project_type: normalizeProjectType(row.project_type),
   }
 }
 

@@ -1,0 +1,90 @@
+.card {
+  opacity: 0;
+  animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hit {
+  display: block;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: start;
+  cursor: pointer;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #e8e6e1;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 18, 28, 0) 42%,
+    rgba(12, 18, 28, 0.28) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.55s ease;
+}
+
+.hit:hover .image,
+.hit:focus-visible .image {
+  transform: scale(1.04);
+}
+
+.hit:hover .overlay,
+.hit:focus-visible .overlay {
+  opacity: 1;
+}
+
+.copy {
+  padding: 1.15rem 0.15rem 0.35rem;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hit:hover .copy,
+.hit:focus-visible .copy {
+  transform: translateY(3px);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display), Didot, Georgia, serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  font-weight: 400;
+  color: #1e2735;
+  line-height: 1.15;
+}
+
+.subtitle {
+  margin: 0.45rem 0 0;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #858b94;
+  line-height: 1.5;
+  max-width: 36rem;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
