@@ -12,6 +12,7 @@ import BrandMark from "@/components/brand/BrandMark";
 import ProfileNavItem from "../ProfileNavItem";
 import HamBurgerIcon from "../HamBurgerIcon";
 import LanguageToggle from "../LanguageToggle";
+import ProductsDropdown from "./ProductsDropdown";
 import styles from "./furniture-navbar.module.css";
 
 export default function FurnitureNavbar() {
@@ -85,13 +86,9 @@ export default function FurnitureNavbar() {
               {t("nav.projects")}
             </Nav.Link>
 
-            <Nav.Link
-              as={Link}
-              href="/products/all-items"
-              className={`${styles.navLink} ${styles.ft14} fw-normal`}
-            >
-              {t("nav.products")}
-            </Nav.Link>
+            <ProductsDropdown
+              linkClassName={`${styles.navLink} ${styles.ft14} fw-normal`}
+            />
 
             <Nav.Link
               as={Link}

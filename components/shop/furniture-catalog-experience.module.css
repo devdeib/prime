@@ -867,3 +867,67 @@
     width: auto;
   }
 }
+
+/* ── Drawer action buttons (Task 2) ──────────────────────────────── */
+.panelCategory {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #b8942f;
+  margin: 0 0 1rem;
+}
+
+.panelActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.panelBtnWhatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.9rem 1.5rem;
+  background: #25d366;
+  color: #ffffff;
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.2s ease, transform 0.18s ease;
+}
+
+.panelBtnWhatsapp:hover {
+  background: #1ebe5a;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.panelBtnShop {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.9rem 1.5rem;
+  background: transparent;
+  color: #1e2735;
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  border: 1px solid rgba(30, 39, 53, 0.22);
+  border-radius: 2px;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.18s ease;
+}
+
+.panelBtnShop:hover {
+  border-color: #b8942f;
+  color: #b8942f;
+  transform: translateY(-1px);
+}

@@ -177,3 +177,70 @@
     right: 0.25rem;
   }
 }
+
+/* ── Task 6: Enhanced Project Card Aesthetic ─────────────────────── */
+/* These override/extend the existing .card for the projects rail */
+.sectionProjects .card {
+  aspect-ratio: 0.68;
+  border-radius: 0;
+  background: #0d1219;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.22);
+}
+
+.sectionProjects .image {
+  transform: scale(1.04);
+  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+  opacity: 0.88;
+}
+
+.sectionProjects .card::after {
+  background: linear-gradient(
+    180deg,
+    rgba(8, 12, 22, 0) 35%,
+    rgba(8, 12, 22, 0.52) 72%,
+    rgba(8, 12, 22, 0.82) 100%
+  );
+  transition: opacity 0.4s ease;
+}
+
+.sectionProjects .card:hover .image {
+  transform: scale(1.12);
+  opacity: 1;
+}
+
+.sectionProjects .card:hover::after {
+  opacity: 0.85;
+}
+
+.sectionProjects .cardBody {
+  padding: 1.4rem 1.25rem 1.5rem;
+}
+
+.sectionProjects .cardTitle {
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.96);
+  transition: color 0.25s ease, transform 0.35s ease;
+}
+
+.sectionProjects .card:hover .cardTitle {
+  color: #ffffff;
+  transform: translateY(-3px);
+}
+
+.sectionProjects .cardMeta {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(184, 148, 47, 0.9);
+  margin-top: 0.35rem;
+  transition: transform 0.35s ease 0.04s;
+}
+
+.sectionProjects .card:hover .cardMeta {
+  transform: translateY(-3px);
+}

@@ -30,6 +30,7 @@ type ProjectRow = {
   images?: string[] | null;
   image_url?: string | null;
   sort_order: number;
+  project_type?: "Residential" | "Commercial" | null;
 };
 
 export default function DashboardProjectsPage() {
@@ -57,6 +58,7 @@ export default function DashboardProjectsPage() {
     description: "",
     descriptionAr: "",
     sortOrder: "0",
+    projectType: "Residential" as "Residential" | "Commercial",
     images: [] as string[],
   });
 
@@ -97,6 +99,7 @@ export default function DashboardProjectsPage() {
       description: r.description ?? "",
       descriptionAr: r.description_ar ?? "",
       sortOrder: String(r.sort_order),
+      projectType: (r.project_type as "Residential" | "Commercial") ?? "Residential",
       images:
         r.images?.filter(Boolean) ??
         (r.image_url?.trim() ? [r.image_url.trim()] : []),
@@ -130,6 +133,7 @@ export default function DashboardProjectsPage() {
           images: form.images,
           image_url: form.images[0] || undefined,
           sort_order: Number(form.sortOrder),
+          project_type: form.projectType,
         }),
       });
       if (!res.ok) {
@@ -176,6 +180,7 @@ export default function DashboardProjectsPage() {
           images: form.images,
           image_url: form.images[0] || "",
           sort_order: Number(form.sortOrder),
+          project_type: form.projectType,
         }),
       });
       if (!res.ok) {
@@ -316,6 +321,21 @@ export default function DashboardProjectsPage() {
                     setForm((p) => ({ ...p, sortOrder: e.target.value }))
                   }
                 />
+              </Col>
+              <Col md={2}>
+                <Form.Label>Type</Form.Label>
+                <Form.Select
+                  value={form.projectType}
+                  onChange={(e) =>
+                    setForm((p) => ({
+                      ...p,
+                      projectType: e.target.value as "Residential" | "Commercial",
+                    }))
+                  }
+                >
+                  <option value="Residential">Residential</option>
+                  <option value="Commercial">Commercial</option>
+                </Form.Select>
               </Col>
             </Row>
             <Row className="g-2 mb-2">
@@ -465,6 +485,7 @@ export default function DashboardProjectsPage() {
               <th>{t("dashboard.name")}</th>
               <th>{t("dashboard.city")}</th>
               <th>{t("dashboard.sortOrder")}</th>
+              <th>Type</th>
               <th>{t("dashboard.images")}</th>
               <th />
             </tr>
@@ -502,6 +523,7 @@ export default function DashboardProjectsPage() {
                     <td>{r.name}</td>
                     <td>{r.city ?? "-"}</td>
                     <td>{r.sort_order}</td>
+                    <td>{r.project_type ?? "Residential"}</td>
                     <td>{r.images?.length ?? (r.image_url ? 1 : 0)}</td>
                     <td>
                       <Button

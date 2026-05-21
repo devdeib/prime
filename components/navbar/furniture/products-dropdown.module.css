@@ -1,0 +1,147 @@
+/* Products dropdown — desktop hover, mobile accordion */
+
+.root {
+  position: relative;
+}
+
+/* ── Desktop trigger ──────────────────────────── */
+.trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 18px;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.chevron {
+  transition: transform 0.22s ease;
+  opacity: 0.7;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown panel ───────────────────────────── */
+.panel {
+  position: absolute;
+  top: calc(100% + 1rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  min-width: 200px;
+  background: #ffffff;
+  border: 1px solid rgba(184, 148, 47, 0.14);
+  box-shadow: 0 16px 48px rgba(17, 24, 39, 0.12);
+  padding: 0.55rem 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 500;
+}
+
+.panelOpen {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.item {
+  display: block;
+  padding: 0.68rem 1.25rem;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #1e2735;
+  text-decoration: none;
+  transition: background 0.14s ease, color 0.14s ease;
+  white-space: nowrap;
+}
+
+.item:hover {
+  background: rgba(184, 148, 47, 0.07);
+  color: #b8942f;
+}
+
+.separator {
+  height: 1px;
+  background: rgba(30, 39, 53, 0.08);
+  margin: 0.4rem 1rem;
+}
+
+/* ── Mobile (hidden on desktop) ───────────────── */
+.mobileAccordion {
+  display: none;
+}
+
+.mobileToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  padding: 0.78rem 0.35rem;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 1.18rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e2735;
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid rgba(30, 39, 53, 0.06);
+}
+
+.mobilePanel {
+  padding-left: 1rem;
+  padding-bottom: 0.25rem;
+}
+
+.mobileItem {
+  display: block;
+  padding: 0.58rem 0.35rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e2735;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(30, 39, 53, 0.04);
+}
+
+.mobileItem:hover {
+  color: #b8942f;
+}
+
+@media (max-width: 991px) {
+  /* On mobile the standard .root (desktop version) is invisible */
+  .root > .trigger,
+  .root > .panel {
+    display: none;
+  }
+
+  .mobileAccordion {
+    display: block;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobileAccordion {
+    display: none;
+  }
+}
+
+@media (max-width: 1199px) {
+  .trigger {
+    font-size: 16px !important;
+  }
+}

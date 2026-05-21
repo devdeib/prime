@@ -9,9 +9,11 @@ export function generateStaticParams() {
   }));
 }
 
-export default async function DashboardUserEditPage(
-  props: PageProps<"/dashboard/users/edit/[id]">
-) {
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export default async function DashboardUserEditPage(props: Props) {
   const { id } = await props.params;
 
   return <DashboardUserEditClient userId={id} />;

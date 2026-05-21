@@ -4,9 +4,11 @@ export function generateStaticParams() {
   return [{ category: "all-items" }];
 }
 
-export default async function CategoryProductsPage(
-  props: PageProps<"/products/[category]">
-) {
+type Props = {
+  params: Promise<{ category: string }>;
+};
+
+export default async function CategoryProductsPage(props: Props) {
   const { category } = await props.params;
   const slug = typeof category === "string" ? category : "all-items";
 

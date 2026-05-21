@@ -21,13 +21,17 @@ type ProjectApi = {
   images?: string[] | null;
   image_url?: string | null;
   sort_order: number;
+  project_type?: "Residential" | "Commercial" | null;
 };
+
+type FilterType = "All" | "Residential" | "Commercial";
 
 const PROJECT_PLACEHOLDER = "/images/La dolce casa.svg";
 
 export default function ProjectsPage() {
   const { t, i18n } = useTranslation("common");
   const [items, setItems] = useState<ProjectApi[]>([]);
+  const [filter, setFilter] = useState<FilterType>("All");
   const [viewer, setViewer] = useState<{
     project: ProjectApi;
     gallery: string[];
@@ -49,6 +53,13 @@ export default function ProjectsPage() {
     (a, b) => a.sort_order - b.sort_order || a.id - b.id
   );
 
+  const filtered =
+    filter === "All"
+      ? sorted
+      : sorted.filter(
+          (p) => (p.project_type ?? "Residential") === filter
+        );
+
   function getGallery(project: ProjectApi): string[] {
     if (project.images && project.images.length > 0 && project.images.filter(Boolean).length > 0) {
       return project.images.filter(Boolean);
@@ -59,6 +70,12 @@ export default function ProjectsPage() {
     return [PROJECT_PLACEHOLDER];
   }
 
+  const filterLabel = (type: FilterType) => {
+    if (type === "All") return i18n.language === "ar" ? "الكل" : "All";
+    if (type === "Residential") return i18n.language === "ar" ? "سكني" : "Residential";
+    return i18n.language === "ar" ? "تجاري" : "Commercial";
+  };
+
   return (
     <section className={styles.page}>
       <BaseContainer>
@@ -67,13 +84,31 @@ export default function ProjectsPage() {
           <p className={styles.sub}>{t("projectsPage.subtitle")}</p>
         </header>
 
-        {sorted.length === 0 ? (
+        {/* Filter Tabs — Task 5 */}
+        <nav className={styles.filterNav} aria-label="Filter projects by type">
+          {(["All", "Residential", "Commercial"] as FilterType[]).map((type, index) => (
+            <>
+              {index > 0 ? <span className={styles.filterSep} aria-hidden key={`sep-${type}`} /> : null}
+              <button
+                key={type}
+                type="button"
+                className={`${styles.filterTab} ${filter === type ? styles.filterTabActive : ""}`}
+                onClick={() => setFilter(type)}
+                aria-current={filter === type ? "true" : undefined}
+              >
+                {filterLabel(type)}
+              </button>
+            </>
+          ))}
+        </nav>
+
+        {filtered.length === 0 ? (
           <p className="text-center text-muted py-5">
             {t("projectsPage.empty")}
           </p>
         ) : (
           <ul className={styles.list}>
-            {sorted.map((project) => {
+            {filtered.map((project) => {
               const gallery = getGallery(project);
               return (
                 <li
@@ -91,6 +126,9 @@ export default function ProjectsPage() {
                   <span className={styles.listName}>
                     {pickLocalized(i18n.language, project.name, project.name_ar)}
                   </span>
+                  {project.project_type && project.project_type !== "Residential" ? (
+                    <span className={styles.listTypeBadge}>{filterLabel(project.project_type)}</span>
+                  ) : null}
                   <span className={styles.listCity}>
                     {pickLocalized(i18n.language, project.city, project.city_ar)}
                   </span>

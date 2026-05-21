@@ -25,6 +25,13 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${fontDisplay.variable} ${fontBodyArabic.variable} ${fontBodyArabicAlt.variable}`}
     >
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,600,700,800&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="min-h-full flex flex-col antialiased">
         <Providers>{children}</Providers>
       </body>

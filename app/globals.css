@@ -3,6 +3,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Cabinet Grotesk — loaded via Fontshare CDN in layout.tsx */
+  --font-ui: "Cabinet Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 @theme inline {
@@ -36,6 +38,23 @@ h2,
 h3,
 .font-display {
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+}
+
+/* Cabinet Grotesk — UI elements: buttons, nav labels, metadata, tags */
+button,
+.nav-link,
+label,
+.font-ui,
+[class*="navLink"],
+[class*="categoryBtn"],
+[class*="eyebrow"],
+[class*="cardName"],
+[class*="panelEyebrow"],
+[class*="listCity"],
+[class*="galleryBadge"],
+[class*="viewerCity"],
+[class*="viewerRailLabel"] {
+  font-family: var(--font-ui);
 }
 
 /* Arabic (RTL): document dir is set in I18nProvider; tweak common layout clashes */
