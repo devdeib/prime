@@ -42,7 +42,110 @@ export default function HomeShowroomsSection() {
 }
 
 export function HomeProjectsSection() {
-  return <HomeCollectionSection kind="projects" />;
+  const { t, i18n } = useTranslation("common");
+  const [items, setItems] = useState<ShowroomItem[]>([]);
+
+  const title =
+    t("homeProjects.title") === "homeProjects.title"
+      ? "PROJECTS"
+      : t("homeProjects.title");
+  const subtitle =
+    t("homeProjects.subtitle") === "homeProjects.subtitle"
+      ? "Explore selected projects and completed interiors shaped with the same care as our showroom experiences."
+      : t("homeProjects.subtitle");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/be/projects", { signal: controller.signal })
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setItems(data);
+        }
+      })
+      .catch(() => {
+        setItems([]);
+      });
+    return () => controller.abort();
+  }, []);
+
+  const cards = useMemo(
+    () => (items.length > 0 ? items : FALLBACK_PROJECTS),
+    [items]
+  );
+  const [featured, secondary] = cards;
+
+  return (
+    <section className={`${styles.section} ${styles.sectionProjects}`}>
+      <div className={styles.inner}>
+        <header className={styles.header}>
+          <h2 className={`${styles.title} ${styles.sectionTitle}`}>{title}</h2>
+          <p className={styles.subtitle}>{subtitle}</p>
+        </header>
+
+        <div className={styles.projectsGrid}>
+          {featured ? (
+            <ProjectFeatureCard
+              project={featured}
+              size="large"
+              language={i18n.language}
+            />
+          ) : null}
+          {secondary ? (
+            <ProjectFeatureCard
+              project={secondary}
+              size="small"
+              language={i18n.language}
+            />
+          ) : null}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProjectFeatureCard({
+  project,
+  size,
+  language,
+}: {
+  project: ShowroomItem;
+  size: "large" | "small";
+  language: string;
+}) {
+  const name = pickLocalized(language, project.name, project.name_ar);
+  const meta = project.city
+    ? pickLocalized(language, project.city, project.city_ar)
+    : null;
+
+  return (
+    <Link
+      href="/projects"
+      className={
+        size === "large" ? styles.projectCardLarge : styles.projectCardSmall
+      }
+      aria-label={name}
+    >
+      <div className={styles.projectMedia}>
+        <Image
+          src={showroomImage(project)}
+          alt={name}
+          fill
+          sizes={
+            size === "large"
+              ? "(max-width: 900px) 100vw, 65vw"
+              : "(max-width: 900px) 100vw, 32vw"
+          }
+          className={styles.projectImage}
+          unoptimized={showroomImage(project).startsWith("http")}
+        />
+      </div>
+      <div className={styles.projectCaption}>
+        <h3 className={styles.projectCardTitle}>{name}</h3>
+        {meta ? <p className={styles.projectCardMeta}>{meta}</p> : null}
+      </div>
+    </Link>
+  );
 }
 
 function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
@@ -103,7 +206,7 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
     <section className={styles.section}>
       <div className={styles.inner}>
         <header className={styles.header}>
-          <h2 className={styles.title}>{title}</h2>
+          <h2 className={`${styles.title} ${styles.sectionTitle}`}>{title}</h2>
           <p className={styles.subtitle}>{subtitle}</p>
         </header>
 

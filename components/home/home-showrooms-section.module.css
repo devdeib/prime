@@ -29,9 +29,9 @@
   margin: 1rem auto 0;
   max-width: 100%;
   color: var(--shop-muted);
+  font-family: var(--font-ui);
   font-size: 25px;
   line-height: 1.8;
-  
 }
 
 .sliderShell {
@@ -178,69 +178,91 @@
   }
 }
 
-/* ── Task 6: Enhanced Project Card Aesthetic ─────────────────────── */
-/* These override/extend the existing .card for the projects rail */
-.sectionProjects .card {
-  aspect-ratio: 0.68;
-  border-radius: 0;
-  background: #0d1219;
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.22);
-}
-
-.sectionProjects .image {
-  transform: scale(1.04);
-  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
-  opacity: 0.88;
-}
-
-.sectionProjects .card::after {
-  background: linear-gradient(
-    180deg,
-    rgba(8, 12, 22, 0) 35%,
-    rgba(8, 12, 22, 0.52) 72%,
-    rgba(8, 12, 22, 0.82) 100%
-  );
-  transition: opacity 0.4s ease;
-}
-
-.sectionProjects .card:hover .image {
-  transform: scale(1.12);
-  opacity: 1;
-}
-
-.sectionProjects .card:hover::after {
-  opacity: 0.85;
-}
-
-.sectionProjects .cardBody {
-  padding: 1.4rem 1.25rem 1.5rem;
-}
-
-.sectionProjects .cardTitle {
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: 1.05rem;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  color: rgba(255, 255, 255, 0.96);
-  transition: color 0.25s ease, transform 0.35s ease;
-}
-
-.sectionProjects .card:hover .cardTitle {
-  color: #ffffff;
-  transform: translateY(-3px);
-}
-
-.sectionProjects .cardMeta {
+/* ── Home projects — asymmetric featured row (one large, one small) ── */
+.sectionProjects .subtitle {
   font-family: var(--font-ui);
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(184, 148, 47, 0.9);
-  margin-top: 0.35rem;
-  transition: transform 0.35s ease 0.04s;
 }
 
-.sectionProjects .card:hover .cardMeta {
-  transform: translateY(-3px);
+.projectsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: start;
+}
+
+.projectCardLarge,
+.projectCardSmall {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.projectMedia {
+  position: relative;
+  overflow: hidden;
+  border-radius: clamp(18px, 2vw, 28px);
+  background: #e8e4dc;
+}
+
+.projectCardLarge .projectMedia {
+  aspect-ratio: 16 / 10;
+}
+
+.projectCardSmall .projectMedia {
+  aspect-ratio: 4 / 5;
+}
+
+.projectImage {
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.projectCardLarge:hover .projectImage,
+.projectCardSmall:hover .projectImage {
+  transform: scale(1.03);
+}
+
+.projectCaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.projectCardTitle {
+  margin: 0;
+  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+  font-weight: 400;
+  line-height: 1.08;
+  color: #1e2735;
+  letter-spacing: -0.01em;
+}
+
+.projectCardSmall .projectCardTitle {
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+}
+
+.projectCardMeta {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #858b94;
+}
+
+@media (max-width: 900px) {
+  .projectsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .projectCardLarge .projectMedia {
+    aspect-ratio: 16 / 11;
+  }
+
+  .projectCardSmall .projectMedia {
+    aspect-ratio: 16 / 10;
+  }
 }

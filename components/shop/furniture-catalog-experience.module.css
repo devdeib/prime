@@ -172,6 +172,7 @@
 }
 
 .heroSub {
+  font-family: var(--font-ui);
   font-size: 25px;
   color: #858b94;
   max-width: 36ch;
@@ -275,6 +276,7 @@
   margin: 1rem auto 0;
   max-width: 100%;
   color: var(--shop-muted);
+  font-family: var(--font-ui);
   font-size: 25px;
   line-height: 1.8;
 }

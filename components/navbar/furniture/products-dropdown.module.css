@@ -33,18 +33,33 @@
 /* ── Dropdown panel ───────────────────────────── */
 .panel {
   position: absolute;
-  top: calc(100% + 1rem);
+  top: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(-6px);
   min-width: 200px;
-  background: #ffffff;
-  border: 1px solid rgba(184, 148, 47, 0.14);
-  box-shadow: 0 16px 48px rgba(17, 24, 39, 0.12);
-  padding: 0.55rem 0;
+  padding-top: 0.65rem;
+  background: transparent;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 500;
+}
+
+/* Inner surface + invisible bridge so hover survives the gap from trigger */
+.panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0.65rem;
+}
+
+.panelInner {
+  background: #ffffff;
+  border: 1px solid rgba(184, 148, 47, 0.14);
+  box-shadow: 0 16px 48px rgba(17, 24, 39, 0.12);
+  padding: 0.55rem 0;
 }
 
 .panelOpen {

@@ -100,30 +100,32 @@ export default function ProductsDropdown({ linkClassName = "" }: Props) {
         role="menu"
         aria-label={label}
       >
-        <Link
-          href="/products/all-items"
-          className={styles.item}
-          role="menuitem"
-          onClick={() => setOpen(false)}
-        >
-          {t("catalog.all") === "catalog.all" ? "All Products" : t("catalog.all")}
-        </Link>
-
-        {categories.length > 0 ? (
-          <div className={styles.separator} aria-hidden />
-        ) : null}
-
-        {categories.map((cat) => (
+        <div className={styles.panelInner}>
           <Link
-            key={cat.id}
-            href={`/products/${cat.alias}`}
+            href="/products/all-items"
             className={styles.item}
             role="menuitem"
             onClick={() => setOpen(false)}
           >
-            {pickLocalized(i18n.language, cat.name, cat.name_ar)}
+            {t("catalog.all") === "catalog.all" ? "All Products" : t("catalog.all")}
           </Link>
-        ))}
+
+          {categories.length > 0 ? (
+            <div className={styles.separator} aria-hidden />
+          ) : null}
+
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/products/${cat.alias}`}
+              className={styles.item}
+              role="menuitem"
+              onClick={() => setOpen(false)}
+            >
+              {pickLocalized(i18n.language, cat.name, cat.name_ar)}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Mobile accordion fallback — visible below lg breakpoint */}
