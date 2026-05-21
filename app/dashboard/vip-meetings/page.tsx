@@ -5,6 +5,7 @@ import { Alert, Badge, Button, Card, Table } from "react-bootstrap";
 import { useSession } from "next-auth/react";
 import { useTranslation } from "react-i18next";
 import AdminAccessHint from "@/components/dashboard/AdminAccessHint";
+import VipMeetingSettingsPanel from "@/components/dashboard/VipMeetingSettingsPanel";
 import {
   formatMeetingDate,
   formatMeetingTime,
@@ -168,6 +169,8 @@ export default function DashboardVipMeetingsPage() {
           )}
         </Card.Body>
       </Card>
+
+      <VipMeetingSettingsPanel />
     </section>
   );
 }

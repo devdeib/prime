@@ -1,5 +1,12 @@
-export const VIP_SLOT_DURATION_MINUTES = 60
-export const VIP_BOOKING_HORIZON_DAYS = 60
+import {
+  getDayScheduleForDate,
+  isDateBlocked,
+  parseTimeToMinutes,
+  type VipMeetingSettings,
+} from '@/lib/vip-meeting-settings'
+import { DEFAULT_VIP_MEETING_SETTINGS } from '@/lib/vip-meeting-settings'
+
+export const VIP_BOOKING_HORIZON_DAYS = DEFAULT_VIP_MEETING_SETTINGS.booking_horizon_days
 
 export type VipMeetingRow = {
   id: number
@@ -12,11 +19,6 @@ export type VipMeetingRow = {
   created_at?: string
 }
 
-type DayHours = { startHour: number; startMinute: number; endHour: number; endMinute: number }
-
-const WEEKDAY_HOURS: DayHours = { startHour: 9, startMinute: 30, endHour: 19, endMinute: 0 }
-const SATURDAY_HOURS: DayHours = { startHour: 10, startMinute: 0, endHour: 17, endMinute: 0 }
-
 function parseDateParts(dateStr: string) {
   const [y, m, d] = dateStr.split('-').map(Number)
   return { year: y, month: m - 1, day: d }
@@ -27,18 +29,6 @@ function toDateKey(date: Date) {
   const m = String(date.getMonth() + 1).padStart(2, '0')
   const d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
-}
-
-function getDayHours(dateStr: string): DayHours | null {
-  const { year, month, day } = parseDateParts(dateStr)
-  const dow = new Date(year, month, day).getDay()
-  if (dow === 0) return null
-  if (dow === 6) return SATURDAY_HOURS
-  return WEEKDAY_HOURS
-}
-
-function minutesFromMidnight(hour: number, minute: number) {
-  return hour * 60 + minute
 }
 
 function formatSlotTime(totalMinutes: number) {
@@ -61,21 +51,29 @@ export function extractDateAndTime(scheduledAt: string) {
   return { dateStr, timeStr }
 }
 
-export function generateSlotsForDate(dateStr: string, bookedTimes: Set<string> = new Set()) {
-  const hours = getDayHours(dateStr)
-  if (!hours) return []
+export function generateSlotsForDate(
+  dateStr: string,
+  bookedTimes: Set<string> = new Set(),
+  settings: VipMeetingSettings = DEFAULT_VIP_MEETING_SETTINGS
+) {
+  if (isDateBlocked(dateStr, settings)) return []
 
-  const start = minutesFromMidnight(hours.startHour, hours.startMinute)
-  const end = minutesFromMidnight(hours.endHour, hours.endMinute)
-  const lastStart = end - VIP_SLOT_DURATION_MINUTES
+  const schedule = getDayScheduleForDate(dateStr, settings)
+  if (!schedule.enabled) return []
+
+  const start = parseTimeToMinutes(schedule.start)
+  const end = parseTimeToMinutes(schedule.end)
+  const duration = settings.slot_duration_minutes
+  const lastStart = end - duration
+  if (lastStart < start) return []
+
   const slots: { time: string; label: string; available: boolean }[] = []
-
   const now = new Date()
   const todayKey = toDateKey(now)
   const isToday = dateStr === todayKey
   const nowMinutes = now.getHours() * 60 + now.getMinutes()
 
-  for (let m = start; m <= lastStart; m += VIP_SLOT_DURATION_MINUTES) {
+  for (let m = start; m <= lastStart; m += duration) {
     const time = formatSlotTime(m)
     const past = isToday && m <= nowMinutes
     const booked = bookedTimes.has(time)
@@ -89,32 +87,26 @@ export function generateSlotsForDate(dateStr: string, bookedTimes: Set<string> =
   return slots
 }
 
-export function dateHasAvailability(dateStr: string, bookedTimes: Set<string> = new Set()) {
-  return generateSlotsForDate(dateStr, bookedTimes).some((slot) => slot.available)
-}
-
-export function listBookableDateKeys(from = new Date(), horizonDays = VIP_BOOKING_HORIZON_DAYS) {
-  const keys: string[] = []
-  const cursor = new Date(from.getFullYear(), from.getMonth(), from.getDate())
-  for (let i = 0; i < horizonDays; i++) {
-    const key = toDateKey(cursor)
-    if (dateHasAvailability(key)) keys.push(key)
-    cursor.setDate(cursor.getDate() + 1)
-  }
-  return keys
+export function dateHasAvailability(
+  dateStr: string,
+  bookedTimes: Set<string> = new Set(),
+  settings: VipMeetingSettings = DEFAULT_VIP_MEETING_SETTINGS
+) {
+  return generateSlotsForDate(dateStr, bookedTimes, settings).some((slot) => slot.available)
 }
 
 export function getMonthAvailability(
   year: number,
   month: number,
-  bookedByDate: Record<string, Set<string>> = {}
+  bookedByDate: Record<string, Set<string>> = {},
+  settings: VipMeetingSettings = DEFAULT_VIP_MEETING_SETTINGS
 ) {
   const daysInMonth = new Date(year, month, 0).getDate()
   const availability: Record<string, boolean> = {}
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
     const booked = bookedByDate[dateStr] ?? new Set()
-    availability[dateStr] = dateHasAvailability(dateStr, booked)
+    availability[dateStr] = dateHasAvailability(dateStr, booked, settings)
   }
   return availability
 }
@@ -130,7 +122,11 @@ export function groupBookedTimesByDate(rows: VipMeetingRow[]) {
   return map
 }
 
-export function isValidBookingPayload(body: Record<string, unknown>) {
+export function isValidBookingPayload(
+  body: Record<string, unknown>,
+  settings: VipMeetingSettings = DEFAULT_VIP_MEETING_SETTINGS,
+  bookedTimes: Set<string> = new Set()
+) {
   const guestName = typeof body.guest_name === 'string' ? body.guest_name.trim() : ''
   const guestEmail = typeof body.guest_email === 'string' ? body.guest_email.trim() : ''
   const guestPhone = typeof body.guest_phone === 'string' ? body.guest_phone.trim() : ''
@@ -145,7 +141,7 @@ export function isValidBookingPayload(body: Record<string, unknown>) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return { ok: false as const, error: 'Invalid date.' }
   if (!/^\d{2}:\d{2}$/.test(timeStr)) return { ok: false as const, error: 'Invalid time.' }
 
-  const slots = generateSlotsForDate(dateStr)
+  const slots = generateSlotsForDate(dateStr, bookedTimes, settings)
   const slot = slots.find((s) => s.time === timeStr)
   if (!slot?.available) return { ok: false as const, error: 'This time slot is no longer available.' }
 

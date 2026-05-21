@@ -104,13 +104,6 @@ export default function FurnitureNavbar() {
             >
               {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
             </Nav.Link>
-            <Nav.Link
-              as={Link}
-              href="/vip-meeting"
-              className={`${styles.navLink} ${styles.ft14} fw-normal`}
-            >
-              {t("nav.vipMeeting")}
-            </Nav.Link>
           </Nav>
 
           <Nav className={`align-items-center flex-wrap ${styles.rightLinks}`}>
@@ -121,6 +114,13 @@ export default function FurnitureNavbar() {
               >
               <LanguageToggle />
             </span>
+            <Nav.Link
+              as={Link}
+              href="/vip-meeting"
+              className={`${styles.navLink} ${styles.ft14} fw-normal`}
+            >
+              {t("nav.vipMeeting")}
+            </Nav.Link>
               {!session && (
                 <Nav.Link
                   as={Link}

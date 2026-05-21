@@ -10,6 +10,8 @@ import {
   type VipMeetingRow,
 } from '@/lib/vip-meetings'
 import { requireAdminSession } from '@/lib/vip-meetings-auth'
+import { normalizeVipMeetingSettings } from '@/lib/vip-meeting-settings'
+import { readVipMeetingSettings, writeVipMeetingSettings } from '@/lib/vip-meeting-settings-db'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -312,10 +314,11 @@ async function handleVipMeetingsGet(req: NextRequest, index: string[]) {
     const lastDay = new Date(year, monthNum, 0).getDate()
     const rangeEnd = `${month}-${String(lastDay).padStart(2, '0')}T23:59:59.999`
     try {
+      const settings = await readVipMeetingSettings(supabase)
       const rows = await fetchActiveVipMeetings(rangeStart, rangeEnd)
       const bookedByDate = groupBookedTimesByDate(rows)
-      const availability = getMonthAvailability(year, monthNum, bookedByDate)
-      return NextResponse.json({ month, availability })
+      const availability = getMonthAvailability(year, monthNum, bookedByDate, settings)
+      return NextResponse.json({ month, availability, settings })
     } catch (error) {
       return NextResponse.json(
         { error: error instanceof Error ? error.message : 'Failed to load availability' },
@@ -328,10 +331,11 @@ async function handleVipMeetingsGet(req: NextRequest, index: string[]) {
     const rangeStart = `${date}T00:00:00.000`
     const rangeEnd = `${date}T23:59:59.999`
     try {
+      const settings = await readVipMeetingSettings(supabase)
       const rows = await fetchActiveVipMeetings(rangeStart, rangeEnd)
       const bookedByDate = groupBookedTimesByDate(rows)
       const booked = bookedByDate[date] ?? new Set()
-      const slots = generateSlotsForDate(date, booked)
+      const slots = generateSlotsForDate(date, booked, settings)
       return NextResponse.json({ date, slots })
     } catch (error) {
       return NextResponse.json(
@@ -470,6 +474,18 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
     return handleVipMeetingsGet(req, index)
   }
 
+  if (resource === 'vip-meeting-settings') {
+    try {
+      const settings = await readVipMeetingSettings(supabase)
+      return NextResponse.json(settings)
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Failed to load settings' },
+        { status: 500 }
+      )
+    }
+  }
+
   return NextResponse.json({ error: 'Not found' }, { status: 404 })
 }
 
@@ -545,23 +561,37 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
   }
 
   if (resource === 'vip-meetings') {
-    const validation = isValidBookingPayload(body)
-    if (!validation.ok) {
-      return NextResponse.json({ error: validation.error }, { status: 400 })
-    }
-    const { data, error } = await supabase
+    try {
+      const settings = await readVipMeetingSettings(supabase)
+      const dateStr = typeof body.date === 'string' ? body.date.trim() : ''
+      const rangeStart = `${dateStr}T00:00:00.000`
+      const rangeEnd = `${dateStr}T23:59:59.999`
+      const rows = dateStr ? await fetchActiveVipMeetings(rangeStart, rangeEnd) : []
+      const bookedByDate = groupBookedTimesByDate(rows)
+      const booked = bookedByDate[dateStr] ?? new Set()
+      const validation = isValidBookingPayload(body, settings, booked)
+      if (!validation.ok) {
+        return NextResponse.json({ error: validation.error }, { status: 400 })
+      }
+      const { data, error } = await supabase
       .from('vip_meetings')
       .insert([validation.payload])
       .select()
       .single()
-    if (error) {
-      const message =
-        error.code === '23505'
-          ? 'This time slot is no longer available.'
-          : error.message
-      return NextResponse.json({ error: message }, { status: 500 })
+      if (error) {
+        const message =
+          error.code === '23505'
+            ? 'This time slot is no longer available.'
+            : error.message
+        return NextResponse.json({ error: message }, { status: 500 })
+      }
+      return NextResponse.json(data)
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Failed to create booking' },
+        { status: 500 }
+      )
     }
-    return NextResponse.json(data)
   }
 
   return NextResponse.json({ error: 'Not found' }, { status: 404 })
@@ -672,6 +702,23 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json(data)
+  }
+
+  if (resource === 'vip-meeting-settings') {
+    const session = await requireAdminSession()
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    try {
+      const settings = await writeVipMeetingSettings(
+        supabase,
+        normalizeVipMeetingSettings(body)
+      )
+      return NextResponse.json(settings)
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Failed to save settings' },
+        { status: 500 }
+      )
+    }
   }
 
   return NextResponse.json({ error: 'Not found' }, { status: 404 })

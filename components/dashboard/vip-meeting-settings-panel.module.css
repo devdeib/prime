@@ -1,0 +1,135 @@
+.sectionTitle {
+  margin: 0 0 0.35rem;
+  color: #1e2735;
+  font-family: var(--font-display), Didot, Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+}
+
+.sectionHint {
+  margin: 0 0 1rem;
+  color: #5f6775;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.calendarNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.monthLabel {
+  font-family: var(--font-display), Didot, Georgia, serif;
+  font-size: 1.1rem;
+  color: #1e2735;
+}
+
+.navBtn {
+  border: 1px solid rgba(30, 39, 53, 0.18);
+  background: #fff;
+  width: 2.25rem;
+  height: 2.25rem;
+  cursor: pointer;
+}
+
+.navBtn:hover {
+  border-color: #b8942f;
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.weekday {
+  text-align: center;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #7a828d;
+}
+
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+}
+
+.dayEmpty {
+  aspect-ratio: 1;
+}
+
+.dayBtn {
+  aspect-ratio: 1;
+  border: 1px solid rgba(30, 39, 53, 0.12);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.dayOpen {
+  background: #fffdf8;
+  color: #1e2735;
+}
+
+.dayBlocked {
+  background: #1e2735;
+  color: #fff;
+  border-color: #1e2735;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.85rem;
+  font-size: 0.82rem;
+  color: #5f6775;
+}
+
+.swatch {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1px solid rgba(30, 39, 53, 0.12);
+  display: inline-block;
+}
+
+.swatchOpen {
+  background: #fffdf8;
+}
+
+.swatchBlocked {
+  background: #1e2735;
+}
+
+.scheduleTable {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.scheduleRow {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 1fr auto 1fr;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.scheduleSep {
+  color: #7a828d;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .scheduleRow {
+    grid-template-columns: 1fr;
+  }
+
+  .scheduleSep {
+    display: none;
+  }
+}

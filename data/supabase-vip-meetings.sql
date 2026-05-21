@@ -39,3 +39,31 @@ drop policy if exists "vip_meetings_delete_public" on public.vip_meetings;
 create policy "vip_meetings_delete_public"
   on public.vip_meetings for delete
   using (true);
+
+-- Admin-editable availability (weekly hours, blocked dates, slot length).
+create table if not exists public.vip_meeting_settings (
+  id int primary key default 1 check (id = 1),
+  settings jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+insert into public.vip_meeting_settings (id, settings)
+values (1, '{}'::jsonb)
+on conflict (id) do nothing;
+
+alter table public.vip_meeting_settings enable row level security;
+
+drop policy if exists "vip_meeting_settings_select_public" on public.vip_meeting_settings;
+create policy "vip_meeting_settings_select_public"
+  on public.vip_meeting_settings for select
+  using (true);
+
+drop policy if exists "vip_meeting_settings_insert_public" on public.vip_meeting_settings;
+create policy "vip_meeting_settings_insert_public"
+  on public.vip_meeting_settings for insert
+  with check (true);
+
+drop policy if exists "vip_meeting_settings_update_public" on public.vip_meeting_settings;
+create policy "vip_meeting_settings_update_public"
+  on public.vip_meeting_settings for update
+  using (true);
