@@ -453,9 +453,7 @@
   border-right: 1px solid rgba(30, 39, 53, 0.1);
   border-bottom: none;
   border-top: 1px solid rgba(30, 39, 53, 0.1);
-  transition:
-    background-color 0.35s ease,
-    border-color 0.35s ease;
+  transition: border-color 0.35s ease;
 }
 
 /* First row — no line above */
@@ -601,27 +599,9 @@
   min-height: 74px;
 }
 
-/* Catalog cells — image area fills card and inherits hover fill */
+/* Catalog cells — image area fills card; no background tint on hover */
 .grid:not(.featuredRail) .cardImageWrap {
   flex: 1 1 auto;
-  background-color: inherit;
-  transition: background-color 0.35s ease;
-}
-
-.grid:not(.featuredRail) .cardBody,
-.grid:not(.featuredRail) .cardVideo {
-  background-color: inherit;
-  transition: background-color 0.35s ease;
-}
-
-.grid:not(.featuredRail) .card:hover {
-  background-color: #ebe4d8 !important;
-}
-
-.grid:not(.featuredRail) .card:hover .cardImageWrap,
-.grid:not(.featuredRail) .card:hover .cardBody,
-.grid:not(.featuredRail) .card:hover .cardVideo {
-  background-color: inherit !important;
 }
 
 .grid:not(.featuredRail) .card:hover .cardName,
