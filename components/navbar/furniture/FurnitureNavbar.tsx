@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BrandMark from "@/components/brand/BrandMark";
 import ProfileNavItem from "../ProfileNavItem";
-import ProductsNavDropdown from "../ProductsNavDropdown";
 import HamBurgerIcon from "../HamBurgerIcon";
 import LanguageToggle from "../LanguageToggle";
 import styles from "./furniture-navbar.module.css";
@@ -86,10 +85,13 @@ export default function FurnitureNavbar() {
               {t("nav.projects")}
             </Nav.Link>
 
-            <ProductsNavDropdown
-              navLinkClassName={`${styles.navLink} ${styles.ft14} fw-normal`}
-              onLight={profileOnLight}
-            />
+            <Nav.Link
+              as={Link}
+              href="/products/all-items"
+              className={`${styles.navLink} ${styles.ft14} fw-normal`}
+            >
+              {t("nav.products")}
+            </Nav.Link>
 
             <Nav.Link
               as={Link}

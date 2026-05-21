@@ -665,7 +665,6 @@
 }
 
 .panelEyebrow {
-  font-family: var(--font-ui);
   font-size: 0.82rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
@@ -717,62 +716,6 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.65rem;
-}
-
-.panelActions {
-  margin-top: auto;
-  padding-top: 1.25rem;
-  display: grid;
-  gap: 0.65rem;
-}
-
-.panelBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 48px;
-  padding: 0.95rem 1.25rem;
-  font-family: var(--font-ui);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition:
-    background 0.35s ease,
-    color 0.35s ease,
-    border-color 0.35s ease,
-    transform 0.35s var(--ease-out-expo);
-}
-
-.panelBtnPrimary {
-  border: 1px solid var(--shop-accent);
-  background: var(--shop-accent);
-  color: #fff;
-}
-
-.panelBtnPrimary:hover {
-  background: #2a3648;
-  border-color: #2a3648;
-  transform: translateY(-1px);
-}
-
-.panelBtnGhost {
-  border: 1px solid rgba(30, 39, 53, 0.18);
-  background: transparent;
-  color: var(--shop-accent);
-}
-
-.panelBtnGhost:hover {
-  border-color: rgba(184, 148, 47, 0.45);
-  background: rgba(184, 148, 47, 0.08);
-}
-
-.specRow span:last-child {
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  color: var(--shop-text);
 }
 
 .cta {

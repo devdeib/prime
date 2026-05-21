@@ -1,18 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { FaChevronLeft, FaChevronRight, FaXmark } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { pickLocalized } from "@/lib/bilingual";
-import {
-  normalizeProjectType,
-  projectTypeLabel,
-  type ProjectType,
-} from "@/lib/project-type";
 import BaseContainer from "@/components/common/container/BaseContainer";
-import ProjectFilterTabs from "@/components/projects/ProjectFilterTabs";
-import ProjectPortfolioCard from "@/components/projects/ProjectPortfolioCard";
 import styles from "./projects.module.css";
 
 type ProjectApi = {
@@ -28,7 +21,6 @@ type ProjectApi = {
   images?: string[] | null;
   image_url?: string | null;
   sort_order: number;
-  project_type?: string | null;
 };
 
 const PROJECT_PLACEHOLDER = "/images/La dolce casa.svg";
@@ -36,7 +28,6 @@ const PROJECT_PLACEHOLDER = "/images/La dolce casa.svg";
 export default function ProjectsPage() {
   const { t, i18n } = useTranslation("common");
   const [items, setItems] = useState<ProjectApi[]>([]);
-  const [activeType, setActiveType] = useState<ProjectType>("residential");
   const [viewer, setViewer] = useState<{
     project: ProjectApi;
     gallery: string[];
@@ -54,26 +45,12 @@ export default function ProjectsPage() {
     return () => c.abort();
   }, []);
 
-  const sorted = useMemo(
-    () =>
-      [...items].sort((a, b) => a.sort_order - b.sort_order || a.id - b.id),
-    [items]
-  );
-
-  const filtered = useMemo(
-    () =>
-      sorted.filter(
-        (project) => normalizeProjectType(project.project_type) === activeType
-      ),
-    [sorted, activeType]
+  const sorted = [...items].sort(
+    (a, b) => a.sort_order - b.sort_order || a.id - b.id
   );
 
   function getGallery(project: ProjectApi): string[] {
-    if (
-      project.images &&
-      project.images.length > 0 &&
-      project.images.filter(Boolean).length > 0
-    ) {
+    if (project.images && project.images.length > 0 && project.images.filter(Boolean).length > 0) {
       return project.images.filter(Boolean);
     }
     if (project.image_url?.trim()) {
@@ -81,15 +58,6 @@ export default function ProjectsPage() {
     }
     return [PROJECT_PLACEHOLDER];
   }
-
-  const residentialLabel =
-    t("projectsPage.residential") === "projectsPage.residential"
-      ? "Residential"
-      : t("projectsPage.residential");
-  const commercialLabel =
-    t("projectsPage.commercial") === "projectsPage.commercial"
-      ? "Commercial"
-      : t("projectsPage.commercial");
 
   return (
     <section className={styles.page}>
@@ -99,32 +67,36 @@ export default function ProjectsPage() {
           <p className={styles.sub}>{t("projectsPage.subtitle")}</p>
         </header>
 
-        <ProjectFilterTabs
-          active={activeType}
-          onChange={setActiveType}
-          residentialLabel={residentialLabel}
-          commercialLabel={commercialLabel}
-        />
-
-        {filtered.length === 0 ? (
-          <p className={styles.empty}>
+        {sorted.length === 0 ? (
+          <p className="text-center text-muted py-5">
             {t("projectsPage.empty")}
           </p>
         ) : (
-          <ul className={styles.grid} key={activeType}>
-            {filtered.map((project, index) => (
-              <li key={project.id} className={styles.gridItem}>
-                <ProjectPortfolioCard
-                  project={project}
-                  language={i18n.language}
-                  placeholder={PROJECT_PLACEHOLDER}
-                  animationDelay={`${Math.min(index, 12) * 0.06}s`}
-                  onActivate={() =>
-                    setViewer({ project, gallery: getGallery(project), activeIndex: 0 })
-                  }
-                />
-              </li>
-            ))}
+          <ul className={styles.list}>
+            {sorted.map((project) => {
+              const gallery = getGallery(project);
+              return (
+                <li
+                  key={project.id}
+                  className={styles.listItem}
+                  tabIndex={0}
+                  onClick={() => setViewer({ project, gallery, activeIndex: 0 })}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      setViewer({ project, gallery, activeIndex: 0 });
+                    }
+                  }}
+                  aria-label={`${pickLocalized(i18n.language, project.name, project.name_ar)} (${pickLocalized(i18n.language, project.city, project.city_ar)})`}
+                >
+                  <span className={styles.listName}>
+                    {pickLocalized(i18n.language, project.name, project.name_ar)}
+                  </span>
+                  <span className={styles.listCity}>
+                    {pickLocalized(i18n.language, project.city, project.city_ar)}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         )}
       </BaseContainer>
@@ -204,9 +176,6 @@ function ProjectViewer({
             <h2 className={styles.viewerTitle}>
               {pickLocalized(language, project.name, project.name_ar)}
             </h2>
-            <p className={styles.viewerType}>
-              {projectTypeLabel(normalizeProjectType(project.project_type), language)}
-            </p>
           </div>
           <div className={styles.viewerMeta}>
             {project.address ? (

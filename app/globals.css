@@ -38,24 +38,6 @@ h3,
   font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
 }
 
-.font-ui,
-button,
-input,
-select,
-textarea,
-label,
-.nav-link,
-.navbar-nav .nav-link {
-  font-family: var(--font-ui);
-}
-
-.font-ui-meta {
-  font-family: var(--font-ui);
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 /* Arabic (RTL): document dir is set in I18nProvider; tweak common layout clashes */
 html[dir="rtl"] .navbar .me-auto {
   margin-right: 0 !important;

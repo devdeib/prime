@@ -13,11 +13,23 @@ type ShowroomItem = {
   name_ar?: string | null;
   city?: string | null;
   city_ar?: string | null;
-  description?: string | null;
-  description_ar?: string | null;
   image_url?: string | null;
   images?: string[] | null;
 };
+
+const FALLBACK_SHOWROOMS: ShowroomItem[] = [
+  { id: 1, name: "Showroom", city: "Riyadh" },
+  { id: 2, name: "Showroom", city: "Jeddah" },
+  { id: 3, name: "Showroom", city: "Rome" },
+  { id: 4, name: "Showroom", city: "Dubai" },
+];
+
+const FALLBACK_PROJECTS: ShowroomItem[] = [
+  { id: 1, name: "Residential Project", city: "Riyadh" },
+  { id: 2, name: "Villa Interior", city: "Jeddah" },
+  { id: 3, name: "Private Residence", city: "Dubai" },
+  { id: 4, name: "Apartment Styling", city: "Rome" },
+];
 
 function showroomImage(showroom: ShowroomItem) {
   const image = showroom.images?.find(Boolean) || showroom.image_url;
@@ -68,7 +80,15 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
     return () => controller.abort();
   }, [kind]);
 
-  const cards = useMemo(() => items, [items]);
+  const cards = useMemo(
+    () =>
+      items.length > 0
+        ? items
+        : isProjects
+          ? FALLBACK_PROJECTS
+          : FALLBACK_SHOWROOMS,
+    [isProjects, items]
+  );
 
   const scrollRail = (direction: -1 | 1) => {
     const rail = railRef.current;
@@ -87,7 +107,6 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
           <p className={styles.subtitle}>{subtitle}</p>
         </header>
 
-        {cards.length === 0 ? null : (
         <div className={styles.sliderShell}>
           <button
             type="button"
@@ -101,61 +120,40 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
             aria-label={`Next ${title.toLowerCase()}`}
             onClick={() => scrollRail(1)}
           />
-          <div
-            className={`${styles.rail} ${isProjects ? styles.railProjects : ""}`}
-            ref={railRef}
-          >
-          {cards.map((showroom) => {
-            const name = pickLocalized(i18n.language, showroom.name, showroom.name_ar);
-            const subtitle =
-              pickLocalized(i18n.language, showroom.city, showroom.city_ar) ||
-              (isProjects
-                ? pickLocalized(
-                    i18n.language,
-                    (showroom as { description?: string }).description,
-                    (showroom as { description_ar?: string }).description_ar
-                  )
-                : "");
-
-            return (
+          <div className={styles.rail} ref={railRef}>
+          {cards.map((showroom) => (
             <Link
               key={showroom.id}
               href={isProjects ? "/projects" : "/showrooms"}
-              className={`${styles.card} ${isProjects ? styles.cardProject : ""}`}
-              aria-label={name}
-            >
-              <div className={styles.cardMedia}>
-                <Image
-                  src={showroomImage(showroom)}
-                  alt={name}
-                  fill
-                  sizes="(max-width: 900px) 72vw, 24vw"
-                  className={styles.image}
-                  unoptimized={showroomImage(showroom).startsWith("http")}
-                />
-                {!isProjects ? <span className={styles.cardShade} aria-hidden /> : null}
-              </div>
-              {isProjects ? (
-                <div className={styles.cardCopyBelow}>
-                  <h3 className={styles.cardTitleBelow}>{name}</h3>
-                  {subtitle ? <p className={styles.cardMetaBelow}>{subtitle}</p> : null}
-                </div>
-              ) : (
-                <div className={styles.cardBody}>
-                  <h3 className={styles.cardTitle}>{name}</h3>
-                  {showroom.city ? (
-                    <p className={styles.cardMeta}>
-                      {pickLocalized(i18n.language, showroom.city, showroom.city_ar)}
-                    </p>
-                  ) : null}
-                </div>
+              className={styles.card}
+              aria-label={pickLocalized(
+                i18n.language,
+                showroom.name,
+                showroom.name_ar
               )}
+            >
+              <Image
+                src={showroomImage(showroom)}
+                alt={pickLocalized(i18n.language, showroom.name, showroom.name_ar)}
+                fill
+                sizes="(max-width: 900px) 72vw, 24vw"
+                className={styles.image}
+                unoptimized={showroomImage(showroom).startsWith("http")}
+              />
+              <div className={styles.cardBody}>
+                <h3 className={styles.cardTitle}>
+                  {pickLocalized(i18n.language, showroom.name, showroom.name_ar)}
+                </h3>
+                {showroom.city ? (
+                  <p className={styles.cardMeta}>
+                    {pickLocalized(i18n.language, showroom.city, showroom.city_ar)}
+                  </p>
+                ) : null}
+              </div>
             </Link>
-          );
-          })}
+          ))}
           </div>
         </div>
-        )}
       </div>
     </section>
   );
