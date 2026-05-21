@@ -617,20 +617,22 @@ export default function FurnitureCatalogExperience({
               )}
             </div>
             <div className={styles.panelContent}>
-              <p className={styles.panelEyebrow}>{t("catalog.detailEyebrow")}</p>
-              <h2 id="product-detail-title" className={styles.panelTitle}>
-                {pickLocalized(i18n.language, selected.name, selected.name_ar)}
-              </h2>
-              {selected.category ? (
-                <p className={styles.panelCategory}>{selected.category}</p>
-              ) : null}
-              <p className={styles.panelDesc}>
-                {pickLocalized(
-                  i18n.language,
-                  selected.descriptions,
-                  selected.descriptions_ar
-                ) || t("catalog.noDescription")}
-              </p>
+              <div className={styles.panelContentScroll}>
+                <p className={styles.panelEyebrow}>{t("catalog.detailEyebrow")}</p>
+                <h2 id="product-detail-title" className={styles.panelTitle}>
+                  {pickLocalized(i18n.language, selected.name, selected.name_ar)}
+                </h2>
+                {selected.category ? (
+                  <p className={styles.panelCategory}>{selected.category}</p>
+                ) : null}
+                <p className={styles.panelDesc}>
+                  {pickLocalized(
+                    i18n.language,
+                    selected.descriptions,
+                    selected.descriptions_ar
+                  ) || t("catalog.noDescription")}
+                </p>
+              </div>
               <div className={styles.panelActions}>
                 <a
                   href={`https://wa.me/966538020460?text=${encodeURIComponent(

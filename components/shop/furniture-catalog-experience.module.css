@@ -425,6 +425,9 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   align-items: stretch;
+  border-top: 1px solid rgba(30, 39, 53, 0.1);
+  border-left: 1px solid rgba(30, 39, 53, 0.1);
+  background: rgba(30, 39, 53, 0.06);
 }
 
 .featuredRail::-webkit-scrollbar {
@@ -469,6 +472,9 @@
   scroll-snap-align: start;
   display: grid;
   grid-template-rows: minmax(0, 1fr) 112px;
+  border-right: 1px solid rgba(30, 39, 53, 0.1);
+  border-bottom: 1px solid rgba(30, 39, 53, 0.1);
+  background: #faf9f7;
 }
 
 .featuredRail .cardImageWrap {
@@ -617,6 +623,10 @@
     min-height: 100%;
     flex: 1.15;
   }
+
+  .panelWide .panelContent {
+    min-height: 100%;
+  }
 }
 
 .panelImage {
@@ -632,10 +642,18 @@
 
 .panelContent {
   flex: 1;
+  min-height: 0;
   padding: clamp(1.25rem, 3vw, 2.25rem);
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.panelContentScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 0.5rem;
 }
 
 .closeBtn {
@@ -884,7 +902,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  margin-top: 2rem;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(30, 39, 53, 0.1);
+  background: var(--shop-surface);
 }
 
 .panelBtnWhatsapp {

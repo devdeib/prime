@@ -218,7 +218,7 @@
 .projectMedia {
   position: relative;
   overflow: hidden;
-  border-radius: clamp(18px, 2vw, 28px);
+  border-radius: 10px;
   background: #e8e4dc;
 }
 
