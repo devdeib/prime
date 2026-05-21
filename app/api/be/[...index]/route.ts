@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { resolveGoogleMapsShortLinkToEmbedUrl, toEmbedUrl } from '@/lib/map-embed-url'
+import {
+  generateSlotsForDate,
+  getMonthAvailability,
+  getTodayDateKey,
+  groupBookedTimesByDate,
+  isValidBookingPayload,
+  type VipMeetingRow,
+} from '@/lib/vip-meetings'
+import { requireAdminSession } from '@/lib/vip-meetings-auth'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -256,6 +265,100 @@ async function getMediaCandidates() {
   return Array.from(urls)
 }
 
+async function fetchActiveVipMeetings(from?: string, to?: string) {
+  let query = supabase
+    .from('vip_meetings')
+    .select('*')
+    .neq('status', 'cancelled')
+    .order('scheduled_at', { ascending: true })
+
+  if (from) query = query.gte('scheduled_at', from)
+  if (to) query = query.lte('scheduled_at', to)
+
+  const { data, error } = await query
+  if (error) throw error
+  return (data ?? []) as VipMeetingRow[]
+}
+
+async function handleVipMeetingsGet(req: NextRequest, index: string[]) {
+  const [, segment] = index
+
+  if (segment === 'today') {
+    const session = await requireAdminSession()
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+    const today = getTodayDateKey()
+    const start = `${today}T00:00:00.000`
+    const end = `${today}T23:59:59.999`
+    try {
+      const rows = await fetchActiveVipMeetings(start, end)
+      return NextResponse.json(rows)
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Failed to load meetings' },
+        { status: 500 }
+      )
+    }
+  }
+
+  const month = req.nextUrl.searchParams.get('month')
+  const date = req.nextUrl.searchParams.get('date')
+
+  if (month && /^\d{4}-\d{2}$/.test(month)) {
+    const [yearStr, monthStr] = month.split('-')
+    const year = Number(yearStr)
+    const monthNum = Number(monthStr)
+    const rangeStart = `${month}-01T00:00:00.000`
+    const lastDay = new Date(year, monthNum, 0).getDate()
+    const rangeEnd = `${month}-${String(lastDay).padStart(2, '0')}T23:59:59.999`
+    try {
+      const rows = await fetchActiveVipMeetings(rangeStart, rangeEnd)
+      const bookedByDate = groupBookedTimesByDate(rows)
+      const availability = getMonthAvailability(year, monthNum, bookedByDate)
+      return NextResponse.json({ month, availability })
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Failed to load availability' },
+        { status: 500 }
+      )
+    }
+  }
+
+  if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    const rangeStart = `${date}T00:00:00.000`
+    const rangeEnd = `${date}T23:59:59.999`
+    try {
+      const rows = await fetchActiveVipMeetings(rangeStart, rangeEnd)
+      const bookedByDate = groupBookedTimesByDate(rows)
+      const booked = bookedByDate[date] ?? new Set()
+      const slots = generateSlotsForDate(date, booked)
+      return NextResponse.json({ date, slots })
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : 'Failed to load slots' },
+        { status: 500 }
+      )
+    }
+  }
+
+  const session = await requireAdminSession()
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  try {
+    const { data, error } = await supabase
+      .from('vip_meetings')
+      .select('*')
+      .order('scheduled_at', { ascending: true })
+    if (error) throw error
+    return NextResponse.json(data ?? [])
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : 'Failed to load meetings' },
+      { status: 500 }
+    )
+  }
+}
+
 function buildStorageFileRows(type: string | null, urls: string[]) {
   const fallbackCount = type === 'banner' ? 3 : 1
   const selected =
@@ -363,6 +466,10 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
     return NextResponse.json(data)
   }
 
+  if (resource === 'vip-meetings') {
+    return handleVipMeetingsGet(req, index)
+  }
+
   return NextResponse.json({ error: 'Not found' }, { status: 404 })
 }
 
@@ -434,6 +541,26 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
   if (resource === 'users') {
     const { data, error } = await supabase.from('users').insert([body]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
+  if (resource === 'vip-meetings') {
+    const validation = isValidBookingPayload(body)
+    if (!validation.ok) {
+      return NextResponse.json({ error: validation.error }, { status: 400 })
+    }
+    const { data, error } = await supabase
+      .from('vip_meetings')
+      .insert([validation.payload])
+      .select()
+      .single()
+    if (error) {
+      const message =
+        error.code === '23505'
+          ? 'This time slot is no longer available.'
+          : error.message
+      return NextResponse.json({ error: message }, { status: 500 })
+    }
     return NextResponse.json(data)
   }
 
@@ -529,6 +656,24 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
     return NextResponse.json(data)
   }
 
+  if (resource === 'vip-meetings') {
+    const session = await requireAdminSession()
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const status =
+      typeof body.status === 'string' && ['pending', 'confirmed', 'cancelled'].includes(body.status)
+        ? body.status
+        : null
+    if (!status) return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+    const { data, error } = await supabase
+      .from('vip_meetings')
+      .update({ status })
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
+  }
+
   return NextResponse.json({ error: 'Not found' }, { status: 404 })
 }
 
@@ -570,6 +715,19 @@ export async function DELETE(req: NextRequest, context: { params: Promise<{ inde
     const { error } = await supabase.from('users').delete().eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ success: true })
+  }
+
+  if (resource === 'vip-meetings') {
+    const session = await requireAdminSession()
+    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const { data, error } = await supabase
+      .from('vip_meetings')
+      .update({ status: 'cancelled' })
+      .eq('id', id)
+      .select()
+      .single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(data)
   }
 
   return NextResponse.json({ error: 'Not found' }, { status: 404 })

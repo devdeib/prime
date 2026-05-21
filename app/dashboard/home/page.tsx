@@ -11,6 +11,7 @@ type DashboardCounts = {
   heroSlides: number;
   showrooms: number;
   projects: number;
+  meetingsToday: number;
 };
 
 export default function DashboardHomePage() {
@@ -28,6 +29,7 @@ export default function DashboardHomePage() {
           heroSlidesRes,
           showroomsRes,
           projectsRes,
+          meetingsRes,
         ] = await Promise.all([
           fetch("/api/be/users", { credentials: "include" }),
           fetch("/api/be/categories", { credentials: "include" }),
@@ -35,6 +37,7 @@ export default function DashboardHomePage() {
           fetch("/api/be/hero-slides", { credentials: "include" }),
           fetch("/api/be/showrooms", { credentials: "include" }),
           fetch("/api/be/projects", { credentials: "include" }),
+          fetch("/api/be/vip-meetings/today", { credentials: "include" }),
         ]);
 
         const [
@@ -44,6 +47,7 @@ export default function DashboardHomePage() {
           heroSlidesJson,
           showroomsJson,
           projectsJson,
+          meetingsJson,
         ] = await Promise.all([
           usersRes.json().catch(() => []),
           categoriesRes.json().catch(() => []),
@@ -51,6 +55,7 @@ export default function DashboardHomePage() {
           heroSlidesRes.json().catch(() => []),
           showroomsRes.json().catch(() => []),
           projectsRes.json().catch(() => []),
+          meetingsRes.json().catch(() => []),
         ]);
 
         if (!mounted) return;
@@ -61,6 +66,7 @@ export default function DashboardHomePage() {
           heroSlides: Array.isArray(heroSlidesJson) ? heroSlidesJson.length : 0,
           showrooms: Array.isArray(showroomsJson) ? showroomsJson.length : 0,
           projects: Array.isArray(projectsJson) ? projectsJson.length : 0,
+          meetingsToday: Array.isArray(meetingsJson) ? meetingsJson.length : 0,
         });
       } catch {
         if (mounted) setCounts(null);
@@ -80,6 +86,7 @@ export default function DashboardHomePage() {
       { label: t("dashboard.heroSlides") === "dashboard.heroSlides" ? "Hero slides" : t("dashboard.heroSlides"), value: counts?.heroSlides ?? "—" },
       { label: t("dashboard.showroomsMenu") === "dashboard.showroomsMenu" ? "Showrooms" : t("dashboard.showroomsMenu"), value: counts?.showrooms ?? "—" },
       { label: t("dashboard.projectsMenu") === "dashboard.projectsMenu" ? "Projects" : t("dashboard.projectsMenu"), value: counts?.projects ?? "—" },
+      { label: t("dashboard.meetingsTodayCount") === "dashboard.meetingsTodayCount" ? "Meetings today" : t("dashboard.meetingsTodayCount"), value: counts?.meetingsToday ?? "—" },
     ],
     [counts, t]
   );

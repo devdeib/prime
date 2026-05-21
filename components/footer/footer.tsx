@@ -74,7 +74,9 @@ const Footer = () => {
             <Link href="/contact" className={styles.link}>
               {t("nav.contact")}
             </Link>
-            
+            <Link href="/vip-meeting" className={styles.link}>
+              {t("nav.vipMeeting")}
+            </Link>
           </Col>
           <Col md={6} lg={3} className={styles.linkCol}>
             <h3 className={styles.title}>{t("footer.socials")}</h3>

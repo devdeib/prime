@@ -11,6 +11,7 @@ import {
   FiEdit3,
   FiUser,
   FiLogOut,
+  FiCalendar,
 } from "react-icons/fi";
 import SingleListItems from "./SingleListItems";
 import { signOut, useSession } from "next-auth/react";
@@ -101,6 +102,12 @@ export const sideNavItems = (role: string): SideNavItems => {
         labelKey: "dashboard.contentMenu",
         url: "/dashboard/content",
         icon: (size: number = 18) => <FiEdit3 size={size} />,
+      },
+      {
+        id: 11,
+        labelKey: "dashboard.vipMeetings",
+        url: "/dashboard/vip-meetings",
+        icon: (size: number = 18) => <FiCalendar size={size} />,
       },
     ];
     navItems.list = adminRoutes;
