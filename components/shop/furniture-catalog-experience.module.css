@@ -448,7 +448,6 @@
 
 /* Catalog grid — open intersecting lines (no outer box), BYKEPI-style */
 .grid:not(.featuredRail) .card {
-  background: #ffffff;
   border-right: 1px solid rgba(30, 39, 53, 0.1);
   border-bottom: 1px solid rgba(30, 39, 53, 0.1);
   transition:
@@ -480,35 +479,10 @@
   }
 }
 
-.grid:not(.featuredRail) .cardImageWrap,
-.grid:not(.featuredRail) .cardBody,
-.grid:not(.featuredRail) .cardVideo {
-  transition: background-color 0.35s ease;
-}
-
 .grid:not(.featuredRail) .cardName,
 .grid:not(.featuredRail) .cardNameArabic {
   letter-spacing: 0.12em;
   transition: color 0.35s ease;
-}
-
-.grid:not(.featuredRail) .card:hover {
-  background: #ebe4d8;
-}
-
-.grid:not(.featuredRail) .card:hover .cardImageWrap,
-.grid:not(.featuredRail) .card:hover .cardBody,
-.grid:not(.featuredRail) .card:hover .cardVideo {
-  background: #ebe4d8;
-}
-
-.grid:not(.featuredRail) .card:hover .cardName,
-.grid:not(.featuredRail) .card:hover .cardNameArabic {
-  color: #b8942f;
-}
-
-.grid:not(.featuredRail) .card:hover .cardImage {
-  transform: scale(1.02);
 }
 
 .card {
@@ -597,12 +571,33 @@
   align-items: center;
   justify-content: center;
   min-height: 100px;
-  
-  
 }
 
 .cardCompact .cardBody {
   min-height: 74px;
+}
+
+/* Catalog hover — after image/body defaults so beige fills the full cell */
+.grid:not(.featuredRail) .cardImageWrap,
+.grid:not(.featuredRail) .cardBody,
+.grid:not(.featuredRail) .cardVideo {
+  transition: background-color 0.35s ease;
+}
+
+.grid:not(.featuredRail) .card:hover,
+.grid:not(.featuredRail) .card:hover .cardImageWrap,
+.grid:not(.featuredRail) .card:hover .cardBody,
+.grid:not(.featuredRail) .card:hover .cardVideo {
+  background-color: #ebe4d8;
+}
+
+.grid:not(.featuredRail) .card:hover .cardName,
+.grid:not(.featuredRail) .card:hover .cardNameArabic {
+  color: #b8942f;
+}
+
+.grid:not(.featuredRail) .card:hover .cardImage {
+  transform: scale(1.02);
 }
 
 .cardName {
