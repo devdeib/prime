@@ -633,7 +633,7 @@ export default function FurnitureCatalogExperience({
               </p>
               <div className={styles.panelActions}>
                 <a
-                  href={`https://wa.me/393398566333?text=${encodeURIComponent(
+                  href={`https://wa.me/966538020460?text=${encodeURIComponent(
                     `Hi, I'm interested in: ${pickLocalized(i18n.language, selected.name, selected.name_ar)}`
                   )}`}
                   target="_blank"

@@ -248,16 +248,16 @@
 
 .projectCardTitle {
   margin: 0;
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
-  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
-  font-weight: 400;
-  line-height: 1.08;
+  font-family: var(--font-ui);
+  font-size: clamp(1.125rem, 2vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.2;
   color: #1e2735;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.01em;
 }
 
 .projectCardSmall .projectCardTitle {
-  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
 }
 
 .projectCardMeta {
