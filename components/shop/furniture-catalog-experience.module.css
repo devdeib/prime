@@ -448,11 +448,19 @@
 
 /* Catalog grid — open intersecting lines (no outer box), BYKEPI-style */
 .grid:not(.featuredRail) .card {
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid rgba(30, 39, 53, 0.1);
-  border-bottom: 1px solid rgba(30, 39, 53, 0.1);
+  border-bottom: none;
+  border-top: 1px solid rgba(30, 39, 53, 0.1);
   transition:
     background-color 0.35s ease,
     border-color 0.35s ease;
+}
+
+/* First row — no line above */
+.grid:not(.featuredRail) .card:nth-child(-n + 2) {
+  border-top: none;
 }
 
 .grid:not(.featuredRail) .card:nth-child(2n) {
@@ -467,6 +475,14 @@
   .grid:not(.featuredRail) .card:nth-child(3n) {
     border-right: none;
   }
+
+  .grid:not(.featuredRail) .card:nth-child(-n + 2) {
+    border-top: 1px solid rgba(30, 39, 53, 0.1);
+  }
+
+  .grid:not(.featuredRail) .card:nth-child(-n + 3) {
+    border-top: none;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -476,6 +492,14 @@
 
   .grid:not(.featuredRail) .card:nth-child(4n) {
     border-right: none;
+  }
+
+  .grid:not(.featuredRail) .card:nth-child(-n + 3) {
+    border-top: 1px solid rgba(30, 39, 53, 0.1);
+  }
+
+  .grid:not(.featuredRail) .card:nth-child(-n + 4) {
+    border-top: none;
   }
 }
 
@@ -577,18 +601,27 @@
   min-height: 74px;
 }
 
-/* Catalog hover — after image/body defaults so beige fills the full cell */
-.grid:not(.featuredRail) .cardImageWrap,
-.grid:not(.featuredRail) .cardBody,
-.grid:not(.featuredRail) .cardVideo {
+/* Catalog cells — image area fills card and inherits hover fill */
+.grid:not(.featuredRail) .cardImageWrap {
+  flex: 1 1 auto;
+  background-color: inherit;
   transition: background-color 0.35s ease;
 }
 
-.grid:not(.featuredRail) .card:hover,
+.grid:not(.featuredRail) .cardBody,
+.grid:not(.featuredRail) .cardVideo {
+  background-color: inherit;
+  transition: background-color 0.35s ease;
+}
+
+.grid:not(.featuredRail) .card:hover {
+  background-color: #ebe4d8 !important;
+}
+
 .grid:not(.featuredRail) .card:hover .cardImageWrap,
 .grid:not(.featuredRail) .card:hover .cardBody,
 .grid:not(.featuredRail) .card:hover .cardVideo {
-  background-color: #ebe4d8;
+  background-color: inherit !important;
 }
 
 .grid:not(.featuredRail) .card:hover .cardName,
