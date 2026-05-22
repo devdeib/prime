@@ -42,7 +42,6 @@ export default function ProjectGalleryCarousel({ images, alt }: Props) {
         controls={images.length > 1}
         interval={null}
         pause={false}
-        ride={false}
         wrap
       >
         {images.map((src, index) => (
