@@ -238,12 +238,9 @@
 
   .mobileCollapse:global(.show),
   .mobileCollapse:global(.collapsing) {
-    background:
-      radial-gradient(circle at top right, rgba(184, 148, 47, 0.16), transparent 22%),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(249, 244, 235, 0.99) 100%);
-    border: 1px solid rgba(184, 148, 47, 0.16);
-    
-    box-shadow: 0 24px 60px rgba(17, 24, 39, 0.12);
+    background: #ffffff;
+    border: 1px solid rgba(30, 39, 53, 0.08);
+    box-shadow: none;
     padding: 1.05rem 1.1rem 0.9rem !important;
   }
 
