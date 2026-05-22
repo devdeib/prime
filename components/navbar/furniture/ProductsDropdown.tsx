@@ -47,10 +47,28 @@ export default function ProductsDropdown({
   const [categories, setCategories] = useState<Category[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const setMenuOpen = (next: boolean) => {
     setOpen(next);
     onOpenChange?.(next);
+  };
+
+  const clearCloseTimer = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+
+  const openMenu = () => {
+    clearCloseTimer();
+    setMenuOpen(true);
+  };
+
+  const scheduleClose = () => {
+    clearCloseTimer();
+    closeTimerRef.current = setTimeout(() => setMenuOpen(false), 200);
   };
 
   useEffect(() => {
@@ -65,9 +83,14 @@ export default function ProductsDropdown({
   }, []);
 
   useEffect(() => {
+    return () => clearCloseTimer();
+  }, []);
+
+  useEffect(() => {
     if (!open) return;
     const handler = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
+        clearCloseTimer();
         setMenuOpen(false);
       }
     };
@@ -97,35 +120,33 @@ export default function ProductsDropdown({
   const columns = splitIntoColumns(categories, MEGA_COLUMNS);
 
   return (
-    <div
-      ref={ref}
-      className={styles.root}
-      onMouseEnter={() => setMenuOpen(true)}
-      onMouseLeave={() => setMenuOpen(false)}
-    >
+    <div ref={ref} className={styles.root}>
       <button
         type="button"
-        className={`${styles.trigger} ${linkClassName} ${open ? styles.triggerOpen : ""}`}
+        className={`${styles.trigger} ${linkClassName}`}
         aria-haspopup="true"
         aria-expanded={open}
+        onMouseEnter={openMenu}
+        onMouseLeave={scheduleClose}
         onClick={() => setMenuOpen(!open)}
       >
         {label}
       </button>
 
-      {open ? (
-        <div
-          className={styles.backdrop}
-          aria-hidden
-          onClick={() => setMenuOpen(false)}
-        />
-      ) : null}
-
       <div
         className={`${styles.megaWrap} ${open ? styles.megaWrapOpen : ""}`}
         role="menu"
         aria-label={label}
+        onMouseEnter={openMenu}
+        onMouseLeave={scheduleClose}
       >
+        {open ? (
+          <div
+            className={styles.backdrop}
+            aria-hidden
+            onClick={() => setMenuOpen(false)}
+          />
+        ) : null}
         <div className={styles.megaPanel}>
           <div className={styles.megaInner}>
             <div className={styles.columns}>

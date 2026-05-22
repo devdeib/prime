@@ -142,22 +142,6 @@
   color: #1e2735;
 }
 
-.navScrolled.navProductsOpen .navLink {
-  color: #9a8268 !important;
-}
-
-.navScrolled.navProductsOpen .navLink:hover {
-  color: #b8942f !important;
-}
-
-.navScrolled.navProductsOpen .brandMark {
-  color: #9a8268;
-}
-
-.navScrolled.navProductsOpen .languageWrap {
-  color: #9a8268;
-}
-
 .navScrolled .navToggle {
   color: #1e2735 !important;
   
