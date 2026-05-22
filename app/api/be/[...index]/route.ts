@@ -446,6 +446,17 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
   }
 
   if (resource === 'projects') {
+    const [, id] = index
+    if (id) {
+      const { data, error } = await supabase
+        .from('projects')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle()
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (!data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      return NextResponse.json(formatProjectRow(data))
+    }
     const { data, error } = await supabase.from('projects').select('*').order('sort_order')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json((data ?? []).map((row) => formatProjectRow(row)))

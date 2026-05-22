@@ -1,0 +1,46 @@
+.wrap {
+  width: 100%;
+  background: #0f141c;
+}
+
+.carousel :global(.carousel-control-prev),
+.carousel :global(.carousel-control-next) {
+  width: 10%;
+  opacity: 0.9;
+}
+
+.carousel :global(.carousel-control-prev-icon),
+.carousel :global(.carousel-control-next-icon) {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.45));
+}
+
+.carousel :global(.carousel-indicators) {
+  margin-bottom: 1.25rem;
+}
+
+.carousel :global(.carousel-indicators [data-bs-target]) {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.carousel :global(.carousel-indicators .active) {
+  background-color: #b8942f;
+}
+
+.item {
+  min-height: clamp(320px, 58vw, 720px);
+}
+
+.slide {
+  position: relative;
+  width: 100%;
+  min-height: clamp(320px, 58vw, 720px);
+  background: #1a2230;
+}
+
+.image {
+  object-fit: cover;
+}

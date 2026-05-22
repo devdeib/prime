@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { pickLocalized } from "@/lib/bilingual";
+import { projectDetailPath } from "@/lib/projects";
 import styles from "./home-showrooms-section.module.css";
 
 type ShowroomItem = {
@@ -120,7 +121,7 @@ function ProjectFeatureCard({
 
   return (
     <Link
-      href="/projects"
+      href={projectDetailPath(project.id)}
       className={
         size === "large" ? styles.projectCardLarge : styles.projectCardSmall
       }
@@ -227,7 +228,7 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
           {cards.map((showroom) => (
             <Link
               key={showroom.id}
-              href={isProjects ? "/projects" : "/showrooms"}
+              href={isProjects ? projectDetailPath(showroom.id) : "/showrooms"}
               className={styles.card}
               aria-label={pickLocalized(
                 i18n.language,

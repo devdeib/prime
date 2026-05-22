@@ -267,6 +267,16 @@
     "subtitle": "Browse selected spaces and previous work completed by our team.",
     "empty": "No projects listed yet."
   },
+  "projectDetail": {
+    "metaLabel": "Project details",
+    "location": "Location",
+    "typology": "Typology",
+    "address": "Address",
+    "about": "About this project",
+    "gallery": "Project gallery",
+    "backToProjects": "Back to projects",
+    "notFound": "This project could not be found."
+  },
   "about": {
     "metaTitle": "La Dolce Casa | About Us",
     "metaDesc": "Best furniture pieces and home solutions in Bangladesh",

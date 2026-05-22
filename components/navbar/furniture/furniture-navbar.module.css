@@ -80,6 +80,25 @@
   color: #ffffff !important;
 }
 
+.navLinkActive {
+  position: relative;
+}
+
+.navLinkActive::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.35rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.85;
+}
+
+.navScrolled .navLinkActive::after {
+  background: #b8942f;
+}
+
 .navToggle {
   color: #3c3c3c !important;
   

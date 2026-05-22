@@ -13,6 +13,7 @@ import ProfileNavItem from "../ProfileNavItem";
 import HamBurgerIcon from "../HamBurgerIcon";
 import LanguageToggle from "../LanguageToggle";
 import ProductsDropdown from "./ProductsDropdown";
+import { isProjectHeroPath } from "@/lib/projects";
 import styles from "./furniture-navbar.module.css";
 
 export default function FurnitureNavbar() {
@@ -22,10 +23,12 @@ export default function FurnitureNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const isHome = pathname === "/";
-  const useLightNavbar = !isHome || scrolled;
+  const isProjectHero = isProjectHeroPath(pathname);
+  const isHeroPage = isHome || isProjectHero;
+  const useLightNavbar = !isHeroPage || scrolled;
   /** Mobile menu uses a light panel; profile trigger uses dark text on light. */
   const profileOnLight = useLightNavbar || isNarrow;
-  const profileHeroFlat = isHome && !scrolled;
+  const profileHeroFlat = isHeroPage && !scrolled;
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
@@ -61,7 +64,7 @@ export default function FurnitureNavbar() {
             text={t("nav.brand")}
             className={styles.brandMark}
             logoWidth={12}
-            priority={isHome}
+            priority={isHeroPage}
           />
         </Navbar.Brand>
 
@@ -81,7 +84,9 @@ export default function FurnitureNavbar() {
             <Nav.Link
               as={Link}
               href="/projects"
-              className={`${styles.navLink} ${styles.ft14} fw-normal`}
+              className={`${styles.navLink} ${styles.ft14} fw-normal ${
+                pathname === "/projects" || isProjectHero ? styles.navLinkActive : ""
+              }`}
             >
               {t("nav.projects")}
             </Nav.Link>

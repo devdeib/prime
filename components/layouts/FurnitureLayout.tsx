@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
+import { isProjectHeroPath } from "@/lib/projects";
 import CartOffCanvas from "../cart/CartOffCanvas";
 import CustomizationIntro from "../footer/CustomizationIntro";
 import Footer from "../footer/footer";
@@ -15,10 +16,12 @@ type Props = {
 export default function FurnitureLayout({ children }: Props) {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const isProjectHero = isProjectHeroPath(pathname);
+  const isHeroLayout = isHome || isProjectHero;
 
   const contentClass = useMemo(
-    () => (!isHome ? styles.contentOffset : undefined),
-    [isHome]
+    () => (!isHeroLayout ? styles.contentOffset : undefined),
+    [isHeroLayout]
   );
 
   return (
