@@ -132,7 +132,8 @@ export default function ProductsDropdown({ linkClassName = "" }: Props) {
       <div className={styles.mobileAccordion}>
         <button
           type="button"
-          className={`${styles.mobileToggle} ${linkClassName}`}
+          data-nav-item
+          className={styles.mobileToggle}
           aria-haspopup="true"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}

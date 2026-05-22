@@ -245,6 +245,7 @@
   }
 
   .leftLinks :global(.nav-link),
+  .leftLinks :global([data-nav-item]),
   .rightLinks :global(.nav-link) {
     padding: 0.78rem 0.35rem !important;
     border-bottom: 1px solid rgba(30, 39, 53, 0.06);
@@ -291,6 +292,7 @@
   }
 
   .leftLinks :global(.nav-link),
+  .leftLinks :global([data-nav-item]),
   .rightLinks :global(.nav-link) {
     font-size: 1.06rem !important;
   }

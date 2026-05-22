@@ -102,12 +102,16 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  margin: 0;
+  appearance: none;
   background: transparent;
   border: none;
   padding: 0.78rem 0.35rem;
   cursor: pointer;
   font-family: var(--font-ui);
   font-size: 1.18rem;
+  font-weight: 400;
+  line-height: 1.08;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #1e2735;
@@ -139,6 +143,10 @@
 
 @media (max-width: 991px) {
   /* On mobile the standard .root (desktop version) is invisible */
+  .root {
+    width: 100%;
+  }
+
   .root > .trigger,
   .root > .panel {
     display: none;
@@ -146,6 +154,13 @@
 
   .mobileAccordion {
     display: block;
+    width: 100%;
+  }
+}
+
+@media (max-width: 575px) {
+  .mobileToggle {
+    font-size: 1.06rem;
   }
 }
 
