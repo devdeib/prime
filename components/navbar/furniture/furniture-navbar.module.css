@@ -124,7 +124,14 @@
 .navScrolled {
   background: rgb(255, 255, 255) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.navScrolled:not(.navProductsOpen) {
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
+}
+
+.navProductsOpen {
+  box-shadow: none;
 }
 
 .navScrolled .navLink {
@@ -133,6 +140,22 @@
 
 .navScrolled .brandMark {
   color: #1e2735;
+}
+
+.navScrolled.navProductsOpen .navLink {
+  color: #9a8268 !important;
+}
+
+.navScrolled.navProductsOpen .navLink:hover {
+  color: #b8942f !important;
+}
+
+.navScrolled.navProductsOpen .brandMark {
+  color: #9a8268;
+}
+
+.navScrolled.navProductsOpen .languageWrap {
+  color: #9a8268;
 }
 
 .navScrolled .navToggle {

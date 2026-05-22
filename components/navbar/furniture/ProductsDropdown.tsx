@@ -16,13 +16,42 @@ type Category = {
 type Props = {
   /** Inherit link colour class from parent navbar */
   linkClassName?: string;
+  /** Notify parent when mega menu opens (navbar turns white on hero) */
+  onOpenChange?: (open: boolean) => void;
 };
 
-export default function ProductsDropdown({ linkClassName = "" }: Props) {
+const MEGA_COLUMNS = 3;
+
+function splitIntoColumns<T>(items: T[], columnCount: number): T[][] {
+  const cols: T[][] = Array.from({ length: columnCount }, () => []);
+  if (items.length === 0) return cols;
+
+  const base = Math.floor(items.length / columnCount);
+  const remainder = items.length % columnCount;
+  let index = 0;
+
+  for (let c = 0; c < columnCount; c++) {
+    const size = base + (c < remainder ? 1 : 0);
+    cols[c] = items.slice(index, index + size);
+    index += size;
+  }
+
+  return cols;
+}
+
+export default function ProductsDropdown({
+  linkClassName = "",
+  onOpenChange,
+}: Props) {
   const { t, i18n } = useTranslation("common");
   const [categories, setCategories] = useState<Category[]>([]);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const setMenuOpen = (next: boolean) => {
+    setOpen(next);
+    onOpenChange?.(next);
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -35,23 +64,21 @@ export default function ProductsDropdown({ linkClassName = "" }: Props) {
     return () => controller.abort();
   }, []);
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false);
+        setMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [open]);
 
-  // Close on ESC
   useEffect(() => {
     if (!open) return;
     const handler = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") setMenuOpen(false);
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
@@ -59,76 +86,93 @@ export default function ProductsDropdown({ linkClassName = "" }: Props) {
 
   const label =
     t("nav.products") === "nav.products" ? "PRODUCTS" : t("nav.products");
+  const seeAllLabel =
+    t("nav.seeAllProducts") === "nav.seeAllProducts"
+      ? "SEE ALL PRODUCTS"
+      : t("nav.seeAllProducts");
+  const collectionsLabel =
+    t("nav.viewCollections") === "nav.viewCollections"
+      ? "VIEW COLLECTIONS"
+      : t("nav.viewCollections");
+  const columns = splitIntoColumns(categories, MEGA_COLUMNS);
 
   return (
     <div
       ref={ref}
       className={styles.root}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={() => setMenuOpen(true)}
+      onMouseLeave={() => setMenuOpen(false)}
     >
-      {/* Trigger */}
       <button
         type="button"
-        className={`${styles.trigger} ${linkClassName}`}
+        className={`${styles.trigger} ${linkClassName} ${open ? styles.triggerOpen : ""}`}
         aria-haspopup="true"
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setMenuOpen(!open)}
       >
         {label}
-        <svg
-          className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}
-          width="10"
-          height="10"
-          viewBox="0 0 10 6"
-          fill="none"
-          aria-hidden
-        >
-          <path
-            d="M1 1l4 4 4-4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
       </button>
 
-      {/* Dropdown panel */}
+      {open ? (
+        <div
+          className={styles.backdrop}
+          aria-hidden
+          onClick={() => setMenuOpen(false)}
+        />
+      ) : null}
+
       <div
-        className={`${styles.panel} ${open ? styles.panelOpen : ""}`}
+        className={`${styles.megaWrap} ${open ? styles.megaWrapOpen : ""}`}
         role="menu"
         aria-label={label}
       >
-        <div className={styles.panelInner}>
-          <Link
-            href="/products/all-items"
-            className={styles.item}
-            role="menuitem"
-            onClick={() => setOpen(false)}
-          >
-            {t("catalog.all") === "catalog.all" ? "All Products" : t("catalog.all")}
-          </Link>
+        <div className={styles.megaPanel}>
+          <div className={styles.megaInner}>
+            <div className={styles.columns}>
+              {columns.map((column, columnIndex) => (
+                <ul
+                  key={`col-${columnIndex}`}
+                  className={styles.column}
+                  role="none"
+                >
+                  {column.map((cat) => (
+                    <li key={cat.id} role="none">
+                      <Link
+                        href={`/products/${cat.alias}`}
+                        className={styles.categoryLink}
+                        role="menuitem"
+                        onClick={() => setMenuOpen(false)}
+                      >
+                        {pickLocalized(i18n.language, cat.name, cat.name_ar)}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
 
-          {categories.length > 0 ? (
-            <div className={styles.separator} aria-hidden />
-          ) : null}
-
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/products/${cat.alias}`}
-              className={styles.item}
-              role="menuitem"
-              onClick={() => setOpen(false)}
-            >
-              {pickLocalized(i18n.language, cat.name, cat.name_ar)}
-            </Link>
-          ))}
+            <aside className={styles.aside} aria-label={seeAllLabel}>
+              <Link
+                href="/products/all-items"
+                className={styles.asideLink}
+                role="menuitem"
+                onClick={() => setMenuOpen(false)}
+              >
+                {seeAllLabel}
+              </Link>
+              <Link
+                href="/showrooms"
+                className={`${styles.asideLink} ${styles.asideLinkBottom}`}
+                role="menuitem"
+                onClick={() => setMenuOpen(false)}
+              >
+                {collectionsLabel}
+              </Link>
+            </aside>
+          </div>
         </div>
       </div>
 
-      {/* Mobile accordion fallback — visible below lg breakpoint */}
       <div className={styles.mobileAccordion}>
         <button
           type="button"
@@ -136,7 +180,7 @@ export default function ProductsDropdown({ linkClassName = "" }: Props) {
           className={styles.mobileToggle}
           aria-haspopup="true"
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setMenuOpen(!open)}
         >
           {label}
           <svg
@@ -161,20 +205,27 @@ export default function ProductsDropdown({ linkClassName = "" }: Props) {
             <Link
               href="/products/all-items"
               className={styles.mobileItem}
-              onClick={() => setOpen(false)}
+              onClick={() => setMenuOpen(false)}
             >
-              {t("catalog.all") === "catalog.all" ? "All Products" : t("catalog.all")}
+              {seeAllLabel}
             </Link>
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/products/${cat.alias}`}
                 className={styles.mobileItem}
-                onClick={() => setOpen(false)}
+                onClick={() => setMenuOpen(false)}
               >
                 {pickLocalized(i18n.language, cat.name, cat.name_ar)}
               </Link>
             ))}
+            <Link
+              href="/showrooms"
+              className={styles.mobileItem}
+              onClick={() => setMenuOpen(false)}
+            >
+              {collectionsLabel}
+            </Link>
           </div>
         ) : null}
       </div>

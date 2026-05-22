@@ -22,12 +22,13 @@ export default function FurnitureNavbar() {
   const { data: session } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
+  const [productsMenuOpen, setProductsMenuOpen] = useState(false);
   const isHome = pathname === "/";
   const isDetailHero = isCollectionDetailHeroPath(pathname);
   const isShowroomHero =
     pathname != null && /^\/showrooms\/\d+$/.test(pathname);
   const isHeroPage = isHome || isDetailHero;
-  const useLightNavbar = !isHeroPage || scrolled;
+  const useLightNavbar = !isHeroPage || scrolled || productsMenuOpen;
   /** Mobile menu uses a light panel; profile trigger uses dark text on light. */
   const profileOnLight = useLightNavbar || isNarrow;
   const profileHeroFlat = isHeroPage && !scrolled;
@@ -52,7 +53,9 @@ export default function FurnitureNavbar() {
       expand="lg"
       variant="dark"
       fixed="top"
-      className={`${styles.navShell} ${useLightNavbar ? styles.navScrolled : ""}`}
+      className={`${styles.navShell} ${useLightNavbar ? styles.navScrolled : ""} ${
+        productsMenuOpen ? styles.navProductsOpen : ""
+      }`}
     >
       <Container fluid="xxl" className={styles.navContainer}>
         <Navbar.Brand
@@ -98,6 +101,7 @@ export default function FurnitureNavbar() {
 
             <ProductsDropdown
               linkClassName={`${styles.navLink} ${styles.ft14} fw-normal`}
+              onOpenChange={setProductsMenuOpen}
             />
 
             <Nav.Link

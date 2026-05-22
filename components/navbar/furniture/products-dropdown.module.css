@@ -1,14 +1,12 @@
-/* Products dropdown — desktop hover, mobile accordion */
+/* Products mega menu — full-width panel, navbar turns white on hover */
 
 .root {
   position: relative;
 }
 
-/* ── Desktop trigger ──────────────────────────── */
 .trigger {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
   background: transparent;
   border: none;
   padding: 0;
@@ -18,7 +16,122 @@
   line-height: 1.08;
   letter-spacing: 0.01em;
   color: inherit;
+  transition: color 0.2s ease;
+}
+
+.triggerOpen {
+  color: #9a8268 !important;
+}
+
+.backdrop {
+  display: none;
+}
+
+.megaWrap {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  z-index: 1090;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+/* Invisible bridge so hover stays active between nav link and panel */
+.megaWrap::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  height: 14px;
+}
+
+.megaWrapOpen {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.megaPanel {
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
+}
+
+.megaInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 2.5rem;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 2.1rem clamp(1.5rem, 4vw, 3.5rem) 2.35rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.75rem 3.5rem;
+}
+
+.column {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.categoryLink {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: var(--text-nav);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a8268;
+  text-decoration: none;
+  line-height: 1.2;
   transition: color 0.15s ease;
+}
+
+.categoryLink:hover {
+  color: #b8942f;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  min-height: 100%;
+  padding-inline-start: 2.75rem;
+  border-inline-start: 1px solid rgba(154, 130, 104, 0.28);
+}
+
+.asideLink {
+  font-family: var(--font-ui);
+  font-size: var(--text-nav);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9a8268;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+}
+
+.asideLink:hover {
+  color: #b8942f;
+}
+
+.asideLinkBottom {
+  margin-top: auto;
 }
 
 .chevron {
@@ -30,70 +143,6 @@
   transform: rotate(180deg);
 }
 
-/* ── Dropdown panel ───────────────────────────── */
-.panel {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-6px);
-  min-width: 200px;
-  padding-top: 0.65rem;
-  background: transparent;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 500;
-}
-
-/* Inner surface + invisible bridge so hover survives the gap from trigger */
-.panel::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 0.65rem;
-}
-
-.panelInner {
-  background: #ffffff;
-  border: 1px solid rgba(184, 148, 47, 0.14);
-  box-shadow: 0 16px 48px rgba(17, 24, 39, 0.12);
-  padding: 0.55rem 0;
-}
-
-.panelOpen {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
-.item {
-  display: block;
-  padding: 0.68rem 1.25rem;
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #1e2735;
-  text-decoration: none;
-  transition: background 0.14s ease, color 0.14s ease;
-  white-space: nowrap;
-}
-
-.item:hover {
-  background: rgba(184, 148, 47, 0.07);
-  color: #b8942f;
-}
-
-.separator {
-  height: 1px;
-  background: rgba(30, 39, 53, 0.08);
-  margin: 0.4rem 1rem;
-}
-
-/* ── Mobile (hidden on desktop) ───────────────── */
 .mobileAccordion {
   display: none;
 }
@@ -141,14 +190,38 @@
   color: #b8942f;
 }
 
+@media (min-width: 992px) {
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 100px 0 0;
+    z-index: 1085;
+    background: rgba(7, 12, 22, 0.42);
+    border: none;
+    cursor: default;
+  }
+}
+
+@media (max-width: 1199px) {
+  .trigger,
+  .categoryLink,
+  .asideLink {
+    font-size: 0.875rem !important;
+  }
+
+  .columns {
+    gap: 2rem 2.25rem;
+  }
+}
+
 @media (max-width: 991px) {
-  /* On mobile the standard .root (desktop version) is invisible */
   .root {
     width: 100%;
   }
 
   .root > .trigger,
-  .root > .panel {
+  .root > .megaWrap,
+  .root > .backdrop {
     display: none;
   }
 
@@ -167,11 +240,5 @@
 @media (min-width: 992px) {
   .mobileAccordion {
     display: none;
-  }
-}
-
-@media (max-width: 1199px) {
-  .trigger {
-    font-size: 0.875rem !important;
   }
 }
