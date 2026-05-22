@@ -118,7 +118,7 @@ export default function ProjectDetailView({ projectId }: Props) {
         </div>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>{name}</h1>
-          {city ? <p className={styles.heroLocation}>{city}</p> : null}
+          {city ? <p className={styles.heroSub}>{city}</p> : null}
         </div>
       </section>
 

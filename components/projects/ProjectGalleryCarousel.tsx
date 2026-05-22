@@ -19,7 +19,7 @@ export default function ProjectGalleryCarousel({ images, alt }: Props) {
         className={styles.carousel}
         indicators={images.length > 1}
         controls={images.length > 1}
-        interval={null}
+        interval={6500}
         pause="hover"
         wrap
       >
