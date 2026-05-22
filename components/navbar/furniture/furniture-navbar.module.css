@@ -124,13 +124,6 @@
 .navScrolled {
   background: rgb(255, 255, 255) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.navScrolled:not(.navProductsOpen) {
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.06);
-}
-
-.navProductsOpen {
   box-shadow: none;
 }
 

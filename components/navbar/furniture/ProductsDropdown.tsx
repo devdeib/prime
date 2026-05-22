@@ -113,10 +113,6 @@ export default function ProductsDropdown({
     t("nav.seeAllProducts") === "nav.seeAllProducts"
       ? "SEE ALL PRODUCTS"
       : t("nav.seeAllProducts");
-  const collectionsLabel =
-    t("nav.viewCollections") === "nav.viewCollections"
-      ? "VIEW COLLECTIONS"
-      : t("nav.viewCollections");
   const columns = splitIntoColumns(categories, MEGA_COLUMNS);
 
   return (
@@ -181,14 +177,6 @@ export default function ProductsDropdown({
               >
                 {seeAllLabel}
               </Link>
-              <Link
-                href="/showrooms"
-                className={`${styles.asideLink} ${styles.asideLinkBottom}`}
-                role="menuitem"
-                onClick={() => setMenuOpen(false)}
-              >
-                {collectionsLabel}
-              </Link>
             </aside>
           </div>
         </div>
@@ -234,19 +222,12 @@ export default function ProductsDropdown({
               <Link
                 key={cat.id}
                 href={`/products/${cat.alias}`}
-                className={styles.mobileItem}
+                className={`${styles.mobileItem} ${styles.mobileCategoryItem}`}
                 onClick={() => setMenuOpen(false)}
               >
                 {pickLocalized(i18n.language, cat.name, cat.name_ar)}
               </Link>
             ))}
-            <Link
-              href="/showrooms"
-              className={styles.mobileItem}
-              onClick={() => setMenuOpen(false)}
-            >
-              {collectionsLabel}
-            </Link>
           </div>
         ) : null}
       </div>
