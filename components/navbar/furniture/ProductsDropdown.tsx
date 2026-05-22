@@ -129,21 +129,24 @@ export default function ProductsDropdown({
         {label}
       </button>
 
+      {open ? (
+        <div
+          className={styles.backdrop}
+          aria-hidden
+          onClick={() => setMenuOpen(false)}
+        />
+      ) : null}
+
       <div
         className={`${styles.megaWrap} ${open ? styles.megaWrapOpen : ""}`}
         role="menu"
         aria-label={label}
-        onMouseEnter={openMenu}
-        onMouseLeave={scheduleClose}
       >
-        {open ? (
-          <div
-            className={styles.backdrop}
-            aria-hidden
-            onClick={() => setMenuOpen(false)}
-          />
-        ) : null}
-        <div className={styles.megaPanel}>
+        <div
+          className={styles.megaPanel}
+          onMouseEnter={openMenu}
+          onMouseLeave={scheduleClose}
+        >
           <div className={styles.megaInner}>
             <div className={styles.columns}>
               {columns.map((column, columnIndex) => (
