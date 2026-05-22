@@ -440,6 +440,17 @@ export async function GET(req: NextRequest, context: { params: Promise<{ index: 
   }
 
   if (resource === 'showrooms') {
+    const [, id] = index
+    if (id) {
+      const { data, error } = await supabase
+        .from('showrooms')
+        .select('*')
+        .eq('id', id)
+        .maybeSingle()
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+      if (!data) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+      return NextResponse.json(formatShowroomRow(data))
+    }
     const { data, error } = await supabase.from('showrooms').select('*').order('sort_order')
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json((data ?? []).map((row) => formatShowroomRow(row)))

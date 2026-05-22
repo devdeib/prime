@@ -13,7 +13,7 @@ import ProfileNavItem from "../ProfileNavItem";
 import HamBurgerIcon from "../HamBurgerIcon";
 import LanguageToggle from "../LanguageToggle";
 import ProductsDropdown from "./ProductsDropdown";
-import { isProjectHeroPath } from "@/lib/projects";
+import { isCollectionDetailHeroPath } from "@/lib/detail-hero";
 import styles from "./furniture-navbar.module.css";
 
 export default function FurnitureNavbar() {
@@ -23,8 +23,10 @@ export default function FurnitureNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const isHome = pathname === "/";
-  const isProjectHero = isProjectHeroPath(pathname);
-  const isHeroPage = isHome || isProjectHero;
+  const isDetailHero = isCollectionDetailHeroPath(pathname);
+  const isShowroomHero =
+    pathname != null && /^\/showrooms\/\d+$/.test(pathname);
+  const isHeroPage = isHome || isDetailHero;
   const useLightNavbar = !isHeroPage || scrolled;
   /** Mobile menu uses a light panel; profile trigger uses dark text on light. */
   const profileOnLight = useLightNavbar || isNarrow;
@@ -85,7 +87,10 @@ export default function FurnitureNavbar() {
               as={Link}
               href="/projects"
               className={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname === "/projects" || isProjectHero ? styles.navLinkActive : ""
+                pathname === "/projects" ||
+                (pathname != null && /^\/projects\/\d+$/.test(pathname))
+                  ? styles.navLinkActive
+                  : ""
               }`}
             >
               {t("nav.projects")}
@@ -98,7 +103,9 @@ export default function FurnitureNavbar() {
             <Nav.Link
               as={Link}
               href="/showrooms"
-              className={`${styles.navLink} ${styles.ft14} fw-normal`}
+              className={`${styles.navLink} ${styles.ft14} fw-normal ${
+                pathname === "/showrooms" || isShowroomHero ? styles.navLinkActive : ""
+              }`}
             >
               {t("nav.showrooms")}
             </Nav.Link>

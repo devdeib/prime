@@ -262,6 +262,15 @@
     "subtitle": "Visit us and explore collections in person.",
     "empty": "No showroom listed yet."
   },
+  "showroomDetail": {
+    "metaLabel": "Showroom details",
+    "location": "Location",
+    "address": "Address",
+    "about": "About this showroom",
+    "gallery": "Showroom gallery",
+    "backToShowrooms": "Back to showrooms",
+    "notFound": "This showroom could not be found."
+  },
   "projectsPage": {
     "title": "PROJECTS",
     "subtitle": "Browse selected spaces and previous work completed by our team.",

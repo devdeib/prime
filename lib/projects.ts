@@ -35,6 +35,4 @@ export function projectDetailPath(id: number): string {
   return `/projects/${id}`;
 }
 
-export function isProjectHeroPath(pathname: string | null): boolean {
-  return pathname != null && /^\/projects\/\d+$/.test(pathname);
-}
+export { isCollectionDetailHeroPath as isProjectHeroPath } from "./detail-hero";

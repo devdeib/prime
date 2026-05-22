@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { pickLocalized } from "@/lib/bilingual";
 import { projectDetailPath } from "@/lib/projects";
+import { showroomDetailPath } from "@/lib/showrooms";
 import styles from "./home-showrooms-section.module.css";
 
 type ShowroomItem = {
@@ -228,7 +229,9 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
           {cards.map((showroom) => (
             <Link
               key={showroom.id}
-              href={isProjects ? projectDetailPath(showroom.id) : "/showrooms"}
+              href={
+                isProjects ? projectDetailPath(showroom.id) : showroomDetailPath(showroom.id)
+              }
               className={styles.card}
               aria-label={pickLocalized(
                 i18n.language,
