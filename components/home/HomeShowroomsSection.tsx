@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { pickLocalized } from "@/lib/bilingual";
 import { projectDetailPath } from "@/lib/projects";
@@ -33,10 +33,12 @@ const FALLBACK_PROJECTS: ShowroomItem[] = [
   { id: 4, name: "Apartment Styling", city: "Rome" },
 ];
 
+const PLACEHOLDER_IMAGE = "/images/La dolce casa.svg";
+
 function showroomImage(showroom: ShowroomItem) {
   const image = showroom.images?.find(Boolean) || showroom.image_url;
   if (image) return image;
-  return `https://picsum.photos/seed/showroom-${showroom.id}/900/1200`;
+  return PLACEHOLDER_IMAGE;
 }
 
 export default function HomeShowroomsSection() {
@@ -46,6 +48,7 @@ export default function HomeShowroomsSection() {
 export function HomeProjectsSection() {
   const { t, i18n } = useTranslation("common");
   const [items, setItems] = useState<ShowroomItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const title =
     t("homeProjects.title") === "homeProjects.title"
@@ -63,19 +66,20 @@ export function HomeProjectsSection() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setItems(data);
+        } else {
+          setItems(FALLBACK_PROJECTS);
         }
       })
       .catch(() => {
-        setItems([]);
+        if (!controller.signal.aborted) setItems(FALLBACK_PROJECTS);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
   }, []);
 
-  const cards = useMemo(
-    () => (items.length > 0 ? items : FALLBACK_PROJECTS),
-    [items]
-  );
-  const [featured, secondary] = cards;
+  const [featured, secondary] = items;
 
   return (
     <section className={`${styles.section} ${styles.sectionProjects}`}>
@@ -85,22 +89,26 @@ export function HomeProjectsSection() {
           <p className={styles.subtitle}>{subtitle}</p>
         </header>
 
-        <div className={styles.projectsGrid}>
-          {featured ? (
-            <ProjectFeatureCard
-              project={featured}
-              size="large"
-              language={i18n.language}
-            />
-          ) : null}
-          {secondary ? (
-            <ProjectFeatureCard
-              project={secondary}
-              size="small"
-              language={i18n.language}
-            />
-          ) : null}
-        </div>
+        {loading ? (
+          <div className={styles.projectsGrid} aria-busy="true" />
+        ) : (
+          <div className={styles.projectsGrid}>
+            {featured ? (
+              <ProjectFeatureCard
+                project={featured}
+                size="large"
+                language={i18n.language}
+              />
+            ) : null}
+            {secondary ? (
+              <ProjectFeatureCard
+                project={secondary}
+                size="small"
+                language={i18n.language}
+              />
+            ) : null}
+          </div>
+        )}
       </div>
     </section>
   );
@@ -170,30 +178,31 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
         : "You can visit us in one of our curated showrooms and explore how each collection comes to life in a real interior setting."
       : t(isProjects ? "homeProjects.subtitle" : "homeShowrooms.subtitle");
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    setLoading(true);
     const controller = new AbortController();
+    const fallback = isProjects ? FALLBACK_PROJECTS : FALLBACK_SHOWROOMS;
     fetch(`/api/be/${kind}`, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setItems(data);
+        } else {
+          setItems(fallback);
         }
       })
       .catch(() => {
-        setItems([]);
+        if (!controller.signal.aborted) setItems(fallback);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [kind]);
+  }, [kind, isProjects]);
 
-  const cards = useMemo(
-    () =>
-      items.length > 0
-        ? items
-        : isProjects
-          ? FALLBACK_PROJECTS
-          : FALLBACK_SHOWROOMS,
-    [isProjects, items]
-  );
+  const cards = items;
 
   const scrollRail = (direction: -1 | 1) => {
     const rail = railRef.current;
@@ -225,8 +234,8 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
             aria-label={`Next ${title.toLowerCase()}`}
             onClick={() => scrollRail(1)}
           />
-          <div className={styles.rail} ref={railRef}>
-          {cards.map((showroom) => (
+          <div className={styles.rail} ref={railRef} aria-busy={loading || undefined}>
+          {!loading && cards.map((showroom) => (
             <Link
               key={showroom.id}
               href={

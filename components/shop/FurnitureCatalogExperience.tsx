@@ -76,7 +76,7 @@ function productImageUrl(product: Product) {
   if (product.image_url) {
     return product.image_url;
   }
-  return `https://picsum.photos/seed/product-${product.id}/800/1000`;
+  return "/images/La dolce casa.svg";
 }
 
 function isVideoUrl(url: string | null | undefined) {

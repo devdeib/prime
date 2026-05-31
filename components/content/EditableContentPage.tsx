@@ -38,7 +38,7 @@ type Props = {
   fallbackImage?: string;
 };
 
-const DEFAULT_IMAGE = "https://picsum.photos/seed/la-dolce-content/1200/1400";
+const DEFAULT_IMAGE = "/images/La dolce casa.svg";
 
 export default function EditableContentPage({
   contentKey,

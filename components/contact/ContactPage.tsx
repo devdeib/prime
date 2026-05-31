@@ -37,7 +37,7 @@ type ContactContent = {
   map_iframe_src?: string;
 };
 
-const FALLBACK_VISUAL = "https://picsum.photos/seed/la-dolce-contact/1000/1200";
+const FALLBACK_VISUAL = "/images/La dolce casa.svg";
 
 function findLeadImage(row: VisualRow) {
   return row.images?.find(Boolean) || row.image_url || null;

@@ -67,7 +67,7 @@ function formatCategoryRow(c: MockStoredCategory) {
       type: "category",
       size: "0",
       public_id: `category-${c.id}`,
-      image_url: `https://picsum.photos/seed/furniture-category-${c.id}/80/80`,
+      image_url: "/images/La dolce casa.svg",
       category_id: c.id,
       created_at: nowIso,
       updated_at: nowIso,
@@ -87,7 +87,7 @@ function formatProductRow(
   const imageUrl =
     item.image_url && item.image_url.trim() !== ""
       ? item.image_url
-      : `https://picsum.photos/seed/furniture-${item.id}/640/480`;
+      : "/images/La dolce casa.svg";
   const descEn =
     item.descriptions?.trim() ?? `${item.name} from La Dolce Casa`;
   const descAr =
@@ -397,7 +397,7 @@ export async function tryMockBeRequest(
         type: type ?? "banner",
         size: "0",
         public_id: `${type ?? "banner"}-${idx + 1}`,
-        image_url: `https://picsum.photos/seed/furni-banner-${type ?? "banner"}-${idx + 1}/1200/400`,
+        image_url: "/images/La dolce casa.svg",
         created_at: nowIso,
         updated_at: nowIso,
       })),

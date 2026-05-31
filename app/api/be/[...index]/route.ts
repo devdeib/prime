@@ -370,9 +370,7 @@ function buildStorageFileRows(type: string | null, urls: string[]) {
       ? type === 'banner'
         ? urls.slice(0, 3)
         : [urls[0]]
-      : Array.from({ length: fallbackCount }, (_, index) =>
-          `https://picsum.photos/seed/${type ?? 'banner'}-${index + 1}/1200/700`
-        )
+      : []
   return selected.map((image_url, index) => ({
     id: index + 1,
     type: type ?? 'banner',
