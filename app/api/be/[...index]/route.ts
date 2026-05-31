@@ -364,7 +364,6 @@ async function handleVipMeetingsGet(req: NextRequest, index: string[]) {
 }
 
 function buildStorageFileRows(type: string | null, urls: string[]) {
-  const fallbackCount = type === 'banner' ? 3 : 1
   const selected =
     urls.length > 0
       ? type === 'banner'
