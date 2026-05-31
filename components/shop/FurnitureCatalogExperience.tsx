@@ -103,6 +103,22 @@ export default function FurnitureCatalogExperience({
   const [activeCategoryAlias, setActiveCategoryAlias] = useState<string>(
     topCarousel ? FEATURED_ALIAS : (routeCategorySlug ?? ALL_ITEMS_ALIAS)
   );
+
+  // Once categories load on homepage, find the actual featured category alias
+  useEffect(() => {
+    if (!topCarousel || categories.length === 0) return;
+    const featured = categories.find(
+      (c) =>
+        c.alias === "featured-products" ||
+        c.name.toLowerCase().includes("featured")
+    );
+    if (featured) {
+      setActiveCategoryAlias(featured.alias);
+    } else {
+      // No featured category found — show all products
+      setActiveCategoryAlias(ALL_ITEMS_ALIAS);
+    }
+  }, [categories, topCarousel]);
   const [selected, setSelected] = useState<Product | null>(null);
   const [heroSlides, setHeroSlides] = useState<HomeCarouselSlide[]>(
     initialHeroSlides?.length ? initialHeroSlides : MOCK_HOME_CAROUSEL_SLIDES
@@ -162,7 +178,8 @@ export default function FurnitureCatalogExperience({
   }, []);
 
   useEffect(() => {
-    setActiveCategoryAlias(topCarousel ? FEATURED_ALIAS : (routeCategorySlug ?? ALL_ITEMS_ALIAS));
+    if (topCarousel) return; // homepage alias is managed by the categories effect above
+    setActiveCategoryAlias(routeCategorySlug ?? ALL_ITEMS_ALIAS);
   }, [routeCategorySlug, topCarousel]);
 
   useEffect(() => {
@@ -170,10 +187,7 @@ export default function FurnitureCatalogExperience({
     let url = "/api/be/products";
 
     if (activeCategoryAlias !== ALL_ITEMS_ALIAS) {
-      // Products table stores category by name, not alias — resolve it
-      const matchedCat = categories.find((c) => c.alias === activeCategoryAlias);
-      const categoryParam = matchedCat ? matchedCat.name : activeCategoryAlias;
-      url += `?category=${encodeURIComponent(categoryParam)}`;
+      url += `?category=${encodeURIComponent(activeCategoryAlias)}`;
     }
     setLoadingProducts(true);
     setProductsError(null);
@@ -193,7 +207,7 @@ export default function FurnitureCatalogExperience({
       });
 
     return () => controller.abort();
-  }, [activeCategoryAlias, categories]);
+  }, [activeCategoryAlias]);
 
   useEffect(() => {
     if (!selected) return;
