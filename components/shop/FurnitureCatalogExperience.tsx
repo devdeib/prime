@@ -175,7 +175,6 @@ export default function FurnitureCatalogExperience({
       const categoryParam = matchedCat ? matchedCat.name : activeCategoryAlias;
       url += `?category=${encodeURIComponent(categoryParam)}`;
     }
-    }
     setLoadingProducts(true);
     setProductsError(null);
 
