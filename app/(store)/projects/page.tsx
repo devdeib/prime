@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { pickLocalized } from "@/lib/bilingual";
@@ -12,7 +12,7 @@ import styles from "./projects.module.css";
 
 type FilterType = "All" | "Residential" | "Commercial";
 
-export default function ProjectsPage() {
+function ProjectsContent() {
   const { t, i18n } = useTranslation("common");
   const searchParams = useSearchParams();
   const typeParam = searchParams.get("type") as FilterType | null;
@@ -25,30 +25,19 @@ export default function ProjectsPage() {
     const c = new AbortController();
     fetch("/api/be/projects", { signal: c.signal })
       .then((r) => r.json())
-      .then((j) => {
-        if (Array.isArray(j)) setItems(j);
-      })
+      .then((j) => { if (Array.isArray(j)) setItems(j); })
       .catch(() => setItems([]));
     return () => c.abort();
   }, []);
 
-  // Sync filter with URL param
   useEffect(() => {
     if (typeParam && ["Residential", "Commercial"].includes(typeParam)) {
       setFilter(typeParam as FilterType);
     }
   }, [typeParam]);
 
-  const sorted = [...items].sort(
-    (a, b) => a.sort_order - b.sort_order || a.id - b.id
-  );
-
-  const filtered =
-    filter === "All"
-      ? sorted
-      : sorted.filter(
-          (p) => (p.project_type ?? "Residential") === filter
-        );
+  const sorted = [...items].sort((a, b) => a.sort_order - b.sort_order || a.id - b.id);
+  const filtered = filter === "All" ? sorted : sorted.filter((p) => (p.project_type ?? "Residential") === filter);
 
   const filterLabel = (type: FilterType) => {
     if (type === "All") return i18n.language === "ar" ? "الكل" : "All";
@@ -82,9 +71,7 @@ export default function ProjectsPage() {
         </nav>
 
         {filtered.length === 0 ? (
-          <p className="text-center text-muted py-5">
-            {t("projectsPage.empty")}
-          </p>
+          <p className="text-center text-muted py-5">{t("projectsPage.empty")}</p>
         ) : (
           <div className={styles.imakerGrid}>
             {filtered.map((project, index) => {
@@ -92,8 +79,7 @@ export default function ProjectsPage() {
               const city = pickLocalized(i18n.language, project.city, project.city_ar);
               const gallery = getProjectGallery(project);
               const heroImage = gallery[0];
-              // iMaker alternating layout: first item large, rest alternate
-              const isLarge = index === 0 || (index % 3 === 0 && index > 0);
+              const isLarge = index === 0 || index % 3 === 0;
 
               return (
                 <Link
@@ -129,5 +115,13 @@ export default function ProjectsPage() {
         )}
       </BaseContainer>
     </section>
+  );
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense>
+      <ProjectsContent />
+    </Suspense>
   );
 }
