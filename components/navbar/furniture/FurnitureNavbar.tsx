@@ -89,12 +89,16 @@ export default function FurnitureNavbar() {
         >
           <Nav className={`me-auto ${styles.leftLinks}`}>
             <ProjectsDropdown
-              linkClassName={`${styles.navLink} ${styles.ft14} fw-normal`}
+              linkClassName={`${styles.navLink} ${styles.ft14} fw-normal ${
+                pathname != null && pathname.startsWith("/projects") ? styles.navLinkActive : ""
+              }`}
               onOpenChange={setProjectsMenuOpen}
             />
 
             <ProductsDropdown
-              linkClassName={`${styles.navLink} ${styles.ft14} fw-normal`}
+              linkClassName={`${styles.navLink} ${styles.ft14} fw-normal ${
+                pathname != null && pathname.startsWith("/products") ? styles.navLinkActive : ""
+              }`}
               onOpenChange={setProductsMenuOpen}
             />
 
@@ -110,7 +114,9 @@ export default function FurnitureNavbar() {
             <Nav.Link
               as={Link}
               href="/services"
-              className={`${styles.navLink} ${styles.ft14} fw-normal`}
+              className={`${styles.navLink} ${styles.ft14} fw-normal ${
+                pathname === "/services" ? styles.navLinkActive : ""
+              }`}
             >
               {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
             </Nav.Link>
@@ -127,7 +133,9 @@ export default function FurnitureNavbar() {
             <Nav.Link
               as={Link}
               href="/vip-meeting"
-              className={`${styles.navLink} ${styles.ft14} fw-normal`}
+              className={`${styles.navLink} ${styles.ft14} fw-normal ${
+                pathname === "/vip-meeting" ? styles.navLinkActive : ""
+              }`}
             >
               {t("nav.vipMeeting")}
             </Nav.Link>

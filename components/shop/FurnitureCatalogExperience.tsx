@@ -168,8 +168,13 @@ export default function FurnitureCatalogExperience({
   useEffect(() => {
     const controller = new AbortController();
     let url = "/api/be/products";
+
     if (activeCategoryAlias !== ALL_ITEMS_ALIAS) {
-      url += `?category=${encodeURIComponent(activeCategoryAlias)}`;
+      // Products table stores category by name, not alias — resolve it
+      const matchedCat = categories.find((c) => c.alias === activeCategoryAlias);
+      const categoryParam = matchedCat ? matchedCat.name : activeCategoryAlias;
+      url += `?category=${encodeURIComponent(categoryParam)}`;
+    }
     }
     setLoadingProducts(true);
     setProductsError(null);
@@ -189,7 +194,7 @@ export default function FurnitureCatalogExperience({
       });
 
     return () => controller.abort();
-  }, [activeCategoryAlias]);
+  }, [activeCategoryAlias, categories]);
 
   useEffect(() => {
     if (!selected) return;

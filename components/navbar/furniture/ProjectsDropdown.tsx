@@ -71,11 +71,6 @@ export default function ProjectsDropdown({
 
   const items = [
     {
-      href: "/projects",
-      labelEn: "All Projects",
-      labelAr: "جميع المشاريع",
-    },
-    {
       href: "/projects?type=Commercial",
       labelEn: "Commercial",
       labelAr: "تجاري",
