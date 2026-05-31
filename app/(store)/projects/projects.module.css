@@ -560,3 +560,116 @@
   padding: 0.22rem 0.55rem;
   flex-shrink: 0;
 }
+
+/* ── iMaker-style grid layout ─────────────────────────────── */
+.imakerGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-top: 2rem;
+}
+
+.imakerCard {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.imakerCardLarge {
+  grid-column: 1 / -1;
+}
+
+.imakerCardSmall {
+  grid-column: span 1;
+}
+
+.imakerImageWrap {
+  position: relative;
+  overflow: hidden;
+  background: #ece7dd;
+}
+
+.imakerCardLarge .imakerImageWrap {
+  aspect-ratio: 16 / 9;
+}
+
+.imakerCardSmall .imakerImageWrap {
+  aspect-ratio: 4 / 3;
+}
+
+.imakerImage {
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.imakerCard:hover .imakerImage {
+  transform: scale(1.04);
+}
+
+.imakerOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.22) 100%);
+  transition: background 0.3s ease;
+}
+
+.imakerCard:hover .imakerOverlay {
+  background: linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.3) 100%);
+}
+
+.imakerArrow {
+  position: absolute;
+  bottom: 1rem;
+  inset-inline-end: 1rem;
+  width: 42px;
+  height: 42px;
+  background: rgba(255,255,255,0.92);
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transform: translate(4px, 4px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  color: #1e2735;
+}
+
+.imakerCard:hover .imakerArrow {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.imakerCaption {
+  padding: 1.1rem 0 0.5rem;
+}
+
+.imakerName {
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #1e2735;
+  margin: 0 0 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.imakerCard:hover .imakerName {
+  color: #b8942f;
+}
+
+.imakerCity {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: #858b94;
+  margin: 0;
+  letter-spacing: 0;
+}
+
+@media (max-width: 767px) {
+  .imakerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .imakerCardLarge,
+  .imakerCardSmall {
+    grid-column: 1 / -1;
+  }
+}

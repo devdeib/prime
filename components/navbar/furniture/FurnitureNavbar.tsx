@@ -13,6 +13,7 @@ import ProfileNavItem from "../ProfileNavItem";
 import HamBurgerIcon from "../HamBurgerIcon";
 import LanguageToggle from "../LanguageToggle";
 import ProductsDropdown from "./ProductsDropdown";
+import ProjectsDropdown from "./ProjectsDropdown";
 import { isCollectionDetailHeroPath } from "@/lib/detail-hero";
 import styles from "./furniture-navbar.module.css";
 
@@ -23,12 +24,13 @@ export default function FurnitureNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const [productsMenuOpen, setProductsMenuOpen] = useState(false);
+  const [projectsMenuOpen, setProjectsMenuOpen] = useState(false);
   const isHome = pathname === "/";
   const isDetailHero = isCollectionDetailHeroPath(pathname);
   const isShowroomHero =
     pathname != null && /^\/showrooms\/\d+$/.test(pathname);
   const isHeroPage = isHome || isDetailHero;
-  const useLightNavbar = !isHeroPage || scrolled || productsMenuOpen;
+  const useLightNavbar = !isHeroPage || scrolled || productsMenuOpen || projectsMenuOpen;
   /** Mobile menu uses a light panel; profile trigger uses dark text on light. */
   const profileOnLight = useLightNavbar || isNarrow;
   const profileHeroFlat = isHeroPage && !scrolled;
@@ -54,7 +56,7 @@ export default function FurnitureNavbar() {
       variant="dark"
       fixed="top"
       className={`${styles.navShell} ${useLightNavbar ? styles.navScrolled : ""} ${
-        productsMenuOpen ? styles.navProductsOpen : ""
+        productsMenuOpen || projectsMenuOpen ? styles.navProductsOpen : ""
       }`}
     >
       <Container fluid="xxl" className={styles.navContainer}>
@@ -86,18 +88,10 @@ export default function FurnitureNavbar() {
           className={styles.mobileCollapse}
         >
           <Nav className={`me-auto ${styles.leftLinks}`}>
-            <Nav.Link
-              as={Link}
-              href="/projects"
-              className={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname === "/projects" ||
-                (pathname != null && /^\/projects\/\d+$/.test(pathname))
-                  ? styles.navLinkActive
-                  : ""
-              }`}
-            >
-              {t("nav.projects")}
-            </Nav.Link>
+            <ProjectsDropdown
+              linkClassName={`${styles.navLink} ${styles.ft14} fw-normal`}
+              onOpenChange={setProjectsMenuOpen}
+            />
 
             <ProductsDropdown
               linkClassName={`${styles.navLink} ${styles.ft14} fw-normal`}

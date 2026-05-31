@@ -1,0 +1,239 @@
+/* Products mega menu — full-width panel, navbar turns white on hover */
+
+.root {
+  position: relative;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--text-nav);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.backdrop {
+  display: none;
+}
+
+.megaWrap {
+  position: fixed;
+  top: 100px;
+  left: 0;
+  right: 0;
+  z-index: 1090;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.megaWrapOpen {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.megaPanel {
+  position: relative;
+  z-index: 1;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: none;
+}
+
+/* Bridge from navbar link into panel so hover is not lost in the gap */
+.megaPanel::before {
+  content: "";
+  position: absolute;
+  top: -24px;
+  left: 0;
+  right: 0;
+  height: 24px;
+}
+
+.megaInner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 2.5rem;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 2.1rem clamp(1.5rem, 4vw, 3.5rem) 2.35rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.75rem 3.5rem;
+}
+
+.column {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.categoryLink {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: var(--text-nav);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1e2735;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: color 0.15s ease;
+}
+
+.categoryLink:hover {
+  color: #b8942f;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  padding-inline-start: 2.75rem;
+  border-inline-start: 1px solid rgba(30, 39, 53, 0.14);
+}
+
+.asideLink {
+  font-family: var(--font-ui);
+  font-size: var(--text-nav);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1e2735;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+.asideLink:hover {
+  color: #1e2735;
+  opacity: 0.72;
+}
+
+.chevron {
+  transition: transform 0.22s ease;
+  opacity: 0.7;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.mobileAccordion {
+  display: none;
+}
+
+.mobileToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0.78rem 0.35rem;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 1.18rem;
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e2735;
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid rgba(30, 39, 53, 0.06);
+}
+
+.mobilePanel {
+  padding-left: 1rem;
+  padding-bottom: 0.25rem;
+}
+
+.mobileItem {
+  display: block;
+  padding: 0.58rem 0.35rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1e2735;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(30, 39, 53, 0.04);
+}
+
+.mobileCategoryItem:hover {
+  color: #b8942f;
+}
+
+@media (min-width: 992px) {
+  .backdrop {
+    display: block;
+    position: fixed;
+    inset: 100px 0 0;
+    z-index: 1085;
+    background: rgba(7, 12, 22, 0.42);
+    border: none;
+    cursor: default;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 1199px) {
+  .trigger,
+  .categoryLink,
+  .asideLink {
+    font-size: 0.875rem !important;
+  }
+
+  .columns {
+    gap: 2rem 2.25rem;
+  }
+}
+
+@media (max-width: 991px) {
+  .root {
+    width: 100%;
+  }
+
+  .root > .trigger,
+  .root > .backdrop,
+  .root > .megaWrap {
+    display: none;
+  }
+
+  .mobileAccordion {
+    display: block;
+    width: 100%;
+  }
+}
+
+@media (max-width: 575px) {
+  .mobileToggle {
+    font-size: 1.06rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobileAccordion {
+    display: none;
+  }
+}

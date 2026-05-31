@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { pickLocalized } from "@/lib/bilingual";
-import { projectDetailPath, type Project } from "@/lib/projects";
+import { projectDetailPath, getProjectGallery, projectImageNeedsUnoptimized, type Project } from "@/lib/projects";
 import BaseContainer from "@/components/common/container/BaseContainer";
 import styles from "./projects.module.css";
 
@@ -12,8 +14,12 @@ type FilterType = "All" | "Residential" | "Commercial";
 
 export default function ProjectsPage() {
   const { t, i18n } = useTranslation("common");
+  const searchParams = useSearchParams();
+  const typeParam = searchParams.get("type") as FilterType | null;
   const [items, setItems] = useState<Project[]>([]);
-  const [filter, setFilter] = useState<FilterType>("All");
+  const [filter, setFilter] = useState<FilterType>(
+    typeParam && ["Residential", "Commercial"].includes(typeParam) ? typeParam : "All"
+  );
 
   useEffect(() => {
     const c = new AbortController();
@@ -25,6 +31,13 @@ export default function ProjectsPage() {
       .catch(() => setItems([]));
     return () => c.abort();
   }, []);
+
+  // Sync filter with URL param
+  useEffect(() => {
+    if (typeParam && ["Residential", "Commercial"].includes(typeParam)) {
+      setFilter(typeParam as FilterType);
+    }
+  }, [typeParam]);
 
   const sorted = [...items].sort(
     (a, b) => a.sort_order - b.sort_order || a.id - b.id
@@ -73,31 +86,46 @@ export default function ProjectsPage() {
             {t("projectsPage.empty")}
           </p>
         ) : (
-          <ul className={styles.list}>
-            {filtered.map((project) => {
-              const label = `${pickLocalized(i18n.language, project.name, project.name_ar)} (${pickLocalized(i18n.language, project.city, project.city_ar)})`;
+          <div className={styles.imakerGrid}>
+            {filtered.map((project, index) => {
+              const name = pickLocalized(i18n.language, project.name, project.name_ar);
+              const city = pickLocalized(i18n.language, project.city, project.city_ar);
+              const gallery = getProjectGallery(project);
+              const heroImage = gallery[0];
+              // iMaker alternating layout: first item large, rest alternate
+              const isLarge = index === 0 || (index % 3 === 0 && index > 0);
 
               return (
-                <li key={project.id}>
-                  <Link
-                    href={projectDetailPath(project.id)}
-                    className={styles.listItem}
-                    aria-label={label}
-                  >
-                    <span className={styles.listName}>
-                      {pickLocalized(i18n.language, project.name, project.name_ar)}
-                    </span>
-                    {project.project_type && project.project_type !== "Residential" ? (
-                      <span className={styles.listTypeBadge}>{filterLabel(project.project_type)}</span>
-                    ) : null}
-                    <span className={styles.listCity}>
-                      {pickLocalized(i18n.language, project.city, project.city_ar)}
-                    </span>
-                  </Link>
-                </li>
+                <Link
+                  key={project.id}
+                  href={projectDetailPath(project.id)}
+                  className={`${styles.imakerCard} ${isLarge ? styles.imakerCardLarge : styles.imakerCardSmall}`}
+                  aria-label={name}
+                >
+                  <div className={styles.imakerImageWrap}>
+                    <Image
+                      src={heroImage}
+                      alt={name}
+                      fill
+                      sizes={isLarge ? "(max-width: 900px) 100vw, 65vw" : "(max-width: 900px) 100vw, 40vw"}
+                      className={styles.imakerImage}
+                      unoptimized={projectImageNeedsUnoptimized(heroImage)}
+                    />
+                    <div className={styles.imakerOverlay} aria-hidden />
+                    <div className={styles.imakerArrow} aria-hidden>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M7 17L17 7M17 7H7M17 7v10" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className={styles.imakerCaption}>
+                    <h2 className={styles.imakerName}>{name}</h2>
+                    {city ? <p className={styles.imakerCity}>{city}</p> : null}
+                  </div>
+                </Link>
               );
             })}
-          </ul>
+          </div>
         )}
       </BaseContainer>
     </section>

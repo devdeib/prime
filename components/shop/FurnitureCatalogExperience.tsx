@@ -99,8 +99,9 @@ export default function FurnitureCatalogExperience({
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [productsError, setProductsError] = useState<string | null>(null);
+  const FEATURED_ALIAS = "featured-products";
   const [activeCategoryAlias, setActiveCategoryAlias] = useState<string>(
-    routeCategorySlug ?? ALL_ITEMS_ALIAS
+    topCarousel ? FEATURED_ALIAS : (routeCategorySlug ?? ALL_ITEMS_ALIAS)
   );
   const [selected, setSelected] = useState<Product | null>(null);
   const [heroSlides, setHeroSlides] = useState<HomeCarouselSlide[]>(
@@ -161,8 +162,8 @@ export default function FurnitureCatalogExperience({
   }, []);
 
   useEffect(() => {
-    setActiveCategoryAlias(routeCategorySlug ?? ALL_ITEMS_ALIAS);
-  }, [routeCategorySlug]);
+    setActiveCategoryAlias(topCarousel ? FEATURED_ALIAS : (routeCategorySlug ?? ALL_ITEMS_ALIAS));
+  }, [routeCategorySlug, topCarousel]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -219,7 +220,7 @@ export default function FurnitureCatalogExperience({
   );
 
   const displayProducts = useMemo(
-    () => (topCarousel ? products.slice(0, 8) : products),
+    () => (topCarousel ? products : products),
     [products, topCarousel]
   );
 
