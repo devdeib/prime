@@ -282,3 +282,55 @@
     aspect-ratio: 16 / 10;
   }
 }
+
+/* ── Skeleton loading shimmer ── */
+@keyframes shimmer {
+  0%   { background-position: -700px 0; }
+  100% { background-position: 700px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e8e4dc 25%, #f0ece4 50%, #e8e4dc 75%);
+  background-size: 700px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 10px;
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.skeletonMedia {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.projectCardLarge .skeletonMedia {
+  aspect-ratio: 16 / 10;
+}
+
+.projectCardSmall .skeletonMedia {
+  aspect-ratio: 4 / 5;
+}
+
+.skeletonTitle {
+  height: 1.4rem;
+  width: 60%;
+  border-radius: 4px;
+}
+
+.skeletonMeta {
+  height: 0.9rem;
+  width: 35%;
+  border-radius: 4px;
+}
+
+/* Rail skeleton cards */
+.skeletonRailCard {
+  min-width: 240px;
+  aspect-ratio: 0.74;
+  border-radius: 10px;
+  flex-shrink: 0;
+}

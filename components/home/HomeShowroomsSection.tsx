@@ -90,7 +90,22 @@ export function HomeProjectsSection() {
         </header>
 
         {loading ? (
-          <div className={styles.projectsGrid} aria-busy="true" />
+          <div className={styles.projectsGrid} aria-busy="true">
+            <div className={`${styles.skeletonCard} ${styles.projectCardLarge}`}>
+              <div className={`${styles.skeletonMedia} ${styles.skeleton}`} />
+              <div className={styles.projectCaption}>
+                <div className={`${styles.skeletonTitle} ${styles.skeleton}`} />
+                <div className={`${styles.skeletonMeta} ${styles.skeleton}`} />
+              </div>
+            </div>
+            <div className={`${styles.skeletonCard} ${styles.projectCardSmall}`}>
+              <div className={`${styles.skeletonMedia} ${styles.skeleton}`} />
+              <div className={styles.projectCaption}>
+                <div className={`${styles.skeletonTitle} ${styles.skeleton}`} />
+                <div className={`${styles.skeletonMeta} ${styles.skeleton}`} />
+              </div>
+            </div>
+          </div>
         ) : (
           <div className={styles.projectsGrid}>
             {featured ? (
@@ -237,6 +252,9 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
             onClick={() => scrollRail(1)}
           />
           <div className={styles.rail} ref={railRef} aria-busy={loading || undefined}>
+          {loading && [1, 2, 3, 4].map((n) => (
+            <div key={n} className={`${styles.skeletonRailCard} ${styles.skeleton}`} />
+          ))}
           {!loading && cards.map((showroom) => (
             <Link
               key={showroom.id}
