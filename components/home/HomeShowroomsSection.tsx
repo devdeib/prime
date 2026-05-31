@@ -95,6 +95,7 @@ export function HomeProjectsSection() {
           <div className={styles.projectsGrid}>
             {featured ? (
               <ProjectFeatureCard
+                key={featured.id}
                 project={featured}
                 size="large"
                 language={i18n.language}
@@ -102,6 +103,7 @@ export function HomeProjectsSection() {
             ) : null}
             {secondary ? (
               <ProjectFeatureCard
+                key={secondary.id}
                 project={secondary}
                 size="small"
                 language={i18n.language}
