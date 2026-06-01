@@ -242,6 +242,9 @@
     border: 1px solid rgba(30, 39, 53, 0.08);
     box-shadow: none;
     padding: 1.05rem 1.1rem 0.9rem !important;
+    max-height: calc(100dvh - 130px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .leftLinks,
