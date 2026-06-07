@@ -1,15 +1,16 @@
 /* ─────────────────────────────────────────────
-   ProductDetailPage — full-page product detail
-   Palette matches the La Dolce Casa shop theme
+   ProductDetailPage — matches La Dolce Casa site
 ───────────────────────────────────────────── */
 
 .root {
-  --accent:   #b8942f;
-  --text:     #212a3a;
-  --muted:    #858b94;
-  --bg:       #faf9f7;
-  --surface:  #ffffff;
-  --border:   rgba(0, 0, 0, 0.08);
+  --accent:       #b8942f;
+  --shop-accent:  #1E2735;
+  --text:         #212a3a;
+  --muted:        #858b94;
+  --bg:           #faf9f7;
+  --surface:      #ffffff;
+  --border:       rgba(0, 0, 0, 0.08);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   background: var(--bg);
   min-height: 100vh;
   font-family: var(--font-ui, "Cabinet Grotesk", sans-serif);
@@ -54,88 +55,130 @@
 .backBtn:hover { border-color: var(--accent); }
 
 /* ────────────────────────────────────────────
-   TOP RAIL — category product scrollbar
+   TOP RAIL — matches site's categoryBar exactly
 ──────────────────────────────────────────── */
 .railSection {
   position: relative;
-  display: flex;
-  align-items: stretch;
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
   background: var(--surface);
-  overflow: hidden;
+}
+
+.railInner {
+  display: flex;
+  align-items: center;
 }
 
 .rail {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .rail::-webkit-scrollbar { display: none; }
 
+/* Mirrors .categoryBtn from the catalog */
 .railItem {
   flex-shrink: 0;
   scroll-snap-align: start;
-  padding: 1.1rem 2rem;
-  font-size: 0.78rem;
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  border: none;
+  background: transparent;
   color: var(--muted);
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 0.9rem 1.25rem;
+  cursor: pointer;
+  border-radius: 0;
+  position: relative;
+  transition: color 0.35s var(--ease-out-expo);
   text-decoration: none;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
   white-space: nowrap;
+  display: inline-block;
 }
+
+/* Underline indicator — mirrors .categoryBtn::after */
+.railItem::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0.35rem;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: translateX(-50%);
+  transition: width 0.4s var(--ease-out-expo);
+}
+
 .railItem:hover {
   color: var(--text);
 }
+
 .railItemActive {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--text);
 }
 
+.railItemActive::after {
+  width: calc(100% - 2.5rem);
+}
+
+/* Arrow buttons — same shape as .sliderArrow in the catalog */
 .railArrow {
   flex-shrink: 0;
-  width: 44px;
-  background: none;
-  border: none;
-  font-size: 1.6rem;
+  position: relative;
+  width: 54px;
+  height: 100%;
+  min-height: 48px;
+  border: 0;
+  background: transparent;
   color: var(--muted);
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.18s;
+  cursor: pointer;
+  transition: color 0.25s ease;
   padding: 0;
 }
 .railArrow:hover { color: var(--text); }
-.railArrowLeft  { border-right: 1px solid var(--border); }
-.railArrowRight { border-left: 1px solid var(--border); }
+
+/* chevron via pseudo-element, same technique as catalog sliderArrow */
+.railArrow::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  display: block;
+}
+.railArrowLeft::before  { transform: rotate(-135deg); }
+.railArrowRight::before { transform: rotate(45deg); }
 
 /* ────────────────────────────────────────────
-   HERO — left image / right details
+   HERO — image left / details right
 ──────────────────────────────────────────── */
 .heroSection {
   display: grid;
   grid-template-columns: 1fr;
-  min-height: 70vh;
 }
 
 @media (min-width: 900px) {
   .heroSection {
     grid-template-columns: 55fr 45fr;
-    min-height: 78vh;
+    min-height: 82vh;
   }
 }
 
+/* Image side — same bg as cardImageWrap */
 .heroImage {
   position: relative;
-  background: #f5f3f0;
-  min-height: 52vw;
+  background: var(--bg);
+  min-height: 56vw;
+  padding: clamp(2rem, 5vw, 4rem);
 }
 
 @media (min-width: 900px) {
@@ -144,17 +187,17 @@
 
 .heroImg {
   object-fit: contain;
-  padding: 3%;
 }
 
 /* Details column */
 .heroDetails {
-  padding: clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem);
+  padding: clamp(2.5rem, 5vw, 4.5rem) clamp(2rem, 4vw, 4rem);
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 0;
   background: var(--surface);
+  border-left: 1px solid var(--border);
 }
 
 .eyebrow {
@@ -162,16 +205,16 @@
   letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--muted);
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.85rem;
 }
 
 .productName {
   font-family: var(--font-display, "Italian Didot W90 Normal", serif);
-  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
   font-weight: 400;
-  line-height: 1.15;
+  line-height: 1.12;
   color: var(--text);
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.75rem;
 }
 
 /* Dimensions */
@@ -179,8 +222,8 @@
   display: flex;
   align-items: baseline;
   gap: 1rem;
-  margin-bottom: 1.25rem;
-  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border);
 }
 .dimensionsLabel {
@@ -199,9 +242,9 @@
 /* Description */
 .description {
   font-size: 0.95rem;
-  line-height: 1.72;
+  line-height: 1.75;
   color: var(--muted);
-  margin: 0 0 2rem;
+  margin: 0 0 2.5rem;
 }
 
 /* CTA buttons */
@@ -210,7 +253,6 @@
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: auto;
-  padding-top: 1rem;
 }
 
 .btnWhatsapp {
@@ -260,13 +302,16 @@
 
 /* ────────────────────────────────────────────
    BIG IMAGE SLIDER
+   — light bg, contain (no crop), generous height
 ──────────────────────────────────────────── */
 .sliderSection {
   position: relative;
   width: 100%;
-  height: 80vh;
+  height: clamp(55vh, 75vw, 90vh);
   overflow: hidden;
-  background: #111;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .sliderTrack {
@@ -281,6 +326,7 @@
   opacity: 0;
   transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   pointer-events: none;
+  padding: clamp(2rem, 5vw, 5rem);
 }
 .slideActive {
   opacity: 1;
@@ -288,129 +334,170 @@
 }
 
 .slideImg {
-  object-fit: cover;
+  object-fit: contain;
 }
 
-/* Slider arrows */
+/* Arrows — same chevron style as catalog sliderArrow */
 .sliderArrow {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  font-size: 1.8rem;
+  z-index: 5;
+  width: 54px;
+  height: 76px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: translateY(-50%);
   cursor: pointer;
-  transition: background 0.2s;
-  line-height: 1;
+  opacity: 0.45;
+  transition: opacity 0.25s ease;
   padding: 0;
 }
-.sliderArrow:hover { background: rgba(255, 255, 255, 0.25); }
-.sliderArrowLeft  { left: 1.5rem; }
-.sliderArrowRight { right: 1.5rem; }
+.sliderArrow:hover { opacity: 1; }
+.sliderArrow::before {
+  content: "";
+  width: 22px;
+  height: 22px;
+  border-top: 2.5px solid currentColor;
+  border-right: 2.5px solid currentColor;
+  display: block;
+}
+.sliderArrowLeft  { left: 1rem; }
+.sliderArrowLeft::before  { transform: rotate(-135deg); }
+.sliderArrowRight { right: 1rem; }
+.sliderArrowRight::before { transform: rotate(45deg); }
 
 /* Dots */
 .dots {
   position: absolute;
-  bottom: 1.5rem;
+  bottom: 1.25rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 0.5rem;
+  gap: 0.45rem;
   z-index: 10;
 }
 .dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(30, 39, 53, 0.2);
   cursor: pointer;
   padding: 0;
   transition: background 0.2s, transform 0.2s;
 }
 .dotActive {
-  background: #fff;
-  transform: scale(1.3);
+  background: var(--accent);
+  transform: scale(1.35);
 }
 
 /* ────────────────────────────────────────────
    RELATED PRODUCTS
+   — uses same card / grid style as catalog
 ──────────────────────────────────────────── */
 .relatedSection {
-  padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
-  background: var(--surface);
   border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.relatedHeader {
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2rem) 0;
 }
 
 .relatedTitle {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--muted);
   text-align: center;
-  margin: 0 0 2.5rem;
+  margin: 0;
   font-weight: 400;
 }
 
+/* 4-column grid that exactly mirrors the catalog grid */
 .relatedGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--border);
+  gap: 0;
+  margin-top: 0;
 }
 
-@media (min-width: 700px) {
-  .relatedGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+@media (min-width: 640px) {
+  .relatedGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  .relatedGrid { grid-template-columns: repeat(4, 1fr); }
 }
 
+/* Mirrors .card from catalog */
 .relatedCard {
-  display: flex;
-  flex-direction: column;
+  border: none;
+  background: var(--bg);
+  cursor: pointer;
+  text-align: center;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
   text-decoration: none;
   color: inherit;
-  background: var(--surface);
-  transition: background 0.2s;
+  display: block;
+  transition: transform 0.45s var(--ease-out-expo);
+  animation: cardEnter 0.65s var(--ease-out-expo) both;
 }
-.relatedCard:hover { background: var(--bg); }
 
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mirrors .cardImageWrap */
 .relatedImageWrap {
   position: relative;
   aspect-ratio: 1 / 1;
-  background: #f5f3f0;
   overflow: hidden;
-}
-.relatedImg {
-  object-fit: contain;
-  padding: 8%;
-  transition: transform 0.4s ease;
-}
-.relatedCard:hover .relatedImg {
-  transform: scale(1.04);
+  background: var(--bg);
+  padding: clamp(1.5rem, 4vw, 2.6rem);
 }
 
-.relatedInfo {
-  padding: 1.25rem;
-  text-align: center;
+/* Mirrors .cardImage */
+.relatedImg {
+  object-fit: contain;
+  transition: transform 0.7s var(--ease-out-expo);
 }
+.relatedCard:hover .relatedImg {
+  transform: scale(1.03);
+}
+
+/* Mirrors .cardBody */
+.relatedInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  background: var(--bg);
+  padding: 0 0.5rem;
+}
+
+/* Mirrors .cardName */
 .relatedName {
-  font-size: 0.9rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: 1.125rem;
+  font-weight: 500;
   text-transform: uppercase;
   color: var(--text);
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.2rem;
+  line-height: 1.3;
+  text-align: center;
+  transition: color 0.3s;
 }
+.relatedCard:hover .relatedName {
+  color: var(--accent);
+}
+
 .relatedCat {
   font-size: 0.78rem;
   color: var(--muted);
