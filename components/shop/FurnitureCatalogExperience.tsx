@@ -37,6 +37,7 @@ type Product = {
   weight?: number;
   sku?: string;
   external_url?: string | null;
+  dimensions?: string | null;
   storage_files?: Array<{
     id: number;
     type: string;
@@ -311,9 +312,10 @@ export default function FurnitureCatalogExperience({
     }
   };
 
-  /** All products now open the detail drawer first. External URL is a secondary action inside the drawer. */
+  /** Navigate to the full product detail page. */
   const onProductActivate = (product: Product) => {
-    setSelected(product);
+    const categorySlug = product.category || activeCategoryAlias || "all-items";
+    router.push(`/products/${categorySlug}/${product.id}`);
   };
 
   const scrollFeatured = (direction: -1 | 1) => {

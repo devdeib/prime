@@ -524,6 +524,10 @@ export async function POST(req: NextRequest, context: { params: Promise<{ index:
         typeof body.video_url === 'string' && body.video_url.trim()
           ? body.video_url.trim()
           : null,
+      dimensions:
+        typeof body.dimensions === 'string' && body.dimensions.trim()
+          ? body.dimensions.trim()
+          : null,
     }
     const { data, error } = await supabase.from('products').insert([payload]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -631,6 +635,10 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ index: 
       video_url:
         typeof body.video_url === 'string' && body.video_url.trim()
           ? body.video_url.trim()
+          : null,
+      dimensions:
+        typeof body.dimensions === 'string' && body.dimensions.trim()
+          ? body.dimensions.trim()
           : null,
     }
     const { data, error } = await supabase.from('products').update(payload).eq('id', id).select().single()

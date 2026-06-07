@@ -10,6 +10,7 @@ export type Product = {
   sku: string;
   category_id: number;
   external_url?: string | null;
+  dimensions?: string | null;
   created_at: string;
   updated_at: string;
   storage_files: StorageFile[];

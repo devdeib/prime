@@ -27,6 +27,7 @@ type ProductRow = {
   thumbUrl?: string;
   video_url?: string | null;
   external_url?: string | null;
+  dimensions?: string | null;
 };
 
 export default function DashboardProductsPage() {
@@ -67,6 +68,7 @@ export default function DashboardProductsPage() {
   const [descriptionsAr, setDescriptionsAr] = useState("");
   const [externalUrl, setExternalUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
+  const [dimensions, setDimensions] = useState("");
 
   const [editingId, setEditingId] = useState<number | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
@@ -104,6 +106,7 @@ export default function DashboardProductsPage() {
               thumbUrl:
                 p.storage_files?.[0]?.image_url ??
                 (p as { image_url?: string }).image_url,
+              dimensions: p.dimensions,
             })
           )
         );
@@ -136,6 +139,7 @@ export default function DashboardProductsPage() {
     setDescriptionsAr("");
     setExternalUrl("");
     setVideoUrl("");
+    setDimensions("");
     setEditingId(null);
     setExistingImageUrl(null);
     setPickedFile(null);
@@ -192,6 +196,7 @@ export default function DashboardProductsPage() {
           descriptions_ar: descriptionsAr.trim() || undefined,
           external_url: externalUrl.trim() || undefined,
           video_url: uploadedVideoUrl ?? (videoUrl.trim() || undefined),
+          dimensions: dimensions.trim() || undefined,
           ...(imageUrl ? { image_url: imageUrl } : {}),
         }),
       });
@@ -224,6 +229,7 @@ export default function DashboardProductsPage() {
     setDescriptionsAr(p.descriptions_ar ?? "");
     setExternalUrl(p.external_url ?? "");
     setVideoUrl(p.video_url ?? "");
+    setDimensions(p.dimensions ?? "");
     setPickedFile(null);
     setRemoveImage(false);
     if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
@@ -259,6 +265,7 @@ export default function DashboardProductsPage() {
         descriptions_ar: descriptionsAr,
         external_url: externalUrl.trim(),
         video_url: videoPatch?.video_url ?? videoUrl.trim(),
+        dimensions: dimensions.trim() || null,
       };
       if (imagePatch) body.image_url = imagePatch.image_url;
 
@@ -391,6 +398,19 @@ export default function DashboardProductsPage() {
                   onChange={(e) => setDescriptionsAr(e.target.value)}
                   placeholder={t("dashboard.optionalPlaceholder")}
                 />
+              </Col>
+            </Row>
+            <Row className="g-2 mb-2">
+              <Col md={12}>
+                <Form.Label>Dimensions</Form.Label>
+                <Form.Control
+                  value={dimensions}
+                  onChange={(e) => setDimensions(e.target.value)}
+                  placeholder="e.g. W120 x D80 x H75 cm (optional)"
+                />
+                <Form.Text className="text-muted">
+                  Optional. Product dimensions shown on the product detail page.
+                </Form.Text>
               </Col>
             </Row>
             <Row className="g-2 mb-2">
