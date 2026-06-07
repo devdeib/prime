@@ -59,16 +59,17 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
   const { i18n } = useTranslation("common");
   const router = useRouter();
 
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct]               = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [sliderIndex, setSliderIndex] = useState(0);
+  const [categories, setCategories]         = useState<Category[]>([]);
+  const [loading, setLoading]               = useState(true);
+  const [error, setError]                   = useState<string | null>(null);
+  const [sliderIndex, setSliderIndex]       = useState(0);
 
   const sliderIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const railRef = useRef<HTMLDivElement>(null);
+  const railRef           = useRef<HTMLDivElement>(null);
+  const relatedRailRef    = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -86,7 +87,7 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
       if (found) {
         const same = allProducts.filter((p) => p.category === found.category);
         setCategoryProducts(same);
-        setRelatedProducts(same.filter((p) => p.id !== found.id).slice(0, 4));
+        setRelatedProducts(same.filter((p) => p.id !== found.id).slice(0, 8));
       }
     } catch {
       setError("Failed to load product.");
@@ -117,17 +118,16 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
     startAutoSlide(images.length);
   };
 
-  const scrollRail = (dir: "left" | "right") => {
+  const scrollRail = (dir: "left" | "right") =>
     railRef.current?.scrollBy({ left: dir === "right" ? 280 : -280, behavior: "smooth" });
+
+  const scrollRelated = (dir: -1 | 1) => {
+    const rail = relatedRailRef.current;
+    if (!rail) return;
+    rail.scrollBy({ left: dir * Math.max(rail.clientWidth * 0.82, 320), behavior: "smooth" });
   };
 
-  if (loading) {
-    return (
-      <div className={styles.loadingWrap}>
-        <div className={styles.spinner} />
-      </div>
-    );
-  }
+  if (loading) return <div className={styles.loadingWrap}><div className={styles.spinner} /></div>;
 
   if (error || !product) {
     return (
@@ -138,7 +138,7 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
     );
   }
 
-  const lang = i18n.language;
+  const lang        = i18n.language;
   const productName = pickLocalized(lang, product.name, product.name_ar);
   const productDesc = pickLocalized(lang, product.descriptions, product.descriptions_ar);
   const categoryObj = categories.find((c) => c.alias === product.category);
@@ -179,7 +179,7 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
         </div>
       </section>
 
-      {/* ── HERO: image left / details right ── */}
+      {/* ── HERO ── */}
       <section className={styles.heroSection}>
         <div className={styles.heroImage}>
           <Image
@@ -249,27 +249,13 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
               </div>
             ))}
           </div>
-
           {images.length > 1 ? (
             <>
-              <button
-                className={`${styles.sliderArrow} ${styles.sliderArrowLeft}`}
-                onClick={() => gotoSlide((sliderIndex - 1 + images.length) % images.length)}
-                aria-label="Previous image"
-              />
-              <button
-                className={`${styles.sliderArrow} ${styles.sliderArrowRight}`}
-                onClick={() => gotoSlide((sliderIndex + 1) % images.length)}
-                aria-label="Next image"
-              />
+              <button className={`${styles.sliderArrow} ${styles.sliderArrowLeft}`} onClick={() => gotoSlide((sliderIndex - 1 + images.length) % images.length)} aria-label="Previous image" />
+              <button className={`${styles.sliderArrow} ${styles.sliderArrowRight}`} onClick={() => gotoSlide((sliderIndex + 1) % images.length)} aria-label="Next image" />
               <div className={styles.dots}>
                 {images.map((_, idx) => (
-                  <button
-                    key={idx}
-                    className={`${styles.dot} ${idx === sliderIndex ? styles.dotActive : ""}`}
-                    onClick={() => gotoSlide(idx)}
-                    aria-label={`Image ${idx + 1}`}
-                  />
+                  <button key={idx} className={`${styles.dot} ${idx === sliderIndex ? styles.dotActive : ""}`} onClick={() => gotoSlide(idx)} aria-label={`Image ${idx + 1}`} />
                 ))}
               </div>
             </>
@@ -277,40 +263,54 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
         </section>
       ) : null}
 
-      {/* ── RELATED PRODUCTS ── */}
+      {/* ── RELATED PRODUCTS — horizontal slider ── */}
       {relatedProducts.length > 0 ? (
         <section className={styles.relatedSection}>
-          <div className={styles.relatedHeader}>
-            <p className={styles.relatedTitle}>
-              {lang === "ar" ? "منتجات ذات صلة" : "RELATED PRODUCTS"}
-            </p>
-          </div>
-          <div className={styles.relatedGrid}>
-            {relatedProducts.map((p, index) => {
-              const name = pickLocalized(lang, p.name, p.name_ar);
-              return (
-                <Link
-                  key={p.id}
-                  href={`/products/${categorySlug}/${p.id}`}
-                  className={styles.relatedCard}
-                  style={{ animationDelay: `${index * 0.06}s` }}
-                >
-                  <div className={styles.relatedImageWrap}>
-                    <Image
-                      src={productImageUrl(p)}
-                      alt={name ?? ""}
-                      fill
-                      sizes="(max-width: 640px) 50vw, 25vw"
-                      className={styles.relatedImg}
-                    />
-                  </div>
-                  <div className={styles.relatedInfo}>
-                    <p className={styles.relatedName}>{name}</p>
-                    <p className={styles.relatedCat}>{categoryName}</p>
-                  </div>
-                </Link>
-              );
-            })}
+          <p className={styles.relatedTitle}>
+            {lang === "ar" ? "منتجات ذات صلة" : "RELATED PRODUCTS"}
+          </p>
+
+          <div className={styles.relatedShell}>
+            <button
+              type="button"
+              className={`${styles.relatedArrow} ${styles.relatedArrowPrev}`}
+              aria-label="Previous related products"
+              onClick={() => scrollRelated(-1)}
+            />
+            <button
+              type="button"
+              className={`${styles.relatedArrow} ${styles.relatedArrowNext}`}
+              aria-label="Next related products"
+              onClick={() => scrollRelated(1)}
+            />
+
+            <div className={styles.relatedRail} ref={relatedRailRef}>
+              {relatedProducts.map((p, index) => {
+                const name = pickLocalized(lang, p.name, p.name_ar);
+                return (
+                  <Link
+                    key={p.id}
+                    href={`/products/${categorySlug}/${p.id}`}
+                    className={styles.relatedCard}
+                    style={{ animationDelay: `${index * 0.055}s` }}
+                  >
+                    <div className={styles.relatedImageWrap}>
+                      <Image
+                        src={productImageUrl(p)}
+                        alt={name ?? ""}
+                        fill
+                        sizes="(max-width: 640px) 72vw, (max-width: 1024px) 40vw, 24vw"
+                        className={styles.relatedImg}
+                      />
+                    </div>
+                    <div className={styles.relatedInfo}>
+                      <p className={styles.relatedName}>{name}</p>
+                      <p className={styles.relatedCat}>{categoryName}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </section>
       ) : null}
