@@ -1,9 +1,15 @@
 .main {
-  --nav-h: 84px;
+  --nav-h: 100px;
   min-height: 100vh;
   background: #ffffff;
 }
 
 .contentOffset {
   padding-top: var(--nav-h);
+}
+
+@media (max-width: 991px) {
+  .main {
+    --nav-h: 112px;
+  }
 }
