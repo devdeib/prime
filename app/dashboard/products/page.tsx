@@ -669,16 +669,16 @@ export default function DashboardProductsPage() {
                   className="position-relative rounded overflow-hidden bg-light"
                   style={{ width: 56, height: 56 }}
                 >
-                  {p.thumbUrl ? (
+                  {(p.thumbnailUrl ?? p.thumbUrl) ? (
                     <Image
-                      src={p.thumbUrl}
+                      src={(p.thumbnailUrl ?? p.thumbUrl)!}
                       alt=""
                       fill
                       sizes="56px"
                       style={{ objectFit: "cover" }}
                       unoptimized={
-                        p.thumbUrl.startsWith("/uploads/") ||
-                        p.thumbUrl.startsWith("http")
+                        (p.thumbnailUrl ?? p.thumbUrl)!.startsWith("/uploads/") ||
+                        (p.thumbnailUrl ?? p.thumbUrl)!.startsWith("http")
                       }
                     />
                   ) : (
