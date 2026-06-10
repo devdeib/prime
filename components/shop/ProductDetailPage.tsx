@@ -36,17 +36,23 @@ type Category = {
   alias: string;
 };
 
-function productImageUrl(product: Product): string {
+// Hero image (next to product info): prefer thumbnail_url, fall back to image_url
+function productHeroImageUrl(product: Product): string {
+  if (product.thumbnail_url) return product.thumbnail_url;
   if (product.storage_files?.[0]?.image_url) return product.storage_files[0].image_url;
   if (product.image_url) return product.image_url;
   return "/images/La dolce casa.svg";
 }
 
+// Card thumbnail (product grid/related slider): same logic
 function productCardImageUrl(product: Product): string {
   if (product.thumbnail_url) return product.thumbnail_url;
-  return productImageUrl(product);
+  if (product.storage_files?.[0]?.image_url) return product.storage_files[0].image_url;
+  if (product.image_url) return product.image_url;
+  return "/images/La dolce casa.svg";
 }
 
+// Gallery slider (below the hero): uses only image_url / storage_files, never thumbnail_url
 function getAllImages(product: Product): string[] {
   const imgs: string[] = [];
   if (product.storage_files) {
@@ -189,7 +195,7 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
       <section className={styles.heroSection}>
         <div className={styles.heroImage}>
           <Image
-            src={productImageUrl(product)}
+            src={productHeroImageUrl(product)}
             alt={productName ?? ""}
             fill
             sizes="(max-width: 900px) 100vw, 55vw"
