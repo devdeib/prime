@@ -30,6 +30,7 @@ type Product = {
   price: number;
   category: string;
   image_url?: string | null;
+  thumbnail_url?: string | null;
   video_url?: string | null;
   descriptions?: string;
   descriptions_ar?: string | null;
@@ -78,6 +79,12 @@ function productImageUrl(product: Product) {
     return product.image_url;
   }
   return "/images/La dolce casa.svg";
+}
+
+// Card-only: prefer thumbnail_url for a tighter, faster-loading grid image
+function productCardImageUrl(product: Product) {
+  if (product.thumbnail_url) return product.thumbnail_url;
+  return productImageUrl(product);
 }
 
 function isVideoUrl(url: string | null | undefined) {
@@ -129,6 +136,7 @@ export default function FurnitureCatalogExperience({
   const [heroDraft, setHeroDraft] = useState<HeroCopy>({});
   const [heroSaving, setHeroSaving] = useState(false);
   const featuredRailRef = useRef<HTMLDivElement>(null);
+  const categoryBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!topCarousel) return;
@@ -318,8 +326,13 @@ export default function FurnitureCatalogExperience({
     router.push(`/products/${categorySlug}/${product.id}`);
   };
 
-  const scrollFeatured = (direction: -1 | 1) => {
-    const rail = featuredRailRef.current;
+  const scrollCategoryBar = (dir: -1 | 1) => {
+    const bar = categoryBarRef.current;
+    if (!bar) return;
+    bar.scrollBy({ left: dir * 200, behavior: "smooth" });
+  };
+
+  const scrollFeatured = (direction: -1 | 1) => {    const rail = featuredRailRef.current;
     if (!rail) return;
     rail.scrollBy({
       left: direction * Math.max(rail.clientWidth * 0.82, 320),
@@ -458,7 +471,13 @@ export default function FurnitureCatalogExperience({
 
       {!topCarousel ? (
         <nav className={styles.categoryBar} aria-label="Product categories">
-          <div className={styles.categoryScroll}>
+          <button
+            type="button"
+            className={styles.categoryArrow}
+            aria-label="Scroll categories left"
+            onClick={() => scrollCategoryBar(-1)}
+          />
+          <div className={styles.categoryScroll} ref={categoryBarRef}>
             <button
               type="button"
               className={`${styles.categoryBtn} ${
@@ -485,6 +504,12 @@ export default function FurnitureCatalogExperience({
               </button>
             ))}
           </div>
+          <button
+            type="button"
+            className={`${styles.categoryArrow} ${styles.categoryArrowRight}`}
+            aria-label="Scroll categories right"
+            onClick={() => scrollCategoryBar(1)}
+          />
         </nav>
       ) : (
         <section className={styles.featuredIntro}>
@@ -547,7 +572,7 @@ export default function FurnitureCatalogExperience({
                   ) : (
                     <Image
                       className={styles.cardImage}
-                      src={productImageUrl(product)}
+                      src={productCardImageUrl(product)}
                       alt={displayName}
                       fill
                       sizes="(max-width: 640px) 72vw, (max-width: 1024px) 40vw, 24vw"

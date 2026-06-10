@@ -25,6 +25,7 @@ type ProductRow = {
   descriptions?: string;
   descriptions_ar?: string | null;
   thumbUrl?: string;
+  thumbnailUrl?: string | null;
   video_url?: string | null;
   external_url?: string | null;
   dimensions?: string | null;
@@ -77,6 +78,13 @@ export default function DashboardProductsPage() {
   const [removeImage, setRemoveImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Thumbnail state (separate card-only image)
+  const [existingThumbUrl, setExistingThumbUrl] = useState<string | null>(null);
+  const [pickedThumbFile, setPickedThumbFile] = useState<File | null>(null);
+  const [thumbPreviewUrl, setThumbPreviewUrl] = useState<string | null>(null);
+  const [removeThumb, setRemoveThumb] = useState(false);
+  const thumbInputRef = useRef<HTMLInputElement>(null);
+
   const load = useCallback(async () => {
     setError(null);
     try {
@@ -93,6 +101,7 @@ export default function DashboardProductsPage() {
             (p: ProductRow & {
               category_id?: number;
               storage_files?: { image_url?: string }[];
+              thumbnail_url?: string | null;
             }) => ({
               id: p.id,
               name: p.name,
@@ -106,6 +115,7 @@ export default function DashboardProductsPage() {
               thumbUrl:
                 p.storage_files?.[0]?.image_url ??
                 (p as { image_url?: string }).image_url,
+              thumbnailUrl: p.thumbnail_url ?? null,
               dimensions: p.dimensions,
             })
           )
@@ -147,6 +157,13 @@ export default function DashboardProductsPage() {
     setPreviewUrl(null);
     setRemoveImage(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
+    // Reset thumbnail
+    setExistingThumbUrl(null);
+    setPickedThumbFile(null);
+    if (thumbPreviewUrl?.startsWith("blob:")) URL.revokeObjectURL(thumbPreviewUrl);
+    setThumbPreviewUrl(null);
+    setRemoveThumb(false);
+    if (thumbInputRef.current) thumbInputRef.current.value = "";
   };
 
   useEffect(() => {
@@ -169,6 +186,20 @@ export default function DashboardProductsPage() {
     setPreviewUrl(URL.createObjectURL(f));
   };
 
+  const onPickThumbFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    setRemoveThumb(false);
+    if (!f) {
+      setPickedThumbFile(null);
+      if (thumbPreviewUrl?.startsWith("blob:")) URL.revokeObjectURL(thumbPreviewUrl);
+      setThumbPreviewUrl(editingId != null ? existingThumbUrl : null);
+      return;
+    }
+    setPickedThumbFile(f);
+    if (thumbPreviewUrl?.startsWith("blob:")) URL.revokeObjectURL(thumbPreviewUrl);
+    setThumbPreviewUrl(URL.createObjectURL(f));
+  };
+
   const submitCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAdmin) return;
@@ -182,6 +213,10 @@ export default function DashboardProductsPage() {
         const uploadedUrl = await uploadMediaWithProgress(pickedFile, setUploadProgress);
         if (pickedFile.type.startsWith("video/")) uploadedVideoUrl = uploadedUrl;
         else imageUrl = uploadedUrl;
+      }
+      let thumbnailUrl: string | undefined;
+      if (pickedThumbFile) {
+        thumbnailUrl = await uploadMediaWithProgress(pickedThumbFile, () => {});
       }
       const res = await fetch("/api/be/products", {
         method: "POST",
@@ -198,6 +233,7 @@ export default function DashboardProductsPage() {
           video_url: uploadedVideoUrl ?? (videoUrl.trim() || undefined),
           dimensions: dimensions.trim() || undefined,
           ...(imageUrl ? { image_url: imageUrl } : {}),
+          ...(thumbnailUrl ? { thumbnail_url: thumbnailUrl } : {}),
         }),
       });
       if (!res.ok) {
@@ -237,6 +273,14 @@ export default function DashboardProductsPage() {
     setExistingImageUrl(u && !u.includes("picsum.photos") ? u : null);
     setPreviewUrl(u ?? null);
     if (fileInputRef.current) fileInputRef.current.value = "";
+    // Thumbnail
+    const t2 = p.thumbnailUrl ?? null;
+    setExistingThumbUrl(t2);
+    setPickedThumbFile(null);
+    if (thumbPreviewUrl?.startsWith("blob:")) URL.revokeObjectURL(thumbPreviewUrl);
+    setThumbPreviewUrl(t2);
+    setRemoveThumb(false);
+    if (thumbInputRef.current) thumbInputRef.current.value = "";
   };
 
   const submitUpdate = async (e: React.FormEvent) => {
@@ -255,6 +299,13 @@ export default function DashboardProductsPage() {
         if (pickedFile.type.startsWith("video/")) videoPatch = { video_url: url };
         else imagePatch = { image_url: url };
       }
+      let thumbnailPatch: { thumbnail_url: string | null } | undefined;
+      if (removeThumb) {
+        thumbnailPatch = { thumbnail_url: null };
+      } else if (pickedThumbFile) {
+        const url = await uploadMediaWithProgress(pickedThumbFile, () => {});
+        thumbnailPatch = { thumbnail_url: url };
+      }
 
       const body: Record<string, unknown> = {
         name,
@@ -268,6 +319,7 @@ export default function DashboardProductsPage() {
         dimensions: dimensions.trim() || null,
       };
       if (imagePatch) body.image_url = imagePatch.image_url;
+      if (thumbnailPatch) body.thumbnail_url = thumbnailPatch.thumbnail_url;
 
       const res = await fetch(`/api/be/products/${editingId}`, {
         method: "PUT",
@@ -510,6 +562,61 @@ export default function DashboardProductsPage() {
                     }
                   />
                 )}
+              </div>
+            )}
+            {/* ── THUMBNAIL UPLOAD ── */}
+            <Row className="g-2 mb-3 align-items-end mt-2">
+              <Col md={6}>
+                <Form.Label>
+                  Card Thumbnail{" "}
+                  <small className="text-muted fw-normal">
+                    (optional — shown only on product cards/grid)
+                  </small>
+                </Form.Label>
+                <Form.Control
+                  ref={thumbInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={onPickThumbFile}
+                />
+                <Form.Text className="text-muted">
+                  Upload a smaller, square-cropped image for the product cards. Falls back to the main image if not set.
+                </Form.Text>
+              </Col>
+              <Col md={6}>
+                {editingId != null && existingThumbUrl && !removeThumb && (
+                  <Button
+                    type="button"
+                    variant="outline-warning"
+                    size="sm"
+                    onClick={() => {
+                      setRemoveThumb(true);
+                      setPickedThumbFile(null);
+                      if (thumbInputRef.current) thumbInputRef.current.value = "";
+                      if (thumbPreviewUrl?.startsWith("blob:"))
+                        URL.revokeObjectURL(thumbPreviewUrl);
+                      setThumbPreviewUrl(null);
+                      setExistingThumbUrl(null);
+                    }}
+                  >
+                    Remove Thumbnail
+                  </Button>
+                )}
+              </Col>
+            </Row>
+            {thumbPreviewUrl && (
+              <div className={styles.previewCard}>
+                <Image
+                  src={thumbPreviewUrl}
+                  alt="Thumbnail preview"
+                  fill
+                  className="rounded border bg-light"
+                  style={{ objectFit: "contain" }}
+                  unoptimized={
+                    thumbPreviewUrl.startsWith("blob:") ||
+                    thumbPreviewUrl.startsWith("/uploads/")
+                  }
+                />
               </div>
             )}
               <Button

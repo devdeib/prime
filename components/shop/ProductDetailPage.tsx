@@ -15,6 +15,7 @@ type Product = {
   price: number;
   category: string;
   image_url?: string | null;
+  thumbnail_url?: string | null;
   video_url?: string | null;
   descriptions?: string;
   descriptions_ar?: string | null;
@@ -39,6 +40,11 @@ function productImageUrl(product: Product): string {
   if (product.storage_files?.[0]?.image_url) return product.storage_files[0].image_url;
   if (product.image_url) return product.image_url;
   return "/images/La dolce casa.svg";
+}
+
+function productCardImageUrl(product: Product): string {
+  if (product.thumbnail_url) return product.thumbnail_url;
+  return productImageUrl(product);
 }
 
 function getAllImages(product: Product): string[] {
@@ -87,7 +93,7 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
       if (found) {
         const same = allProducts.filter((p) => p.category === found.category);
         setCategoryProducts(same);
-        setRelatedProducts(same.filter((p) => p.id !== found.id).slice(0, 8));
+        setRelatedProducts(same.filter((p) => p.id !== found.id));
       }
     } catch {
       setError("Failed to load product.");
@@ -296,7 +302,7 @@ export default function ProductDetailPage({ categorySlug, productId }: Props) {
                   >
                     <div className={styles.relatedImageWrap}>
                       <Image
-                        src={productImageUrl(p)}
+                        src={productCardImageUrl(p)}
                         alt={name ?? ""}
                         fill
                         sizes="(max-width: 640px) 72vw, (max-width: 1024px) 40vw, 24vw"

@@ -96,6 +96,7 @@ function formatProjectRow(row: Record<string, unknown>) {
 
 function formatProductRow(row: Record<string, unknown>) {
   const imageUrl = normalizeImageUrl(row.image_url)
+  const thumbnailUrl = normalizeImageUrl(row.thumbnail_url) ?? imageUrl
   const videoUrl = normalizeVideoUrl(row.video_url)
   const externalUrl =
     typeof row.external_url === 'string' && row.external_url.trim()
@@ -104,6 +105,7 @@ function formatProductRow(row: Record<string, unknown>) {
   return {
     ...row,
     image_url: imageUrl,
+    thumbnail_url: thumbnailUrl,
     video_url: videoUrl,
     external_url: externalUrl,
     storage_files: imageUrl
