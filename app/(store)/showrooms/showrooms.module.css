@@ -10,7 +10,7 @@
 }
 
 .headerBrand {
-  color: #b8942f;
+  color: #1E2735;
   margin-bottom: 0.9rem;
 }
 
@@ -75,7 +75,7 @@
 
 .listCity {
   flex: 1;
-  color: #b8942f;
+  color: #1E2735;
   font-size: var(--text-sm);
   text-align: end;
   margin-inline-start: 1.5rem;
@@ -204,7 +204,7 @@
 
 .thumbActive {
   opacity: 1;
-  border-color: #b8942f;
+  border-color: #1E2735;
   transform: translateY(-2px);
   box-shadow: 0 12px 22px rgba(184, 148, 47, 0.18);
 }
@@ -237,7 +237,7 @@
 
 .city {
   font-size: 0.78rem;
-  color: #b8942f;
+  color: #1E2735;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   margin: 0 0 0.5rem;
@@ -306,7 +306,7 @@
 
 .viewerCity {
   margin: 0 0 0.35rem;
-  color: #b8942f;
+  color: #1E2735;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-size: 16px;
@@ -391,7 +391,7 @@
 
 .viewerRailLabel {
   margin: 0 0 0.75rem;
-  color: #b8942f;
+  color: #1E2735;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   font-size: var(--text-sm);
@@ -421,7 +421,7 @@
 
 .viewerThumbActive {
   opacity: 1;
-  border-color: #b8942f;
+  border-color: #1E2735;
   box-shadow: 0 12px 26px rgba(184, 148, 47, 0.18);
 }
 

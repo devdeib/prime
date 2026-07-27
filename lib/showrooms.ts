@@ -13,7 +13,7 @@ export type Showroom = {
   sort_order: number;
 };
 
-export const SHOWROOM_PLACEHOLDER = "/images/La dolce casa.svg";
+export const SHOWROOM_PLACEHOLDER = "/images/prime-logo.svg";
 
 export function getShowroomGallery(
   showroom: Pick<Showroom, "images" | "image_url">

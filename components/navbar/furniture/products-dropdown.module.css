@@ -98,7 +98,7 @@
 }
 
 .categoryLink:hover {
-  color: #b8942f;
+  color: #1E2735;
 }
 
 .aside {
@@ -181,7 +181,7 @@
 }
 
 .mobileCategoryItem:hover {
-  color: #b8942f;
+  color: #1E2735;
 }
 
 @media (min-width: 992px) {

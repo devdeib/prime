@@ -30,7 +30,7 @@ const CategoryProducts: NextPageWithLayout<CategoryProductsProps> = ({
   return (
     <BaseContainer>
       <Meta
-        title={`La Dolce Casa | ${title}`}
+        title={`Prime | ${title}`}
         content={`Browse ${title} | Modern furniture for home and office`}
       />
       <Row className="py-3">

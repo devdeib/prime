@@ -10,27 +10,27 @@ import {
 } from "@/lib/fonts";
 
 export const metadata: Metadata = {
-  title: "La dolce casa",
+  title: "Prime",
   description: "Furniture storefront — sofas, beds, dining, and more.",
   openGraph: {
-    title: "La dolce casa",
+    title: "Prime",
     description: "Furniture storefront — sofas, beds, dining, and more.",
-    url: "https://ladolcecasa.net/",
+    url: "https://primewebsite.net/",
     type: "website",
     images: [
       {
-        url: "https://ladolcecasa.net/images/og-image.png",
+        url: "https://primewebsite.net/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "La dolce casa — Curated furniture for a modern home.",
+        alt: "Prime — Curated furniture for a modern home.",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "La dolce casa",
+    title: "Prime",
     description: "Furniture storefront — sofas, beds, dining, and more.",
-    images: ["https://ladolcecasa.net/images/og-image.png"],
+    images: ["https://primewebsite.net/images/og-image.png"],
   },
 };
 

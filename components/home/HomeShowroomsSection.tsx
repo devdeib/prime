@@ -33,7 +33,7 @@ const FALLBACK_PROJECTS: ShowroomItem[] = [
   { id: 4, name: "Apartment Styling", city: "Rome" },
 ];
 
-const PLACEHOLDER_IMAGE = "/images/La dolce casa.svg";
+const PLACEHOLDER_IMAGE = "/images/prime-logo.svg";
 
 function showroomImage(showroom: ShowroomItem) {
   const image = showroom.images?.find(Boolean) || showroom.image_url;

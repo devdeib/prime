@@ -73,14 +73,14 @@ const SignIn = () => {
           <BrandMark
             href="/"
             stacked={false}
-            text="La Dolce Casa"
+            text="Prime"
             className={styles.brand}
             logoWidth={58}
           />
           <p className={styles.eyebrow}>Private access</p>
           <h1 className={styles.title}>{t("auth.login")}</h1>
           <p className={styles.subtitle}>
-            Access the La Dolce Casa workspace with a calmer, cleaner sign-in
+            Access the Prime workspace with a calmer, cleaner sign-in
             experience that matches the store’s visual identity.
           </p>
           <div className={styles.highlights}>

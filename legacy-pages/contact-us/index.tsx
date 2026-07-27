@@ -80,7 +80,7 @@ const ContactUs: React.FC = () => {
                 <span className="text-color-b94" style={{ marginRight: "8px" }}>
                   <MdMailOutline size={19} style={{ color: "#d7a83e" }}/>
                 </span>
-                <span className="text-color-b94 fw-normal">Info@ladolcecasa.net</span>
+                <span className="text-color-b94 fw-normal">Info@primewebsite.net</span>
               </h2>
             </div>
             <div className="py-2">
@@ -88,7 +88,7 @@ const ContactUs: React.FC = () => {
                 <span className="text-color-b94" style={{ marginRight: "8px" }}>
                   <FaGlobe size={19} style={{ color: "#d7a83e" }}/>
                 </span>
-                <span className="text-color-b94 fw-normal">Ladolcecasa.net</span>
+                <span className="text-color-b94 fw-normal">Primewebsite.net</span>
               </h2>
             </div>
             <Row className="py-2">

@@ -19,7 +19,7 @@
 
 .eyebrow {
   margin: 0 0 0.55rem;
-  color: #b8942f;
+  color: #1E2735;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 0.82rem;
@@ -120,8 +120,8 @@
 
 .primaryBtn {
  
-  background: #b8942f !important;
-  border-color: #b8942f !important;
+  background: #1E2735 !important;
+  border-color: #1E2735 !important;
   color: #ffffff !important;
   font-size: 1rem !important;
   padding: 0.8rem 1.35rem !important;
@@ -162,7 +162,7 @@
   position: absolute;
   inset-block: 0;
   inset-inline-start: 0;
-  background: linear-gradient(90deg, #d6b35a 0%, #b8942f 100%);
+  background: linear-gradient(90deg, #3A4A63 0%, #1E2735 100%);
   transition: width 0.18s ease;
 }
 

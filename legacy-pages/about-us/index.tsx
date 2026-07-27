@@ -31,7 +31,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
                           ? productBanner[0].image_url
                           : ""
                       }
-                      alt="La Dolce Casa"
+                      alt="Prime"
                       className="img-fluid"
                       style={{
                         width: "100%",
@@ -47,7 +47,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
           <Col md="6">
             <h1
                       className="ft-8 fw-bold text-uppercase text-inherit mb-2"
-              style={{ color: "#b8942f" }}
+              style={{ color: "#1E2735" }}
             >
               {t("about.who")}
             </h1>
@@ -75,7 +75,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
           <Col md="6">
             <h1
               className="ft-20 mt-3 mb-3 text-center "
-              style={{ color: "#b8942f" }}
+              style={{ color: "#1E2735" }}
             >
               {t("about.brand")}
             </h1>
@@ -88,7 +88,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
               <Col md="6" sm="6" xs="6">
                 <h1
                   className="ft-18 fw-normal text-center mt-2 mb-3"
-                  style={{ color: "#b8942f" }}
+                  style={{ color: "#1E2735" }}
                 >
                   {t("about.showrooms")}
                 </h1>
@@ -99,7 +99,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
               <Col md="6" sm="6" xs="6">
                 <h1
                   className="ft-18 fw-normal text-center mt-2 mb-3"
-                  style={{ color: "#b8942f" }}
+                  style={{ color: "#1E2735" }}
                 >
                   {t("about.ourProducts")}
                 </h1>
@@ -114,7 +114,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
           <Col md="6">
             <h1
               className="ft-17 mt-3 mb-3 text-center "
-              style={{ color: "#b8942f" }}
+              style={{ color: "#1E2735" }}
             >
               {t("about.mission")}
             </h1>
@@ -130,7 +130,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
               <Col md="6" sm="6" xs="6">
                 <h1
                   className="ft-30 fw-bold text-center mt-2 mb-2"
-                  style={{ color: "#b8942f" }}
+                  style={{ color: "#1E2735" }}
                 >
                   2001
                 </h1>
@@ -141,7 +141,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
               <Col md="6" sm="6" xs="6">
                 <h1
                   className="ft-30 fw-bold text-center mt-2 mb-2"
-                  style={{ color: "#b8942f" }}
+                  style={{ color: "#1E2735" }}
                 >
                   30
                 </h1>
@@ -154,7 +154,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
               <Col md="6" sm="6" xs="6">
                 <h1
                   className="ft-30 fw-bold text-center mt-2 mb-2"
-                  style={{ color: "#b8942f" }}
+                  style={{ color: "#1E2735" }}
                 >
                   20
                 </h1>
@@ -165,7 +165,7 @@ const AboutUs: React.FC<AboutUsProps> = ({ productBanner }) => {
               <Col md="6" sm="6" xs="6">
                 <h1
                   className="ft-30 fw-bold text-center mt-2 mb-2"
-                  style={{ color: "#b8942f" }}
+                  style={{ color: "#1E2735" }}
                 >
                   100000
                 </h1>

@@ -7,7 +7,7 @@
     "contact": "Contact Us",
     "signIn": "SIGN IN",
     "signUp": "SIGN UP",
-    "brand": "La Dolce Casa",
+    "brand": "Prime",
     "showrooms": "SHOWROOMS",
     "projects": "PROJECTS",
     "services": "SERVICES",
@@ -18,7 +18,7 @@
     "langAr": "AR"
   },
   "catalog": {
-    "heroEyebrow": "La dolce casa",
+    "heroEyebrow": "Prime",
     "heroTitle": "CURATED FURNITURE FOR A MODERN HOME.",
     "heroSub": "",
     "all": "All",
@@ -27,7 +27,7 @@
     "marquee3": "Crafted with care",
     "marquee4": "Sofas · Wardrobes · Beds",
     "marquee5": "Modern Living",
-    "marquee6": "La Dolce Casa",
+    "marquee6": "Prime",
     "detailEyebrow": "Product detail",
     "noDescription": "No additional description available.",
     "sku": "SKU",
@@ -57,7 +57,7 @@
     "help": "Help Center",
     "refund": "Refund policy",
     "shipping": "Shipping Info",
-    "copyright": "La Dolce Casa. All rights reserved",
+    "copyright": "Prime. All rights reserved",
     "copyrightPrefix": "Copyright ©",
     "links": "Links",
     "socials": "Socials",
@@ -254,10 +254,10 @@
     "phone": "PHONE NUMBER",
     "phoneValue": "+39 998 656 6333 44",
     "email": "EMAIL",
-    "emailValue": "info@ladolcecasa.net",
+    "emailValue": "info@primewebsite.net",
     "hours": "OPENING HOURS",
     "hoursValue": "Monday - Friday: 09:30 - 19:00\nSaturday: 10:00 - 17:00",
-    "visualAlt": "La Dolce Casa contact visual"
+    "visualAlt": "Prime contact visual"
   },
   "showroomsPage": {
     "title": "SHOWROOM",
@@ -289,18 +289,18 @@
     "notFound": "This project could not be found."
   },
   "about": {
-    "metaTitle": "La Dolce Casa | About Us",
+    "metaTitle": "Prime | About Us",
     "metaDesc": "Best furniture pieces and home solutions in Bangladesh",
     "who": "Our Story",
-    "title": "About La Dolce Casa",
+    "title": "About Prime",
     "p1": "VG Furniture Company Limited is one of the leading furniture providers in Bangladesh. In 2001, we began our journey with our flagship showroom in Dhaka.",
     "p2": "Quality craftsmanship every day — that's what we stand for. We are committed to premium quality and never compromise on materials or finish. Our company has adopted ISO-22000:2018 as a principle in our business processes. We also maintain high standards for safety and customer satisfaction, sourcing the best materials both locally and internationally.",
     "p3": "Currently, we operate over 30 showrooms in major cities like Dhaka, Chittagong, and Sylhet, bringing curated furniture solutions to our customers. VG Furniture is also expanding its presence in Europe, the USA, the Middle East, and various Asian countries through exports of unique furniture pieces.",
     "p4": "Diversity and inclusion are at the heart of our values and strategy. We focus on creating a supportive and inspiring work environment, driving our growth and innovation.",
-    "brand": "La Dolce Casa",
+    "brand": "Prime",
     "tagline": "DESIGNED FOR LIVING",
     "showrooms": "OUR SHOWROOMS",
-    "showroomsText": "La Dolce Casa is one of Bangladesh's most prominent furniture brands. Currently, we have 30 showrooms across major cities and are ready to offer you quality home solutions for your special spaces.",
+    "showroomsText": "Prime is one of Bangladesh's most prominent furniture brands. Currently, we have 30 showrooms across major cities and are ready to offer you quality home solutions for your special spaces.",
     "ourProducts": "OUR PRODUCTS",
     "productsText": "We offer a wide variety of residential and commercial furniture to fit every lifestyle and requirement.",
     "readMore": "Read More",
@@ -312,7 +312,7 @@
     "customers": "HAPPY CUSTOMERS"
   },
   "contact": {
-    "metaTitle": "La Dolce Casa | Contact Us",
+    "metaTitle": "Prime | Contact Us",
     "metaDesc": "Quality furniture in Dhaka, Bangladesh — sofas, beds, dining, and more.",
     "office": "OUR CORPORATE OFFICE",
     "address": "Kuwati Masjid Road,Dhaka-1212,Bangladesh",

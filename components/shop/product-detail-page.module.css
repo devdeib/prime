@@ -1,9 +1,9 @@
 /* ─────────────────────────────────────────────
-   ProductDetailPage — La Dolce Casa design system
+   ProductDetailPage — Prime design system
 ───────────────────────────────────────────── */
 
 .root {
-  --accent:        #b8942f;
+  --accent:        #1E2735;
   --text:          #212a3a;
   --muted:         #858b94;
   --bg:            #faf9f7;
@@ -254,7 +254,7 @@
   border-radius: 2px;
   transition: background 0.2s, transform 0.18s;
 }
-.btnWhatsapp:hover { background: #a68328; color: #fff; transform: translateY(-1px); }
+.btnWhatsapp:hover { background: #141B24; color: #fff; transform: translateY(-1px); }
 
 .btnShop {
   display: inline-flex;

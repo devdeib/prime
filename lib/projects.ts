@@ -14,7 +14,7 @@ export type Project = {
   project_type?: "Residential" | "Commercial" | null;
 };
 
-export const PROJECT_PLACEHOLDER = "/images/La dolce casa.svg";
+export const PROJECT_PLACEHOLDER = "/images/prime-logo.svg";
 
 export function getProjectGallery(project: Pick<Project, "images" | "image_url">): string[] {
   if (project.images && project.images.length > 0) {

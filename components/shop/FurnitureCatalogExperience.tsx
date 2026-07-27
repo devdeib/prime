@@ -78,7 +78,7 @@ function productImageUrl(product: Product) {
   if (product.image_url) {
     return product.image_url;
   }
-  return "/images/La dolce casa.svg";
+  return "/images/prime-logo.svg";
 }
 
 // Card-only: prefer thumbnail_url for a tighter, faster-loading grid image

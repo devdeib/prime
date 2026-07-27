@@ -107,7 +107,7 @@
 .metaLabel {
   display: block;
   margin-bottom: 0.45rem;
-  color: #b8942f;
+  color: #1E2735;
   font-family: var(--font-ui);
   font-size: 0.72rem;
   font-weight: 600;
@@ -142,7 +142,7 @@
   align-self: flex-start;
   margin-inline-start: 0;
   margin-inline-end: auto;
-  color: #b8942f;
+  color: #1E2735;
   font-family: var(--font-ui);
   font-size: 0.78rem;
   font-weight: 600;

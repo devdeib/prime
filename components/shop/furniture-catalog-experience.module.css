@@ -85,7 +85,7 @@
   font-family: var(--font-ui);
   font-size: 1.25rem;
   font-weight: 600;
-  color: #b8942f;
+  color: #1E2735;
 }
 
 .heroEditorGrid {
@@ -304,7 +304,7 @@
 
 .featuredTitle {
   margin: 0;
-  color: #b8942f;
+  color: #1E2735;
   font-family: var(--font-display, Didot, Georgia, serif);
   font-size: 72px;
   font-weight: 400;
@@ -650,7 +650,7 @@
 
 .grid:not(.featuredRail) .card:hover .cardName,
 .grid:not(.featuredRail) .card:hover .cardNameArabic {
-  color: #b8942f;
+  color: #1E2735;
 }
 
 .grid:not(.featuredRail) .card:hover .cardImage {
@@ -807,7 +807,7 @@
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   font-weight: 600;
   letter-spacing: 0;
-  color: #b8942f;
+  color: #1E2735;
   margin: 0 0 0.75rem;
   line-height: 1.25;
 }
@@ -1004,7 +1004,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #b8942f;
+  color: #1E2735;
   margin: 0 0 1rem;
 }
 
@@ -1025,7 +1025,7 @@
   justify-content: center;
   gap: 0.6rem;
   padding: 0.9rem 1.5rem;
-  background: #b8942f;
+  background: #1E2735;
   color: #ffffff;
   font-family: var(--font-ui);
   font-size: 0.88rem;
@@ -1037,7 +1037,7 @@
 }
 
 .panelBtnWhatsapp:hover {
-  background: #a68328;
+  background: #141B24;
   color: #ffffff;
   transform: translateY(-1px);
 }
@@ -1061,7 +1061,7 @@
 }
 
 .panelBtnShop:hover {
-  border-color: #b8942f;
-  color: #b8942f;
+  border-color: #1E2735;
+  color: #1E2735;
   transform: translateY(-1px);
 }

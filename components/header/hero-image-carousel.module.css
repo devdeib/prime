@@ -38,7 +38,7 @@
 }
 
 .carousel :global(.carousel-indicators .active) {
-  background-color: #b8942f;
+  background-color: #1E2735;
   transform: scale(1.15);
 }
 

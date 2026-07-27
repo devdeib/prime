@@ -22,7 +22,7 @@ export default function CustomizationIntro() {
       <div className={styles.customIntroInner}>
         {/* <BrandMark
           showText={false}
-          text="La Dolce Casa"
+          text="Prime"
           className={styles.customIntroBrand}
           logoWidth={88}
         /> */}

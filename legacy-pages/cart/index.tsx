@@ -14,7 +14,7 @@ const CartItems = () => {
   return (
     <BaseContainer>
       <Meta
-        title={`La Dolce Casa | Cart`}
+        title={`Prime | Cart`}
         content={`Best Furniture ever`}
       />
       {!cartItems.length && (

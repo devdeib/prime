@@ -60,7 +60,7 @@ const Home: NextPageWithLayout<ProductListPageProps> = ({
   return (
     <>
       <Meta
-        title="La Dolce Casa | Best furniture selection ever"
+        title="Prime | Best furniture selection ever"
         content="Find the best sofas, sets, beds, and more. Discover stylish, affordable furniture for every home and occasion."
       />
       <header>

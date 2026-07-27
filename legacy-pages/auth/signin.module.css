@@ -32,7 +32,7 @@
 
 .eyebrow {
   margin: 0 0 0.85rem;
-  color: #b8942f;
+  color: #1E2735;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   font-size: 0.78rem;
@@ -63,7 +63,7 @@
 
 .highlight {
   padding: 0.95rem 1rem;
-  border-left: 2px solid #b8942f;
+  border-left: 2px solid #1E2735;
   background: rgba(255, 255, 255, 0.55);
   color: #4b5563;
 }
@@ -102,8 +102,8 @@
 
 .submit:hover,
 .submit:focus {
-  background: #b8942f !important;
-  border-color: #b8942f !important;
+  background: #1E2735 !important;
+  border-color: #1E2735 !important;
 }
 
 @media (max-width: 900px) {

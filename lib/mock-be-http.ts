@@ -67,7 +67,7 @@ function formatCategoryRow(c: MockStoredCategory) {
       type: "category",
       size: "0",
       public_id: `category-${c.id}`,
-      image_url: "/images/La dolce casa.svg",
+      image_url: "/images/prime-logo.svg",
       category_id: c.id,
       created_at: nowIso,
       updated_at: nowIso,
@@ -87,9 +87,9 @@ function formatProductRow(
   const imageUrl =
     item.image_url && item.image_url.trim() !== ""
       ? item.image_url
-      : "/images/La dolce casa.svg";
+      : "/images/prime-logo.svg";
   const descEn =
-    item.descriptions?.trim() ?? `${item.name} from La Dolce Casa`;
+    item.descriptions?.trim() ?? `${item.name} from Prime`;
   const descAr =
     item.descriptions_ar?.trim() ??
     (item.name_ar?.trim()
@@ -397,7 +397,7 @@ export async function tryMockBeRequest(
         type: type ?? "banner",
         size: "0",
         public_id: `${type ?? "banner"}-${idx + 1}`,
-        image_url: "/images/La dolce casa.svg",
+        image_url: "/images/prime-logo.svg",
         created_at: nowIso,
         updated_at: nowIso,
       })),

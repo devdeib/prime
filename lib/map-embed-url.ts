@@ -83,7 +83,7 @@ export async function resolveGoogleMapsShortLinkToEmbedUrl(
       headers: {
         Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "User-Agent":
-          "Mozilla/5.0 (compatible; LaDolceCasaMapResolver/1.0; +https://www.google.com/bot.html)",
+          "Mozilla/5.0 (compatible; PrimeMapResolver/1.0; +https://www.google.com/bot.html)",
       },
     });
 

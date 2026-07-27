@@ -72,11 +72,11 @@
 .menuItem:hover,
 .menuItem:focus {
   background: rgba(184, 148, 47, 0.07) !important;
-  color: #b8942f !important;
+  color: #1E2735 !important;
 }
 
 .icon {
-  color: #b8942f;
+  color: #1E2735;
   flex-shrink: 0;
 }
 

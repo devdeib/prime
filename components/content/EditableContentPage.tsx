@@ -38,7 +38,7 @@ type Props = {
   fallbackImage?: string;
 };
 
-const DEFAULT_IMAGE = "/images/La dolce casa.svg";
+const DEFAULT_IMAGE = "/images/prime-logo.svg";
 
 export default function EditableContentPage({
   contentKey,
@@ -102,7 +102,7 @@ export default function EditableContentPage({
             <div className={styles.media}>
               <Image
                 src={copy.image}
-                alt={copy.title || "La Dolce Casa"}
+                alt={copy.title || "Prime"}
                 fill
                 sizes="(max-width: 899px) 100vw, 42vw"
                 unoptimized={copy.image.startsWith("http")}

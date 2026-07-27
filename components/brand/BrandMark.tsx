@@ -20,7 +20,7 @@ export default function BrandMark({
   className,
   stacked = true,
   showText = true,
-  text = "La Dolce Casa",
+  text = "Prime",
   logoWidth = 54,
   priority,
 }: BrandMarkProps) {
@@ -30,8 +30,8 @@ export default function BrandMark({
       className={`${styles.brandMark} ${stacked ? styles.stacked : styles.inline} ${className ?? ""}`.trim()}
     >
       <Image
-        src="/images/La dolce casa.svg"
-        alt="La Dolce Casa logo"
+        src="/images/prime-logo.svg"
+        alt="Prime logo"
         width={logoWidth}
         height={Math.round((logoWidth * 71) / 63)}
         priority={eagerLogo}

@@ -37,7 +37,7 @@ type ContactContent = {
   map_iframe_src?: string;
 };
 
-const FALLBACK_VISUAL = "/images/La dolce casa.svg";
+const FALLBACK_VISUAL = "/images/prime-logo.svg";
 
 function findLeadImage(row: VisualRow) {
   return row.images?.find(Boolean) || row.image_url || null;
@@ -93,7 +93,7 @@ export default function ContactPage() {
     emailValue:
       pickLocalized(i18n.language, content.email_value_en, content.email_value_ar) ||
       (t("contactPage.emailValue") === "contactPage.emailValue"
-        ? "info@ladolcecasa.net"
+        ? "info@primewebsite.net"
         : t("contactPage.emailValue")),
     hours:
       pickLocalized(i18n.language, content.hours_label_en, content.hours_label_ar) ||
@@ -107,7 +107,7 @@ export default function ContactPage() {
         : t("contactPage.hoursValue")),
     visualAlt:
       t("contactPage.visualAlt") === "contactPage.visualAlt"
-        ? "La Dolce Casa contact visual"
+        ? "Prime contact visual"
         : t("contactPage.visualAlt"),
   };
 

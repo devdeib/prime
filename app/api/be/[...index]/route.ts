@@ -118,10 +118,10 @@ const DEFAULT_SITE_CONTENT: Record<string, unknown> = {
   about: {
     eyebrow_en: 'Our Story',
     eyebrow_ar: '',
-    title_en: 'About La Dolce Casa',
+    title_en: 'About Prime',
     title_ar: '',
     body_en:
-      'La Dolce Casa creates curated furniture experiences for homes, showrooms, and refined interior projects. Our work brings together quality materials, thoughtful detailing, and a warm sense of living.',
+      'Prime creates curated furniture experiences for homes, showrooms, and refined interior projects. Our work brings together quality materials, thoughtful detailing, and a warm sense of living.',
     body_ar: '',
     image_url: '',
     stat_primary_value_en: 'Since 2014',
@@ -180,7 +180,7 @@ const DEFAULT_SITE_CONTENT: Record<string, unknown> = {
     phone_value_ar: '',
     email_label_en: 'EMAIL',
     email_label_ar: '',
-    email_value_en: 'info@ladolcecasa.net',
+    email_value_en: 'info@primewebsite.net',
     email_value_ar: '',
     hours_label_en: 'OPENING HOURS',
     hours_label_ar: '',

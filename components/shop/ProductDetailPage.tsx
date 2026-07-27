@@ -41,7 +41,7 @@ function productHeroImageUrl(product: Product): string {
   if (product.thumbnail_url) return product.thumbnail_url;
   if (product.storage_files?.[0]?.image_url) return product.storage_files[0].image_url;
   if (product.image_url) return product.image_url;
-  return "/images/La dolce casa.svg";
+  return "/images/prime-logo.svg";
 }
 
 // Card thumbnail (product grid/related slider): same logic
@@ -49,7 +49,7 @@ function productCardImageUrl(product: Product): string {
   if (product.thumbnail_url) return product.thumbnail_url;
   if (product.storage_files?.[0]?.image_url) return product.storage_files[0].image_url;
   if (product.image_url) return product.image_url;
-  return "/images/La dolce casa.svg";
+  return "/images/prime-logo.svg";
 }
 
 // Gallery slider (below the hero): uses only image_url / storage_files, never thumbnail_url
@@ -61,7 +61,7 @@ function getAllImages(product: Product): string[] {
     }
   }
   if (imgs.length === 0 && product.image_url) imgs.push(product.image_url);
-  if (imgs.length === 0) imgs.push("/images/La dolce casa.svg");
+  if (imgs.length === 0) imgs.push("/images/prime-logo.svg");
   return imgs;
 }
 
