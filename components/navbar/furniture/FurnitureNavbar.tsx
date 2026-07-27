@@ -68,6 +68,7 @@ export default function FurnitureNavbar() {
           <BrandMark
             href="/"
             stacked
+            showText={false}
             text={t("nav.brand")}
             className={styles.brandMark}
             logoWidth={12}

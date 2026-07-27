@@ -30,14 +30,14 @@ function ProjectsContent() {
     return () => c.abort();
   }, []);
 
-  useEffect(() => {
-    if (typeParam && ["Residential", "Commercial"].includes(typeParam)) {
-      setFilter(typeParam as FilterType);
-    }
-  }, [typeParam]);
+  const validType =
+    typeParam && ["Residential", "Commercial"].includes(typeParam)
+      ? (typeParam as FilterType)
+      : null;
+  const activeFilter = validType ?? filter;
 
   const sorted = [...items].sort((a, b) => a.sort_order - b.sort_order || a.id - b.id);
-  const filtered = filter === "All" ? sorted : sorted.filter((p) => (p.project_type ?? "Residential") === filter);
+  const filtered = activeFilter === "All" ? sorted : sorted.filter((p) => (p.project_type ?? "Residential") === activeFilter);
 
   const filterLabel = (type: FilterType) => {
     if (type === "All") return i18n.language === "ar" ? "الكل" : "All";
@@ -60,9 +60,9 @@ function ProjectsContent() {
               <button
                 key={type}
                 type="button"
-                className={`${styles.filterTab} ${filter === type ? styles.filterTabActive : ""}`}
+                className={`${styles.filterTab} ${activeFilter === type ? styles.filterTabActive : ""}`}
                 onClick={() => setFilter(type)}
-                aria-current={filter === type ? "true" : undefined}
+                aria-current={activeFilter === type ? "true" : undefined}
               >
                 {filterLabel(type)}
               </button>

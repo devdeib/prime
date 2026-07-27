@@ -46,8 +46,9 @@ const Footer = () => {
         <div className={styles.brandWrap}>
           <BrandMark
             text={t("nav.brand")}
+            showText={false}
             className={styles.brandMark}
-            logoWidth={48}
+            logoWidth={120}
           />
         </div>
         <Row className={`g-4 ${styles.linkGrid}`}>
