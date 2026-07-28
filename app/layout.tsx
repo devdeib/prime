@@ -17,20 +17,11 @@ export const metadata: Metadata = {
     description: "Furniture storefront — sofas, beds, dining, and more.",
     url: "https://prime-7nfec6avw-vdeibs-projects.vercel.app/",
     type: "website",
-    images: [
-      {
-        url: "https://prime-7nfec6avw-vdeibs-projects.vercel.app/images/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Prime — Curated furniture for a modern home.",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Prime",
     description: "Furniture storefront — sofas, beds, dining, and more.",
-    images: ["https://prime-7nfec6avw-vdeibs-projects.vercel.app/images/og-image.jpg"],
   },
 };
 
