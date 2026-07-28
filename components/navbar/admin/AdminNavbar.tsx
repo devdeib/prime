@@ -20,6 +20,7 @@ const AdminNavbar = () => {
             <BrandMark
               href="/dashboard/home"
               stacked
+              showText={false}
               text={t("nav.brand")}
               className={styles.brandMark}
               logoWidth={12}

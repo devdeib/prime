@@ -72,7 +72,7 @@
   margin-bottom: 0;
   --bs-table-bg: transparent;
   --bs-table-striped-bg: transparent;
-  --bs-table-hover-bg: rgba(184, 148, 47, 0.04);
+  --bs-table-hover-bg: rgba(30, 39, 53, 0.04);
   border-color: rgba(30, 39, 53, 0.08);
 }
 
@@ -107,7 +107,7 @@
 }
 
 .tableWrap :global(.table-hover tbody tr:hover) {
-  background: rgba(184, 148, 47, 0.06) !important;
+  background: rgba(30, 39, 53, 0.06) !important;
 }
 
 .tableWrap :global(.btn-sm) {
@@ -155,7 +155,7 @@
   border-radius: 999px;
   background: #f7f1e6;
   overflow: hidden;
-  border: 1px solid rgba(184, 148, 47, 0.2);
+  border: 1px solid rgba(30, 39, 53, 0.2);
 }
 
 .progressBar {
@@ -194,8 +194,8 @@
 
 .page :global(.form-control:focus),
 .page :global(.form-select:focus) {
-  border-color: rgba(184, 148, 47, 0.6) !important;
-  box-shadow: 0 0 0 0.2rem rgba(184, 148, 47, 0.12) !important;
+  border-color: rgba(30, 39, 53, 0.6) !important;
+  box-shadow: 0 0 0 0.2rem rgba(30, 39, 53, 0.12) !important;
 }
 
 @media (max-width: 767px) {

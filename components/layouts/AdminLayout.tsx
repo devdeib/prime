@@ -20,8 +20,9 @@ const AdminLayout: React.FC<ChildProps> = ({ children }) => {
             <BrandMark
               href="/dashboard/home"
               stacked={false}
-              text="PRIME"
-              logoWidth={28}
+              showText={false}
+              text="Prime"
+              logoWidth={100}
               priority
               className={styles.sidebarBrandMark}
             />
@@ -39,7 +40,7 @@ const AdminLayout: React.FC<ChildProps> = ({ children }) => {
       </div>
 
       <footer className={styles.footer}>
-        <p className="mb-0">{t("dashboard.dashboard")} · Prime</p>
+        <p className="mb-0">{t("dashboard.dashboard")}</p>
       </footer>
     </div>
   );

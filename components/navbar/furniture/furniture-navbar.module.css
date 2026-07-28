@@ -110,7 +110,7 @@
 }
 
 .navToggle:focus {
-  box-shadow: 0 0 0 0.18rem rgba(184, 148, 47, 0.18) !important;
+  box-shadow: 0 0 0 0.18rem rgba(30, 39, 53, 0.18) !important;
 }
 
 .navToggle :global(svg) {

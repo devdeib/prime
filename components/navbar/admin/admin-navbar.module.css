@@ -72,7 +72,7 @@
 }
 
 .bar :global(.navbar-toggler) {
-  border-color: rgba(184, 148, 47, 0.24) !important;
+  border-color: rgba(30, 39, 53, 0.24) !important;
 }
 
 .bar :global(.navbar-toggler-icon) {

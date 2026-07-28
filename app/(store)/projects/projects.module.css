@@ -62,7 +62,7 @@
 .listItem:hover,
 .listItem:focus-visible {
   transform: translateX(6px);
-  border-color: rgba(184, 148, 47, 0.42);
+  border-color: rgba(30, 39, 53, 0.42);
   outline: none;
 }
 
@@ -177,8 +177,8 @@
 .thumbRail {
   margin-top: 0.85rem;
   background: linear-gradient(180deg, #fbf8f2 0%, #f6f1e7 100%);
-  border-top: 1px solid rgba(184, 148, 47, 0.12);
-  border-bottom: 1px solid rgba(184, 148, 47, 0.12);
+  border-top: 1px solid rgba(30, 39, 53, 0.12);
+  border-bottom: 1px solid rgba(30, 39, 53, 0.12);
 }
 
 .thumbRow {
@@ -206,7 +206,7 @@
   opacity: 1;
   border-color: #1E2735;
   transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(184, 148, 47, 0.18);
+  box-shadow: 0 12px 22px rgba(30, 39, 53, 0.18);
 }
 
 .thumbImage {
@@ -273,7 +273,7 @@
   max-height: calc(100vh - 2rem);
   overflow: auto;
   background: linear-gradient(180deg, #fffdfa 0%, #f8f4ec 100%);
-  border: 1px solid rgba(184, 148, 47, 0.18);
+  border: 1px solid rgba(30, 39, 53, 0.18);
   border-radius: 0;
   box-shadow: 0 32px 90px rgba(0, 0, 0, 0.28);
   padding: 1.5rem;
@@ -421,7 +421,7 @@
 .viewerThumbActive {
   opacity: 1;
   border-color: #1E2735;
-  box-shadow: 0 12px 26px rgba(184, 148, 47, 0.18);
+  box-shadow: 0 12px 26px rgba(30, 39, 53, 0.18);
 }
 
 .viewerThumbImage {
@@ -555,7 +555,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #1E2735;
-  border: 1px solid rgba(184, 148, 47, 0.35);
+  border: 1px solid rgba(30, 39, 53, 0.35);
   border-radius: 2px;
   padding: 0.22rem 0.55rem;
   flex-shrink: 0;

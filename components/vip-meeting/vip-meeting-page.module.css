@@ -90,7 +90,7 @@
 }
 
 .navBtn:hover:not(:disabled) {
-  background: rgba(184, 148, 47, 0.08);
+  background: rgba(30, 39, 53, 0.08);
   border-color: #1E2735;
 }
 
@@ -131,7 +131,7 @@
 }
 
 .dayBtn:hover:not(:disabled) {
-  border-color: rgba(184, 148, 47, 0.45);
+  border-color: rgba(30, 39, 53, 0.45);
 }
 
 .dayEmpty {
@@ -146,7 +146,7 @@
 
 .dayAvailable {
   background: #fffdf8;
-  border-color: rgba(184, 148, 47, 0.25);
+  border-color: rgba(30, 39, 53, 0.25);
 }
 
 .daySelected {
@@ -219,7 +219,7 @@
 
 .formPanel :global(.form-control:focus) {
   border-color: #1E2735;
-  box-shadow: 0 0 0 0.15rem rgba(184, 148, 47, 0.18);
+  box-shadow: 0 0 0 0.15rem rgba(30, 39, 53, 0.18);
 }
 
 .submitBtn {
@@ -245,8 +245,8 @@
 .successBox {
   margin-top: 1rem;
   padding: 1rem;
-  border: 1px solid rgba(184, 148, 47, 0.35);
-  background: rgba(184, 148, 47, 0.08);
+  border: 1px solid rgba(30, 39, 53, 0.35);
+  background: rgba(30, 39, 53, 0.08);
   color: #1e2735;
 }
 

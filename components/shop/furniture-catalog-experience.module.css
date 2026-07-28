@@ -789,8 +789,8 @@
 }
 
 .closeBtn:hover {
-  background: rgba(184, 148, 47, 0.92);
-  border-color: rgba(184, 148, 47, 0.92);
+  background: rgba(30, 39, 53, 0.92);
+  border-color: rgba(30, 39, 53, 0.92);
   color: #ffffff;
 }
 

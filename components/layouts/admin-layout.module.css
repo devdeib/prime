@@ -29,13 +29,10 @@
 }
 
 .sidebarBrandMark :global(img) {
+  max-width: 120px;
+  width: 100px;
+  height: auto;
   flex-shrink: 0;
-}
-
-.sidebarBrandMark :global(span:last-child) {
-  font-size: 20px;
-  white-space: normal;
-  line-height: 1.15;
 }
 
 .sideHeader {
