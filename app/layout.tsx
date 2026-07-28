@@ -15,11 +15,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Prime",
     description: "Furniture storefront — sofas, beds, dining, and more.",
-    url: "https://primewebsite.net/",
+    url: "https://prime-7nfec6avw-vdeibs-projects.vercel.app/",
     type: "website",
     images: [
       {
-        url: "https://primewebsite.net/images/og-image.jpg",
+        url: "https://prime-7nfec6avw-vdeibs-projects.vercel.app/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Prime — Curated furniture for a modern home.",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Prime",
     description: "Furniture storefront — sofas, beds, dining, and more.",
-    images: ["https://primewebsite.net/images/og-image.jpg"],
+    images: ["https://prime-7nfec6avw-vdeibs-projects.vercel.app/images/og-image.jpg"],
   },
 };
 
