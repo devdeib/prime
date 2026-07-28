@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://primewebsite.net/images/og-image.png",
+        url: "https://primewebsite.net/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Prime — Curated furniture for a modern home.",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Prime",
     description: "Furniture storefront — sofas, beds, dining, and more.",
-    images: ["https://primewebsite.net/images/og-image.png"],
+    images: ["https://primewebsite.net/images/og-image.jpg"],
   },
 };
 
