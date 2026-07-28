@@ -19,7 +19,7 @@
   --font-sans: var(--font-body-ar), var(--font-body-ar-alt), ui-sans-serif, system-ui, sans-serif;
 }
 
-/* English: Italian Didot; Arabic: Cairo + Noto Kufi (I18nProvider sets html lang/dir) */
+/* English: Rosemartin; Arabic: Cairo + Noto Kufi (I18nProvider sets html lang/dir) */
 html,
 body {
   background: var(--background);
@@ -41,12 +41,12 @@ html[lang="ar"] body {
   font-variation-settings: "slnt" 0;
 }
 
-/* Italian Didot — storefront hero + featured section headings only */
+/* Rosemartin — storefront hero + featured section headings only */
 .font-display,
 [class*="heroTitle"],
 [class*="featuredTitle"],
 [class*="homeSectionTitle"] {
-  font-family: var(--font-display), Didot, "Libre Bodoni", Georgia, serif;
+  font-family: var(--font-display), Georgia, serif;
 }
 
 /* Cabinet Grotesk — UI elements: buttons, nav labels, metadata, tags */

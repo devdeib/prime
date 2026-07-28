@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 
 export const fontDisplay = localFont({
-  src: "../public/fonts/Italian-Didot-W90-Normal/Italian Didot W90 Normal.ttf",
+  src: "../public/fonts/Rosemartin/Rosemartin.otf",
   variable: "--font-display",
   display: "swap",
 });
