@@ -96,7 +96,7 @@
 }
 
 .navScrolled .navLinkActive::after {
-  background: #1E2735;
+  background: #ffffff;
 }
 
 .navToggle {
@@ -122,22 +122,21 @@
 }
 
 .navScrolled {
-  background: rgb(255, 255, 255) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: none;
+  background: #1E2735 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
 }
 
 .navScrolled .navLink {
-  color: #1e2735 !important;
+  color: #ffffff !important;
 }
 
 .navScrolled .brandMark {
-  color: #1e2735;
+  color: #ffffff;
 }
 
 .navScrolled .navToggle {
-  color: #1e2735 !important;
-  
+  color: #ffffff !important;
 }
 
 .langOnLight {
@@ -145,7 +144,7 @@
 }
 
 .navScrolled .languageWrap {
-  color: #1e2735;
+  color: #ffffff;
 }
 
 .ft14 {

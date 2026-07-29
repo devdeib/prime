@@ -19,8 +19,8 @@
 .homeSectionTitle {
   margin: 0;
   color: #1E2735;
-  font-family: var(--font-display, Didot, Georgia, serif);
-  font-size: clamp(2.3rem, 5vw, 4.6rem);
+  font-family: var(--font-display, Georgia, serif);
+  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
   font-weight: 400;
   text-transform: uppercase;
   line-height: 1;
@@ -29,7 +29,7 @@
 @media (max-width: 575px) {
   .title,
   .homeSectionTitle {
-    font-size: clamp(2rem, 12vw, 3.25rem);
+    font-size: clamp(1.6rem, 10vw, 2.6rem);
   }
 }
 
