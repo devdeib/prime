@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 
 export const fontDisplay = localFont({
-  src: "../public/fonts/Rosemartin/Rosemartin.otf",
+  src: "../public/fonts/Amored.otf",
   variable: "--font-display",
   display: "swap",
 });
