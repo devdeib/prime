@@ -34,7 +34,7 @@ type PageContent = {
 };
 
 type Props = {
-  contentKey: "about" | "services";
+  contentKey: "about" | "services" | "fitout" | "blog" | "careers";
   fallbackImage?: string;
 };
 

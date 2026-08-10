@@ -30,7 +30,7 @@ type ProjectRow = {
   images?: string[] | null;
   image_url?: string | null;
   sort_order: number;
-  project_type?: "Residential" | "Commercial" | null;
+  project_type?: string | null;
 };
 
 export default function DashboardProjectsPage() {
@@ -40,6 +40,9 @@ export default function DashboardProjectsPage() {
   const isAdmin = role === "admin";
 
   const [rows, setRows] = useState<ProjectRow[]>([]);
+  const existingCategories = Array.from(
+    new Set(rows.map((r) => r.project_type ?? "Residential").filter(Boolean))
+  ).sort();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -58,7 +61,7 @@ export default function DashboardProjectsPage() {
     description: "",
     descriptionAr: "",
     sortOrder: "0",
-    projectType: "Residential" as "Residential" | "Commercial",
+    projectType: "Residential" as string,
     images: [] as string[],
   });
 
@@ -99,7 +102,7 @@ export default function DashboardProjectsPage() {
       description: r.description ?? "",
       descriptionAr: r.description_ar ?? "",
       sortOrder: String(r.sort_order),
-      projectType: (r.project_type as "Residential" | "Commercial") ?? "Residential",
+      projectType: r.project_type ?? "Residential",
       images:
         r.images?.filter(Boolean) ??
         (r.image_url?.trim() ? [r.image_url.trim()] : []),
@@ -323,19 +326,23 @@ export default function DashboardProjectsPage() {
                 />
               </Col>
               <Col md={2}>
-                <Form.Label>Type</Form.Label>
-                <Form.Select
+                <Form.Label>Category</Form.Label>
+                <datalist id="project-categories-list">
+                  {existingCategories.map((cat) => (
+                    <option key={cat} value={cat} />
+                  ))}
+                </datalist>
+                <Form.Control
+                  list="project-categories-list"
+                  placeholder="e.g. Residential"
                   value={form.projectType}
                   onChange={(e) =>
-                    setForm((p) => ({
-                      ...p,
-                      projectType: e.target.value as "Residential" | "Commercial",
-                    }))
+                    setForm((p) => ({ ...p, projectType: e.target.value }))
                   }
-                >
-                  <option value="Residential">Residential</option>
-                  <option value="Commercial">Commercial</option>
-                </Form.Select>
+                />
+                <Form.Text className="text-muted">
+                  Type a new category or pick an existing one
+                </Form.Text>
               </Col>
             </Row>
             <Row className="g-2 mb-2">

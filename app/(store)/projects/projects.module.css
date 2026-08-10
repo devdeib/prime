@@ -674,3 +674,107 @@
     grid-column: 1 / -1;
   }
 }
+
+/* ── Shawa-style masonry grid ─────────────────────────────── */
+.shawaGrid {
+  columns: 3;
+  column-gap: 6px;
+  margin-top: 2rem;
+}
+
+@media (max-width: 991px) {
+  .shawaGrid {
+    columns: 2;
+  }
+}
+
+@media (max-width: 575px) {
+  .shawaGrid {
+    columns: 1;
+  }
+}
+
+.shawaCard {
+  display: block;
+  break-inside: avoid;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.shawaImageWrap {
+  position: relative;
+  overflow: hidden;
+  background: #1e2735;
+}
+
+.shawaImage {
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1.01);
+}
+
+.shawaCard:hover .shawaImage {
+  transform: scale(1.06);
+}
+
+.shawaOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.1) 45%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.shawaCard:hover .shawaOverlay {
+  opacity: 1;
+}
+
+.shawaCaption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem 1.25rem 1.25rem;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.shawaCard:hover .shawaCaption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.shawaName {
+  font-family: var(--font-ui);
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0 0 0.2rem;
+}
+
+.shawaCity {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+  letter-spacing: 0.06em;
+}
+
+.filterGroup {
+  display: inline-flex;
+  align-items: center;
+}

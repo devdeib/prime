@@ -11,7 +11,7 @@ export type Project = {
   images?: string[] | null;
   image_url?: string | null;
   sort_order: number;
-  project_type?: "Residential" | "Commercial" | null;
+  project_type?: string | null;
 };
 
 export const PROJECT_PLACEHOLDER = "/images/prime-logo.svg";

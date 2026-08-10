@@ -10,40 +10,41 @@ import { projectDetailPath, getProjectGallery, projectImageNeedsUnoptimized, typ
 import BaseContainer from "@/components/common/container/BaseContainer";
 import styles from "./projects.module.css";
 
-type FilterType = "All" | "Residential" | "Commercial";
-
 function ProjectsContent() {
   const { t, i18n } = useTranslation("common");
   const searchParams = useSearchParams();
-  const typeParam = searchParams.get("type") as FilterType | null;
+  const typeParam = searchParams.get("type");
   const [items, setItems] = useState<Project[]>([]);
-  const [filter, setFilter] = useState<FilterType>(
-    typeParam && ["Residential", "Commercial"].includes(typeParam) ? typeParam : "All"
-  );
+  const [filter, setFilter] = useState<string>("All");
 
   useEffect(() => {
     const c = new AbortController();
     fetch("/api/be/projects", { signal: c.signal })
       .then((r) => r.json())
-      .then((j) => { if (Array.isArray(j)) setItems(j); })
+      .then((j) => {
+        if (Array.isArray(j)) {
+          setItems(j);
+        }
+      })
       .catch(() => setItems([]));
     return () => c.abort();
   }, []);
 
-  const validType =
-    typeParam && ["Residential", "Commercial"].includes(typeParam)
-      ? (typeParam as FilterType)
-      : null;
-  const activeFilter = validType ?? filter;
+  // Derive categories dynamically from project data
+  const categories = ["All", ...Array.from(
+    new Set(items.map((p) => p.project_type ?? "Residential").filter(Boolean))
+  ).sort()];
+
+  // Respect URL param once categories are loaded
+  useEffect(() => {
+    if (typeParam && categories.includes(typeParam)) {
+      setFilter(typeParam);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [typeParam, items]);
 
   const sorted = [...items].sort((a, b) => a.sort_order - b.sort_order || a.id - b.id);
-  const filtered = activeFilter === "All" ? sorted : sorted.filter((p) => (p.project_type ?? "Residential") === activeFilter);
-
-  const filterLabel = (type: FilterType) => {
-    if (type === "All") return i18n.language === "ar" ? "الكل" : "All";
-    if (type === "Residential") return i18n.language === "ar" ? "سكني" : "Residential";
-    return i18n.language === "ar" ? "تجاري" : "Commercial";
-  };
+  const filtered = filter === "All" ? sorted : sorted.filter((p) => (p.project_type ?? "Residential") === filter);
 
   return (
     <section className={styles.page}>
@@ -53,60 +54,55 @@ function ProjectsContent() {
           <p className={styles.sub}>{t("projectsPage.subtitle")}</p>
         </header>
 
-        <nav className={styles.filterNav} aria-label="Filter projects by type">
-          {(["All", "Residential", "Commercial"] as FilterType[]).map((type, index) => (
-            <>
-              {index > 0 ? <span className={styles.filterSep} aria-hidden key={`sep-${type}`} /> : null}
-              <button
-                key={type}
-                type="button"
-                className={`${styles.filterTab} ${activeFilter === type ? styles.filterTabActive : ""}`}
-                onClick={() => setFilter(type)}
-                aria-current={activeFilter === type ? "true" : undefined}
-              >
-                {filterLabel(type)}
-              </button>
-            </>
-          ))}
-        </nav>
+        {categories.length > 1 && (
+          <nav className={styles.filterNav} aria-label="Filter projects by type">
+            {categories.map((type, index) => (
+              <span key={type} className={styles.filterGroup}>
+                {index > 0 ? <span className={styles.filterSep} aria-hidden /> : null}
+                <button
+                  type="button"
+                  className={`${styles.filterTab} ${filter === type ? styles.filterTabActive : ""}`}
+                  onClick={() => setFilter(type)}
+                  aria-current={filter === type ? "true" : undefined}
+                >
+                  {type}
+                </button>
+              </span>
+            ))}
+          </nav>
+        )}
 
         {filtered.length === 0 ? (
           <p className="text-center text-muted py-5">{t("projectsPage.empty")}</p>
         ) : (
-          <div className={styles.imakerGrid}>
-            {filtered.map((project, index) => {
+          <div className={styles.shawaGrid}>
+            {filtered.map((project) => {
               const name = pickLocalized(i18n.language, project.name, project.name_ar);
               const city = pickLocalized(i18n.language, project.city, project.city_ar);
               const gallery = getProjectGallery(project);
               const heroImage = gallery[0];
-              const isLarge = index === 0 || index % 3 === 0;
 
               return (
                 <Link
                   key={project.id}
                   href={projectDetailPath(project.id)}
-                  className={`${styles.imakerCard} ${isLarge ? styles.imakerCardLarge : styles.imakerCardSmall}`}
+                  className={styles.shawaCard}
                   aria-label={name}
                 >
-                  <div className={styles.imakerImageWrap}>
+                  <div className={styles.shawaImageWrap}>
                     <Image
                       src={heroImage}
                       alt={name}
                       fill
-                      sizes={isLarge ? "(max-width: 900px) 100vw, 65vw" : "(max-width: 900px) 100vw, 40vw"}
-                      className={styles.imakerImage}
+                      sizes="(max-width: 767px) 100vw, (max-width: 1199px) 50vw, 33vw"
+                      className={styles.shawaImage}
                       unoptimized={projectImageNeedsUnoptimized(heroImage)}
                     />
-                    <div className={styles.imakerOverlay} aria-hidden />
-                    <div className={styles.imakerArrow} aria-hidden>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M7 17L17 7M17 7H7M17 7v10" />
-                      </svg>
+                    <div className={styles.shawaOverlay} aria-hidden />
+                    <div className={styles.shawaCaption}>
+                      <h2 className={styles.shawaName}>{name}</h2>
+                      {city ? <p className={styles.shawaCity}>{city}</p> : null}
                     </div>
-                  </div>
-                  <div className={styles.imakerCaption}>
-                    <h2 className={styles.imakerName}>{name}</h2>
-                    {city ? <p className={styles.imakerCity}>{city}</p> : null}
                   </div>
                 </Link>
               );

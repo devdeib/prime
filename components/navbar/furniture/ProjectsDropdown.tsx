@@ -10,14 +10,33 @@ type Props = {
   onOpenChange?: (open: boolean) => void;
 };
 
+type Project = {
+  id: number;
+  project_type?: string | null;
+};
+
 export default function ProjectsDropdown({
   linkClassName = "",
   onOpenChange,
 }: Props) {
   const { t, i18n } = useTranslation("common");
   const [open, setOpen] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    fetch("/api/be/projects")
+      .then((r) => r.json())
+      .then((data: Project[]) => {
+        if (!Array.isArray(data)) return;
+        const cats = Array.from(
+          new Set(data.map((p) => p.project_type ?? "Residential").filter(Boolean))
+        ).sort();
+        setCategories(cats);
+      })
+      .catch(() => setCategories(["Residential", "Commercial"]));
+  }, []);
 
   const setMenuOpen = (next: boolean) => {
     setOpen(next);
@@ -69,18 +88,10 @@ export default function ProjectsDropdown({
   const label =
     t("nav.projects") === "nav.projects" ? "PROJECTS" : t("nav.projects");
 
-  const items = [
-    {
-      href: "/projects?type=Commercial",
-      labelEn: "Commercial",
-      labelAr: "تجاري",
-    },
-    {
-      href: "/projects?type=Residential",
-      labelEn: "Residential",
-      labelAr: "سكني",
-    },
-  ];
+  const items = categories.map((cat) => ({
+    href: `/projects?type=${encodeURIComponent(cat)}`,
+    label: cat,
+  }));
 
   return (
     <div ref={ref} className={styles.root}>
@@ -125,7 +136,7 @@ export default function ProjectsDropdown({
                       role="menuitem"
                       onClick={() => setMenuOpen(false)}
                     >
-                      {i18n.language === "ar" ? item.labelAr : item.labelEn}
+                      {item.label}
                     </Link>
                   </li>
                 ))}
@@ -183,7 +194,7 @@ export default function ProjectsDropdown({
                 className={`${styles.mobileItem} ${styles.mobileCategoryItem}`}
                 onClick={() => setMenuOpen(false)}
               >
-                {i18n.language === "ar" ? item.labelAr : item.labelEn}
+                {item.label}
               </Link>
             ))}
           </div>

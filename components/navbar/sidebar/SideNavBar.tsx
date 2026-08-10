@@ -3,8 +3,6 @@
 import {
   FiGrid,
   FiUsers,
-  FiTag,
-  FiBox,
   FiImage,
   FiMapPin,
   FiBriefcase,
@@ -66,18 +64,6 @@ export const sideNavItems = (role: string): SideNavItems => {
         labelKey: "dashboard.users",
         url: "/dashboard/users",
         icon: (size: number = 18) => <FiUsers size={size} />,
-      },
-      {
-        id: 3,
-        labelKey: "dashboard.categories",
-        url: "/dashboard/categories",
-        icon: (size: number = 18) => <FiTag size={size} />,
-      },
-      {
-        id: 4,
-        labelKey: "dashboard.products",
-        url: "/dashboard/products",
-        icon: (size: number = 18) => <FiBox size={size} />,
       },
       {
         id: 5,
