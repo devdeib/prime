@@ -1,0 +1,80 @@
+/* ── Category list ─────────────────────────────────────────── */
+.catList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.catRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  min-height: 44px;
+}
+
+.catName {
+  flex: 1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #212529;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.catCount {
+  font-size: 0.7rem;
+  font-weight: 400;
+  padding: 2px 7px;
+  border-radius: 20px;
+  background: #6c757d !important;
+}
+
+.catInput {
+  flex: 1;
+  font-size: 0.875rem !important;
+  height: 32px !important;
+}
+
+.catBtn {
+  font-size: 0.75rem !important;
+  padding: 3px 10px !important;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ── Add new category row ──────────────────────────────────── */
+.addRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+  border-top: 1px solid #e9ecef;
+  margin-top: 4px;
+}
+
+.addInput {
+  flex: 1;
+  font-size: 0.875rem !important;
+  height: 34px !important;
+}
+
+@media (max-width: 575px) {
+  .catRow {
+    flex-wrap: wrap;
+  }
+  .catName {
+    width: 100%;
+  }
+  .addRow {
+    flex-wrap: wrap;
+  }
+  .addInput {
+    width: 100%;
+  }
+}
