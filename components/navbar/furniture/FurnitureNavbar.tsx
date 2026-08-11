@@ -23,15 +23,15 @@ export default function FurnitureNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
   const [projectsMenuOpen, setProjectsMenuOpen] = useState(false);
+
   const isHome = pathname === "/";
   const isDetailHero = isCollectionDetailHeroPath(pathname);
-  const isShowroomHero =
-    pathname != null && /^\/showrooms\/\d+$/.test(pathname);
+  const isShowroomHero = pathname != null && /^\/showrooms\/\d+$/.test(pathname);
   const isHeroPage = isHome || isDetailHero;
   const useLightNavbar = !isHeroPage || scrolled || projectsMenuOpen;
-  /** Mobile menu uses a light panel; profile trigger uses dark text on light. */
   const profileOnLight = useLightNavbar || isNarrow;
   const profileHeroFlat = isHeroPage && !scrolled;
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
@@ -47,6 +47,9 @@ export default function FurnitureNavbar() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
+  const linkCls = (active: boolean) =>
+    `${styles.navLink} ${styles.ft14} fw-normal ${active ? styles.navLinkActive : ""}`;
+
   return (
     <Navbar
       collapseOnSelect
@@ -58,11 +61,9 @@ export default function FurnitureNavbar() {
       }`}
     >
       <Container fluid="xxl" className={styles.navContainer}>
-        <Navbar.Brand
-          as="div"
-          role="general-navbar-brand-role"
-          className={styles.brandCentered}
-        >
+
+        {/* ── Logo — left-aligned ─────────────────────────────────── */}
+        <Navbar.Brand as="div" className={styles.brandLeft}>
           <BrandMark
             href="/"
             stacked
@@ -74,56 +75,36 @@ export default function FurnitureNavbar() {
           />
         </Navbar.Brand>
 
+        {/* ── Mobile toggle ───────────────────────────────────────── */}
         <Navbar.Toggle
-          aria-controls="offcanvasNavbar"
-          role="navbar-toggle-role"
+          aria-controls="responsive-navbar-nav"
           className={styles.navToggle}
         >
           <HamBurgerIcon />
         </Navbar.Toggle>
 
-        <Navbar.Collapse
-          id="responsive-navbar-nav"
-          className={styles.mobileCollapse}
-        >
-          {/* Left: About Us · Projects */}
-          <Nav className={`me-auto ${styles.leftLinks}`}>
-            <Nav.Link
-              as={Link}
-              href="/about-us"
-              className={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname === "/about-us" ? styles.navLinkActive : ""
-              }`}
-            >
+        {/* ── All links — right side ──────────────────────────────── */}
+        <Navbar.Collapse id="responsive-navbar-nav" className={styles.mobileCollapse}>
+          <Nav className={`ms-auto align-items-center ${styles.mainLinks}`}>
+
+            {/* Page links */}
+            <Nav.Link as={Link} href="/about-us" className={linkCls(pathname === "/about-us")}>
               {t("nav.about") === "nav.about" ? "ABOUT US" : t("nav.about")}
             </Nav.Link>
 
             <ProjectsDropdown
-              linkClassName={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname != null && pathname.startsWith("/projects") ? styles.navLinkActive : ""
-              }`}
+              linkClassName={linkCls(pathname != null && pathname.startsWith("/projects"))}
               onOpenChange={setProjectsMenuOpen}
             />
-          </Nav>
 
-          {/* Right: Fit-Out · Showrooms · Services · Lang · VIP · Profile */}
-          <Nav className={`align-items-center flex-wrap ${styles.rightLinks}`}>
-            <Nav.Link
-              as={Link}
-              href="/fit-out"
-              className={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname === "/fit-out" ? styles.navLinkActive : ""
-              }`}
-            >
+            <Nav.Link as={Link} href="/fit-out" className={linkCls(pathname === "/fit-out")}>
               FIT-OUT
             </Nav.Link>
 
             <Nav.Link
               as={Link}
               href="/showrooms"
-              className={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname === "/showrooms" || isShowroomHero ? styles.navLinkActive : ""
-              }`}
+              className={linkCls(pathname === "/showrooms" || isShowroomHero)}
             >
               {t("nav.showrooms")}
             </Nav.Link>
@@ -131,47 +112,39 @@ export default function FurnitureNavbar() {
             <Nav.Link
               as={Link}
               href="/services"
-              className={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname === "/services" ? styles.navLinkActive : ""
-              }`}
+              className={linkCls(pathname === "/services")}
             >
               {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
             </Nav.Link>
 
-            <span className={`${styles.navDivider}`} aria-hidden />
+            {/* Divider */}
+            <span className={styles.navDivider} aria-hidden />
 
-            <span
-              className={`${styles.languageWrap} ${
-                profileOnLight ? styles.langOnLight : ""
-              }`}
-            >
+            {/* Utilities */}
+            <span className={`${styles.languageWrap} ${profileOnLight ? styles.langOnLight : ""}`}>
               <LanguageToggle />
             </span>
 
             <Nav.Link
               as={Link}
               href="/vip-meeting"
-              className={`${styles.navLink} ${styles.ft14} fw-normal ${
-                pathname === "/vip-meeting" ? styles.navLinkActive : ""
-              }`}
+              className={linkCls(pathname === "/vip-meeting")}
             >
               {t("nav.vipMeeting")}
             </Nav.Link>
 
             {!session && (
-              <Nav.Link
-                as={Link}
-                href="/auth/signin"
-                className={`${styles.navLink} ${styles.ft14}`}
-              >
+              <Nav.Link as={Link} href="/auth/signin" className={`${styles.navLink} ${styles.ft14}`}>
                 {t("nav.signIn")}
               </Nav.Link>
             )}
+
             {session && (
               <ProfileNavItem onLight={profileOnLight} heroFlat={profileHeroFlat} />
             )}
           </Nav>
         </Navbar.Collapse>
+
       </Container>
     </Navbar>
   );
