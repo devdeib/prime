@@ -86,6 +86,7 @@ export default function FurnitureNavbar() {
           id="responsive-navbar-nav"
           className={styles.mobileCollapse}
         >
+          {/* Left: About Us · Projects */}
           <Nav className={`me-auto ${styles.leftLinks}`}>
             <Nav.Link
               as={Link}
@@ -103,7 +104,10 @@ export default function FurnitureNavbar() {
               }`}
               onOpenChange={setProjectsMenuOpen}
             />
+          </Nav>
 
+          {/* Right: Fit-Out · Showrooms · Services · Lang · VIP · Profile */}
+          <Nav className={`align-items-center flex-wrap ${styles.rightLinks}`}>
             <Nav.Link
               as={Link}
               href="/fit-out"
@@ -123,6 +127,7 @@ export default function FurnitureNavbar() {
             >
               {t("nav.showrooms")}
             </Nav.Link>
+
             <Nav.Link
               as={Link}
               href="/services"
@@ -132,16 +137,17 @@ export default function FurnitureNavbar() {
             >
               {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
             </Nav.Link>
-          </Nav>
 
-          <Nav className={`align-items-center flex-wrap ${styles.rightLinks}`}>
+            <span className={`${styles.navDivider}`} aria-hidden />
+
             <span
               className={`${styles.languageWrap} ${
                 profileOnLight ? styles.langOnLight : ""
               }`}
-              >
+            >
               <LanguageToggle />
             </span>
+
             <Nav.Link
               as={Link}
               href="/vip-meeting"
@@ -151,15 +157,16 @@ export default function FurnitureNavbar() {
             >
               {t("nav.vipMeeting")}
             </Nav.Link>
-              {!session && (
-                <Nav.Link
-                  as={Link}
-                  href="/auth/signin"
-                  className={`${styles.navLink} ${styles.ft14}`}
-                >
-                  {t("nav.signIn")}
-                </Nav.Link>
-              )}
+
+            {!session && (
+              <Nav.Link
+                as={Link}
+                href="/auth/signin"
+                className={`${styles.navLink} ${styles.ft14}`}
+              >
+                {t("nav.signIn")}
+              </Nav.Link>
+            )}
             {session && (
               <ProfileNavItem onLight={profileOnLight} heroFlat={profileHeroFlat} />
             )}

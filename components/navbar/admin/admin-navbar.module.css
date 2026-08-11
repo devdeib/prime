@@ -36,6 +36,7 @@
 .brandMark :global(img) {
   width: 48px !important;
   height: auto !important;
+  filter: brightness(0) saturate(100%) invert(14%) sepia(20%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(95%);
 }
 
 .brandMark span:last-child {

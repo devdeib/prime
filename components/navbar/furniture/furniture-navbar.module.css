@@ -38,9 +38,11 @@
   gap: 0.22rem;
 }
 
+/* Force logo white on dark hero background */
 .brandMark :global(img) {
   width: 48px !important;
   height: auto !important;
+  filter: brightness(0) invert(1);
 }
 
 .brandMark span:last-child {
@@ -59,7 +61,19 @@
   position: relative;
   z-index: 2;
   align-items: center;
-  gap: 55px;
+  gap: 42px;
+}
+
+.rightLinks {
+  gap: 28px;
+}
+
+.navDivider {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.25);
+  flex-shrink: 0;
 }
 
 .languageWrap {
@@ -127,6 +141,10 @@
   box-shadow: 0 2px 16px rgba(0,0,0,0.18);
 }
 
+.navScrolled .navDivider {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .navScrolled .navLink {
   color: #ffffff !important;
 }
@@ -156,13 +174,16 @@
 }
 
 @media (max-width: 1199px) {
-  .leftLinks,
+  .leftLinks {
+    gap: 24px;
+  }
+
   .rightLinks {
-    gap: 26px;
+    gap: 16px;
   }
 
   .ft14 {
-    font-size: 0.875rem !important;
+    font-size: 0.8rem !important;
   }
 }
 
@@ -198,6 +219,7 @@
 
   .brandMark :global(img) {
     width: 56px !important;
+    filter: brightness(0) saturate(100%) invert(14%) sepia(20%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(95%);
   }
 
   .brandMark span:last-child {

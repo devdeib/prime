@@ -20,12 +20,14 @@
   padding: 0 1.15rem 1rem;
   margin: 0 0.5rem 0.85rem;
   border-bottom: 1px solid rgba(30, 39, 53, 0.1);
+  display: flex;
+  justify-content: center;
 }
 
 .sidebarBrandMark {
   color: #1e2735;
-  justify-content: flex-start;
-  width: 100%;
+  justify-content: center;
+  width: auto;
 }
 
 .sidebarBrandMark :global(img) {
@@ -33,6 +35,7 @@
   width: 100px;
   height: auto;
   flex-shrink: 0;
+  filter: brightness(0) saturate(100%) invert(14%) sepia(20%) saturate(900%) hue-rotate(182deg) brightness(90%) contrast(95%);
 }
 
 .sideHeader {

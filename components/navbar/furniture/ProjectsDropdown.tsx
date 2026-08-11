@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import styles from "./projects-dropdown.module.css";
 
@@ -37,6 +38,8 @@ export default function ProjectsDropdown({
       })
       .catch(() => setCategories(["Residential", "Commercial"]));
   }, []);
+
+  const router = useRouter();
 
   const setMenuOpen = (next: boolean) => {
     setOpen(next);
@@ -102,7 +105,7 @@ export default function ProjectsDropdown({
         aria-expanded={open}
         onMouseEnter={openMenu}
         onMouseLeave={scheduleClose}
-        onClick={() => setMenuOpen(!open)}
+        onClick={() => { setMenuOpen(false); router.push("/projects"); }}
       >
         {label}
       </button>

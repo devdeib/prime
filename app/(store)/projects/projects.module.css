@@ -678,17 +678,23 @@
 /* ── Shawa-style masonry grid ─────────────────────────────── */
 .shawaGrid {
   columns: 3;
-  column-gap: 6px;
+  column-gap: 4px;
   margin-top: 2rem;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 1199px) {
+  .shawaGrid {
+    columns: 3;
+  }
+}
+
+@media (max-width: 767px) {
   .shawaGrid {
     columns: 2;
   }
 }
 
-@media (max-width: 575px) {
+@media (max-width: 479px) {
   .shawaGrid {
     columns: 1;
   }
