@@ -1,16 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BrandMark from "@/components/brand/BrandMark";
 import ProfileNavItem from "../ProfileNavItem";
-import HamBurgerIcon from "../HamBurgerIcon";
 import LanguageToggle from "../LanguageToggle";
 import ProjectsDropdown from "./ProjectsDropdown";
 import { isCollectionDetailHeroPath } from "@/lib/detail-hero";
@@ -20,132 +17,199 @@ export default function FurnitureNavbar() {
   const { t } = useTranslation("common");
   const pathname = usePathname();
   const { data: session } = useSession();
-  const [scrolled, setScrolled] = useState(false);
-  const [isNarrow, setIsNarrow] = useState(false);
-  const [projectsMenuOpen, setProjectsMenuOpen] = useState(false);
 
-  const isHome = pathname === "/";
-  const isDetailHero = isCollectionDetailHeroPath(pathname);
-  const isShowroomHero = pathname != null && /^\/showrooms\/\d+$/.test(pathname);
-  const isHeroPage = isHome || isDetailHero;
-  const useLightNavbar = !isHeroPage || scrolled || projectsMenuOpen;
+  const [scrolled, setScrolled]         = useState(false);
+  const [isNarrow, setIsNarrow]         = useState(false);
+  const [menuOpen, setMenuOpen]         = useState(false);
+  const [projectsOpen, setProjectsOpen] = useState(false);
+
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const isHome        = pathname === "/";
+  const isDetailHero  = isCollectionDetailHeroPath(pathname);
+  const isShowroomHero= pathname != null && /^\/showrooms\/\d+$/.test(pathname);
+  const isHeroPage    = isHome || isDetailHero;
+
+  const useLightNavbar = !isHeroPage || scrolled || projectsOpen;
   const profileOnLight = useLightNavbar || isNarrow;
-  const profileHeroFlat = isHeroPage && !scrolled;
+  const profileHeroFlat= isHeroPage && !scrolled;
 
+  /* scroll listener */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const fn = () => setScrolled(window.scrollY > 40);
+    fn();
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  /* breakpoint listener */
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 991px)");
-    const sync = () => setIsNarrow(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    const fn = () => { setIsNarrow(mq.matches); if (!mq.matches) setMenuOpen(false); };
+    fn();
+    mq.addEventListener("change", fn);
+    return () => mq.removeEventListener("change", fn);
   }, []);
 
+  /* close menu on route change */
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
+
+  /* close menu on outside click */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const fn = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
+  }, [menuOpen]);
+
+  /* prevent body scroll when mobile menu open */
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
   const linkCls = (active: boolean) =>
-    `${styles.navLink} ${styles.ft14} fw-normal ${active ? styles.navLinkActive : ""}`;
+    `${styles.navLink} ${styles.ft14} fw-normal${active ? " " + styles.navLinkActive : ""}`;
+
+  const navItems = (
+    <>
+      <Nav.Link
+        as={Link} href="/about-us"
+        className={linkCls(pathname === "/about-us")}
+        onClick={() => setMenuOpen(false)}
+      >
+        {t("nav.about") === "nav.about" ? "ABOUT US" : t("nav.about")}
+      </Nav.Link>
+
+      <ProjectsDropdown
+        linkClassName={linkCls(!!pathname?.startsWith("/projects"))}
+        onOpenChange={setProjectsOpen}
+        onNavigate={() => setMenuOpen(false)}
+      />
+
+      <Nav.Link
+        as={Link} href="/fit-out"
+        className={linkCls(pathname === "/fit-out")}
+        onClick={() => setMenuOpen(false)}
+      >
+        FIT-OUT
+      </Nav.Link>
+
+      <Nav.Link
+        as={Link} href="/showrooms"
+        className={linkCls(pathname === "/showrooms" || isShowroomHero)}
+        onClick={() => setMenuOpen(false)}
+      >
+        {t("nav.showrooms")}
+      </Nav.Link>
+
+      <Nav.Link
+        as={Link} href="/services"
+        className={linkCls(pathname === "/services")}
+        onClick={() => setMenuOpen(false)}
+      >
+        {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
+      </Nav.Link>
+
+      <span className={styles.navDivider} aria-hidden />
+
+      <span className={`${styles.languageWrap} ${profileOnLight ? styles.langOnLight : ""}`}>
+        <LanguageToggle />
+      </span>
+
+      <Nav.Link
+        as={Link} href="/vip-meeting"
+        className={linkCls(pathname === "/vip-meeting")}
+        onClick={() => setMenuOpen(false)}
+      >
+        {t("nav.vipMeeting")}
+      </Nav.Link>
+
+      {!session && (
+        <Nav.Link
+          as={Link} href="/auth/signin"
+          className={`${styles.navLink} ${styles.ft14}`}
+          onClick={() => setMenuOpen(false)}
+        >
+          {t("nav.signIn")}
+        </Nav.Link>
+      )}
+
+      {session && (
+        <ProfileNavItem onLight={profileOnLight} heroFlat={profileHeroFlat} />
+      )}
+    </>
+  );
 
   return (
-    <Navbar
-      collapseOnSelect
-      expand="lg"
-      variant="dark"
-      fixed="top"
-      className={`${styles.navShell} ${useLightNavbar ? styles.navScrolled : ""} ${
-        projectsMenuOpen ? styles.navProductsOpen : ""
-      }`}
-    >
-      <Container fluid="xxl" className={styles.navContainer}>
+    <>
+      <header
+        ref={menuRef}
+        className={`${styles.navShell} ${useLightNavbar ? styles.navScrolled : ""}`}
+        role="banner"
+      >
+        <div className={styles.navContainer}>
 
-        {/* ── Logo — left-aligned ─────────────────────────────────── */}
-        <Navbar.Brand as="div" className={styles.brandLeft}>
-          <BrandMark
-            href="/"
-            stacked
-            showText={false}
-            text={t("nav.brand")}
-            className={styles.brandMark}
-            logoWidth={12}
-            priority={isHeroPage}
-          />
-        </Navbar.Brand>
-
-        {/* ── Mobile toggle ───────────────────────────────────────── */}
-        <Navbar.Toggle
-          aria-controls="responsive-navbar-nav"
-          className={styles.navToggle}
-        >
-          <HamBurgerIcon />
-        </Navbar.Toggle>
-
-        {/* ── All links — right side ──────────────────────────────── */}
-        <Navbar.Collapse id="responsive-navbar-nav" className={styles.mobileCollapse}>
-          <Nav className={`ms-auto align-items-center ${styles.mainLinks}`}>
-
-            {/* Page links */}
-            <Nav.Link as={Link} href="/about-us" className={linkCls(pathname === "/about-us")}>
-              {t("nav.about") === "nav.about" ? "ABOUT US" : t("nav.about")}
-            </Nav.Link>
-
-            <ProjectsDropdown
-              linkClassName={linkCls(pathname != null && pathname.startsWith("/projects"))}
-              onOpenChange={setProjectsMenuOpen}
+          {/* Logo */}
+          <div className={styles.brandLeft}>
+            <BrandMark
+              href="/"
+              stacked
+              showText={false}
+              text={t("nav.brand")}
+              className={styles.brandMark}
+              logoWidth={12}
+              priority={isHeroPage}
             />
+          </div>
 
-            <Nav.Link as={Link} href="/fit-out" className={linkCls(pathname === "/fit-out")}>
-              FIT-OUT
-            </Nav.Link>
+          {/* Desktop links */}
+          <nav className={styles.desktopLinks} aria-label="Main navigation">
+            {navItems}
+          </nav>
 
-            <Nav.Link
-              as={Link}
-              href="/showrooms"
-              className={linkCls(pathname === "/showrooms" || isShowroomHero)}
-            >
-              {t("nav.showrooms")}
-            </Nav.Link>
+          {/* Hamburger — mobile only */}
+          <button
+            type="button"
+            className={styles.hamburger}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barTop : ""}`} />
+            <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barMid : ""}`} />
+            <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barBot : ""}`} />
+          </button>
 
-            <Nav.Link
-              as={Link}
-              href="/services"
-              className={linkCls(pathname === "/services")}
-            >
-              {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
-            </Nav.Link>
+        </div>
+      </header>
 
-            {/* Divider */}
-            <span className={styles.navDivider} aria-hidden />
+      {/* Mobile drawer */}
+      {isNarrow && (
+        <>
+          {/* Backdrop */}
+          <div
+            className={`${styles.mobileBackdrop} ${menuOpen ? styles.mobileBackdropOpen : ""}`}
+            aria-hidden
+            onClick={() => setMenuOpen(false)}
+          />
 
-            {/* Utilities */}
-            <span className={`${styles.languageWrap} ${profileOnLight ? styles.langOnLight : ""}`}>
-              <LanguageToggle />
-            </span>
-
-            <Nav.Link
-              as={Link}
-              href="/vip-meeting"
-              className={linkCls(pathname === "/vip-meeting")}
-            >
-              {t("nav.vipMeeting")}
-            </Nav.Link>
-
-            {!session && (
-              <Nav.Link as={Link} href="/auth/signin" className={`${styles.navLink} ${styles.ft14}`}>
-                {t("nav.signIn")}
-              </Nav.Link>
-            )}
-
-            {session && (
-              <ProfileNavItem onLight={profileOnLight} heroFlat={profileHeroFlat} />
-            )}
-          </Nav>
-        </Navbar.Collapse>
-
-      </Container>
-    </Navbar>
+          {/* Drawer */}
+          <nav
+            className={`${styles.mobileDrawer} ${menuOpen ? styles.mobileDrawerOpen : ""}`}
+            aria-label="Mobile navigation"
+            aria-hidden={!menuOpen}
+          >
+            <div className={styles.mobileInner}>
+              {navItems}
+            </div>
+          </nav>
+        </>
+      )}
+    </>
   );
 }

@@ -9,6 +9,7 @@ import styles from "./projects-dropdown.module.css";
 type Props = {
   linkClassName?: string;
   onOpenChange?: (open: boolean) => void;
+  onNavigate?: () => void;
 };
 
 type Project = {
@@ -19,6 +20,7 @@ type Project = {
 export default function ProjectsDropdown({
   linkClassName = "",
   onOpenChange,
+  onNavigate,
 }: Props) {
   const { t, i18n } = useTranslation("common");
   const [open, setOpen] = useState(false);
@@ -137,7 +139,7 @@ export default function ProjectsDropdown({
                       href={item.href}
                       className={styles.categoryLink}
                       role="menuitem"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => { setMenuOpen(false); onNavigate?.(); }}
                     >
                       {item.label}
                     </Link>
@@ -151,7 +153,7 @@ export default function ProjectsDropdown({
                 href="/projects"
                 className={styles.asideLink}
                 role="menuitem"
-                onClick={() => setMenuOpen(false)}
+                onClick={() => { setMenuOpen(false); onNavigate?.(); }}
               >
                 {i18n.language === "ar" ? "عرض جميع المشاريع" : "SEE ALL PROJECTS"}
               </Link>
