@@ -92,18 +92,26 @@ export default function ProjectsDropdown({
     onNavigate?.();
   };
 
-  // ── MOBILE: Projects link + always-visible category sub-links ─
+  // ── MOBILE: Projects toggle + collapsible category sub-links ──
   if (isMobile) {
     return (
       <div className={styles.mobileRoot}>
-        <Link
-          href="/projects"
+        <button
+          type="button"
           className={`${linkClassName} ${styles.mobileMainLink}`}
-          onClick={navigate}
+          onClick={() => setOpen((v) => !v)}
         >
           {label}
-        </Link>
-        {categories.length > 0 && (
+          <svg
+            className={`${styles.mobileChevron} ${open ? styles.mobileChevronOpen : ""}`}
+            width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden
+          >
+            <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5"
+              strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+
+        {open && categories.length > 0 && (
           <div className={styles.mobileSubLinks}>
             {items.map((item) => (
               <Link
@@ -112,7 +120,7 @@ export default function ProjectsDropdown({
                 className={styles.mobileSubLink}
                 onClick={navigate}
               >
-                — {item.label}
+                {item.label}
               </Link>
             ))}
           </div>
