@@ -4,7 +4,7 @@ import Link from "next/link";
 import Nav from "react-bootstrap/Nav";
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BrandMark from "@/components/brand/BrandMark";
 import ProfileNavItem from "../ProfileNavItem";
@@ -24,7 +24,6 @@ export default function FurnitureNavbar() {
   const [projectsOpen, setProjectsOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
-
   const isHome        = pathname === "/";
   const isDetailHero  = isCollectionDetailHeroPath(pathname);
   const isShowroomHero= pathname != null && /^\/showrooms\/\d+$/.test(pathname);
@@ -53,18 +52,6 @@ export default function FurnitureNavbar() {
 
   /* close menu on route change */
   useEffect(() => { setMenuOpen(false); }, [pathname]);
-
-  /* close menu on outside click */
-  useEffect(() => {
-    if (!menuOpen) return;
-    const fn = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", fn);
-    return () => document.removeEventListener("mousedown", fn);
-  }, [menuOpen]);
 
   /* prevent body scroll when mobile menu open */
   useEffect(() => {
@@ -149,7 +136,6 @@ export default function FurnitureNavbar() {
   return (
     <>
       <header
-        ref={menuRef}
         className={`${styles.navShell} ${useLightNavbar ? styles.navScrolled : ""}`}
         role="banner"
       >
