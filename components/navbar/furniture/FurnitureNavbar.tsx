@@ -75,7 +75,7 @@ export default function FurnitureNavbar() {
   const linkCls = (active: boolean) =>
     `${styles.navLink} ${styles.ft14} fw-normal${active ? " " + styles.navLinkActive : ""}`;
 
-  const navItems = (
+  const navItems = (mobile = false) => (
     <>
       <Nav.Link
         as={Link} href="/about-us"
@@ -89,6 +89,7 @@ export default function FurnitureNavbar() {
         linkClassName={linkCls(!!pathname?.startsWith("/projects"))}
         onOpenChange={setProjectsOpen}
         onNavigate={() => setMenuOpen(false)}
+        isMobile={mobile}
       />
 
       <Nav.Link
@@ -169,7 +170,7 @@ export default function FurnitureNavbar() {
 
           {/* Desktop links */}
           <nav className={styles.desktopLinks} aria-label="Main navigation">
-            {navItems}
+            {navItems(false)}
           </nav>
 
           {/* Hamburger — mobile only */}
@@ -205,7 +206,7 @@ export default function FurnitureNavbar() {
             aria-hidden={!menuOpen}
           >
             <div className={styles.mobileInner}>
-              {navItems}
+              {navItems(true)}
             </div>
           </nav>
         </>

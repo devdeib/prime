@@ -10,6 +10,7 @@ type Props = {
   linkClassName?: string;
   onOpenChange?: (open: boolean) => void;
   onNavigate?: () => void;
+  isMobile?: boolean;
 };
 
 type Project = {
@@ -21,12 +22,14 @@ export default function ProjectsDropdown({
   linkClassName = "",
   onOpenChange,
   onNavigate,
+  isMobile = false,
 }: Props) {
   const { t, i18n } = useTranslation("common");
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
   const ref = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     fetch("/api/be/projects")
@@ -41,8 +44,6 @@ export default function ProjectsDropdown({
       .catch(() => setCategories(["Residential", "Commercial"]));
   }, []);
 
-  const router = useRouter();
-
   const setMenuOpen = (next: boolean) => {
     setOpen(next);
     onOpenChange?.(next);
@@ -55,49 +56,75 @@ export default function ProjectsDropdown({
     }
   };
 
-  const openMenu = () => {
-    clearCloseTimer();
-    setMenuOpen(true);
-  };
+  useEffect(() => () => clearCloseTimer(), []);
 
-  const scheduleClose = () => {
-    clearCloseTimer();
-    closeTimerRef.current = setTimeout(() => setMenuOpen(false), 200);
-  };
-
+  // Desktop: close on outside click
   useEffect(() => {
-    return () => clearCloseTimer();
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    const handler = (event: MouseEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
+    if (isMobile || !open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
         clearCloseTimer();
         setMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [open]);
+  }, [open, isMobile]);
 
+  // Desktop: close on Escape
   useEffect(() => {
-    if (!open) return;
-    const handler = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
+    if (isMobile || !open) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
     };
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
-  }, [open]);
+  }, [open, isMobile]);
 
-  const label =
-    t("nav.projects") === "nav.projects" ? "PROJECTS" : t("nav.projects");
-
+  const label = t("nav.projects") === "nav.projects" ? "PROJECTS" : t("nav.projects");
   const items = categories.map((cat) => ({
     href: `/projects?type=${encodeURIComponent(cat)}`,
     label: cat,
   }));
 
+  const navigate = () => {
+    setMenuOpen(false);
+    onNavigate?.();
+  };
+
+  // ── MOBILE: simple link + sub-items accordion ─────────────────
+  if (isMobile) {
+    return (
+      <div className={styles.mobileRoot}>
+        {/* Main Projects link */}
+        <Link
+          href="/projects"
+          className={`${linkClassName} ${styles.mobileMainLink}`}
+          onClick={navigate}
+        >
+          {label}
+        </Link>
+
+        {/* Category sub-links indented below */}
+        {categories.length > 0 && (
+          <div className={styles.mobileSubLinks}>
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={styles.mobileSubLink}
+                onClick={navigate}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── DESKTOP: hover mega-dropdown ──────────────────────────────
   return (
     <div ref={ref} className={styles.root}>
       <button
@@ -105,20 +132,16 @@ export default function ProjectsDropdown({
         className={`${styles.trigger} ${linkClassName}`}
         aria-haspopup="true"
         aria-expanded={open}
-        onMouseEnter={openMenu}
-        onMouseLeave={scheduleClose}
+        onMouseEnter={() => { clearCloseTimer(); setMenuOpen(true); }}
+        onMouseLeave={() => { closeTimerRef.current = setTimeout(() => setMenuOpen(false), 200); }}
         onClick={() => { setMenuOpen(false); router.push("/projects"); }}
       >
         {label}
       </button>
 
-      {open ? (
-        <div
-          className={styles.backdrop}
-          aria-hidden
-          onClick={() => setMenuOpen(false)}
-        />
-      ) : null}
+      {open && (
+        <div className={styles.backdrop} aria-hidden onClick={() => setMenuOpen(false)} />
+      )}
 
       <div
         className={`${styles.megaWrap} ${open ? styles.megaWrapOpen : ""}`}
@@ -127,8 +150,8 @@ export default function ProjectsDropdown({
       >
         <div
           className={styles.megaPanel}
-          onMouseEnter={openMenu}
-          onMouseLeave={scheduleClose}
+          onMouseEnter={() => { clearCloseTimer(); setMenuOpen(true); }}
+          onMouseLeave={() => { closeTimerRef.current = setTimeout(() => setMenuOpen(false), 200); }}
         >
           <div className={styles.megaInner}>
             <div className={styles.columns}>
@@ -139,7 +162,7 @@ export default function ProjectsDropdown({
                       href={item.href}
                       className={styles.categoryLink}
                       role="menuitem"
-                      onClick={() => { setMenuOpen(false); onNavigate?.(); }}
+                      onClick={navigate}
                     >
                       {item.label}
                     </Link>
@@ -147,63 +170,18 @@ export default function ProjectsDropdown({
                 ))}
               </ul>
             </div>
-
             <aside className={styles.aside}>
               <Link
                 href="/projects"
                 className={styles.asideLink}
                 role="menuitem"
-                onClick={() => { setMenuOpen(false); onNavigate?.(); }}
+                onClick={navigate}
               >
                 {i18n.language === "ar" ? "عرض جميع المشاريع" : "SEE ALL PROJECTS"}
               </Link>
             </aside>
           </div>
         </div>
-      </div>
-
-      {/* Mobile accordion */}
-      <div className={styles.mobileAccordion}>
-        <button
-          type="button"
-          data-nav-item
-          className={styles.mobileToggle}
-          aria-haspopup="true"
-          aria-expanded={open}
-          onClick={() => setMenuOpen(!open)}
-        >
-          {label}
-          <svg
-            className={`${styles.chevron} ${open ? styles.chevronOpen : ""}`}
-            width="10"
-            height="10"
-            viewBox="0 0 10 6"
-            fill="none"
-            aria-hidden
-          >
-            <path
-              d="M1 1l4 4 4-4"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </button>
-        {open ? (
-          <div className={styles.mobilePanel}>
-            {items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${styles.mobileItem} ${styles.mobileCategoryItem}`}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        ) : null}
       </div>
     </div>
   );
