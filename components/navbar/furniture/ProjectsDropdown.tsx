@@ -92,11 +92,10 @@ export default function ProjectsDropdown({
     onNavigate?.();
   };
 
-  // ── MOBILE: simple link + sub-items accordion ─────────────────
+  // ── MOBILE: Projects link + always-visible category sub-links ─
   if (isMobile) {
     return (
       <div className={styles.mobileRoot}>
-        {/* Main Projects link */}
         <Link
           href="/projects"
           className={`${linkClassName} ${styles.mobileMainLink}`}
@@ -104,8 +103,6 @@ export default function ProjectsDropdown({
         >
           {label}
         </Link>
-
-        {/* Category sub-links indented below */}
         {categories.length > 0 && (
           <div className={styles.mobileSubLinks}>
             {items.map((item) => (
@@ -115,7 +112,7 @@ export default function ProjectsDropdown({
                 className={styles.mobileSubLink}
                 onClick={navigate}
               >
-                {item.label}
+                — {item.label}
               </Link>
             ))}
           </div>

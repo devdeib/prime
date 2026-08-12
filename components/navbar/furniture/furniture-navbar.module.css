@@ -231,16 +231,31 @@
 }
 
 .mobileInner .navLinkActive::after {
-  display: none; /* no underline indicator in drawer */
+  display: none;
 }
 
-/* Divider becomes full-width rule */
+/* Remove the bottom border from a link that sits right before the divider */
+.mobileInner .navLink + .navDivider {
+  margin-top: -1px;
+}
+
+/* Also target via :has when navLink is immediately before navDivider sibling */
+.mobileInner :is(.navLink):has(+ .navDivider) {
+  border-bottom: none;
+}
+
+/* Remove bottom border from Services (last page link before divider) */
+.mobileInner .lastPageLink {
+  border-bottom: none !important;
+}
+
+/* Divider rule */
 .mobileInner .navDivider {
   display: block;
   width: 100%;
   height: 1px;
-  background: rgba(30, 39, 53, 0.1);
-  margin: 0.5rem 0;
+  background: rgba(30, 39, 53, 0.12);
+  margin: 0.6rem 0;
 }
 
 /* Language wrap in drawer */

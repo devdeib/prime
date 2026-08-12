@@ -110,7 +110,7 @@ export default function FurnitureNavbar() {
 
       <Nav.Link
         as={Link} href="/services"
-        className={linkCls(pathname === "/services")}
+        className={`${linkCls(pathname === "/services")} ${styles.lastPageLink}`}
         onClick={() => setMenuOpen(false)}
       >
         {t("nav.services") === "nav.services" ? "SERVICES" : t("nav.services")}
