@@ -28,6 +28,20 @@
   box-shadow: none !important;
 }
 
+/* On scrolled navy navbar — keep white */
+.triggerOnLight {
+  border-color: rgba(255, 255, 255, 0.78) !important;
+  color: #ffffff !important;
+}
+
+.triggerOnLight:hover,
+.triggerOnLight:focus,
+.triggerOnLight:active,
+.triggerOnLight:focus-visible {
+  border-color: #ffffff !important;
+  color: #ffffff !important;
+}
+
 /* On white background (admin navbar) — navy border and text */
 .triggerNavy {
   border-color: rgba(30, 39, 53, 0.5) !important;
@@ -40,17 +54,6 @@
 .triggerNavy:focus-visible {
   border-color: #1e2735 !important;
   color: #1e2735 !important;
-}
-  border-color: rgba(255, 255, 255, 0.78) !important;
-  color: #ffffff !important;
-}
-
-.triggerOnLight:hover,
-.triggerOnLight:focus,
-.triggerOnLight:active,
-.triggerOnLight:focus-visible {
-  border-color: #ffffff !important;
-  color: #ffffff !important;
 }
 
 .menu,
@@ -84,11 +87,11 @@
 .menuItem:hover,
 .menuItem:focus {
   background: rgba(30, 39, 53, 0.07) !important;
-  color: #1E2735 !important;
+  color: #1e2735 !important;
 }
 
 .icon {
-  color: #1E2735;
+  color: #1e2735;
   flex-shrink: 0;
 }
 
