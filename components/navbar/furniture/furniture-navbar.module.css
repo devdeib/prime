@@ -24,16 +24,19 @@
   display: flex;
   align-items: center;
   height: 100%;
-  /* logo gets extra left breathing room; links pushed right */
-  padding-left: 3.5rem;
-  padding-right: 2.5rem;
+  /* logical properties so logo stays on the correct side in RTL */
+  padding-inline-start: 3.5rem;
+  padding-inline-end: 2.5rem;
   gap: 0;
+  /* Force LTR layout for navbar regardless of page direction —
+     logo always left, links always right */
+  direction: ltr;
 }
 
-/* ── Brand — left ──────────────────────────────────────────── */
+/* ── Brand — left (right in RTL) ───────────────────────────── */
 .brandLeft {
   flex-shrink: 0;
-  margin-right: auto; /* pushes desktop links to the right */
+  margin-inline-end: auto; /* logical property: works for both LTR and RTL */
 }
 
 .brandMark {
@@ -55,8 +58,9 @@
   align-items: center;
   gap: 38px;
   flex-shrink: 0;
-  /* slight right padding so last items don't hug the edge */
-  padding-right: 0.5rem;
+  padding-inline-end: 0.5rem;
+  /* text inside links renders in their natural direction */
+  unicode-bidi: plaintext;
 }
 
 /* ── Link base ─────────────────────────────────────────────── */
@@ -249,8 +253,9 @@
   }
 
   .navContainer {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    padding-inline-start: 1.25rem;
+    padding-inline-end: 1.25rem;
+    direction: ltr; /* keep logo left, hamburger right on mobile too */
   }
 
   .brandMark :global(img) {
@@ -269,7 +274,7 @@
   .desktopLinks { gap: 26px; }
   .ft14         { font-size: 0.76rem !important; }
   .navContainer {
-    padding-left: 2rem;
-    padding-right: 1.75rem;
+    padding-inline-start: 2rem;
+    padding-inline-end: 1.75rem;
   }
 }

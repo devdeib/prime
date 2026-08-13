@@ -97,7 +97,7 @@ export default function FurnitureNavbar() {
 
       <Nav.Link
         as={Link} href="/showrooms"
-        className={`${linkCls(pathname === "/showrooms" || isShowroomHero)} ${!mobile ? styles.lastPageLink : ""}`}
+        className={`${linkCls(pathname === "/showrooms" || isShowroomHero)} ${styles.lastPageLink}`}
         onClick={() => setMenuOpen(false)}
       >
         {t("nav.showrooms")}
