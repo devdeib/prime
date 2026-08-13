@@ -9,11 +9,12 @@ import styles from "./profile-nav-item.module.css";
 
 type ProfileNavItemProps = {
   onLight?: boolean;
+  onWhiteBg?: boolean;
   /** Home hero (before scroll): light flat dropdown only; trigger stays default (white outline). */
   heroFlat?: boolean;
 };
 
-const ProfileNavItem = ({ onLight = false, heroFlat = false }: ProfileNavItemProps) => {
+const ProfileNavItem = ({ onLight = false, onWhiteBg = false, heroFlat = false }: ProfileNavItemProps) => {
   const { t } = useTranslation("common");
   const { data: session } = useSession();
 
@@ -38,7 +39,7 @@ const ProfileNavItem = ({ onLight = false, heroFlat = false }: ProfileNavItemPro
           <Dropdown.Toggle
             variant="link"
             id="dropdown-basic"
-            className={`${styles.trigger} ${onLight ? styles.triggerOnLight : ""}`}
+            className={`${styles.trigger} ${onLight ? styles.triggerOnLight : ""} ${onWhiteBg ? styles.triggerNavy : ""}`}
           >
             <span className="ft-15 fw-normal">{user.first_name}</span>
           </Dropdown.Toggle>

@@ -35,7 +35,7 @@ const AdminNavbar = () => {
             </Nav>
             <Nav className={`align-items-center flex-wrap ${styles.rightLinks}`}>
               <LanguageToggle />
-              <ProfileNavItem onLight />
+              <ProfileNavItem onWhiteBg />
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -28,8 +28,19 @@
   box-shadow: none !important;
 }
 
-/* On scrolled navy navbar — keep white */
-.triggerOnLight {
+/* On white background (admin navbar) — navy border and text */
+.triggerNavy {
+  border-color: rgba(30, 39, 53, 0.5) !important;
+  color: #1e2735 !important;
+}
+
+.triggerNavy:hover,
+.triggerNavy:focus,
+.triggerNavy:active,
+.triggerNavy:focus-visible {
+  border-color: #1e2735 !important;
+  color: #1e2735 !important;
+}
   border-color: rgba(255, 255, 255, 0.78) !important;
   color: #ffffff !important;
 }
