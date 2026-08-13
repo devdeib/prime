@@ -28,17 +28,18 @@
   box-shadow: none !important;
 }
 
+/* On scrolled navy navbar — keep white */
 .triggerOnLight {
-  border-color: rgba(30, 39, 53, 0.45) !important;
-  color: #1e2735 !important;
+  border-color: rgba(255, 255, 255, 0.78) !important;
+  color: #ffffff !important;
 }
 
 .triggerOnLight:hover,
 .triggerOnLight:focus,
 .triggerOnLight:active,
 .triggerOnLight:focus-visible {
-  border-color: #1e2735 !important;
-  color: #1e2735 !important;
+  border-color: #ffffff !important;
+  color: #ffffff !important;
 }
 
 .menu,
