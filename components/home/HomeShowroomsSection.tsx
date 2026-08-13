@@ -19,20 +19,6 @@ type ShowroomItem = {
   images?: string[] | null;
 };
 
-const FALLBACK_SHOWROOMS: ShowroomItem[] = [
-  { id: 1, name: "Showroom", city: "Riyadh" },
-  { id: 2, name: "Showroom", city: "Jeddah" },
-  { id: 3, name: "Showroom", city: "Rome" },
-  { id: 4, name: "Showroom", city: "Dubai" },
-];
-
-const FALLBACK_PROJECTS: ShowroomItem[] = [
-  { id: 1, name: "Residential Project", city: "Riyadh" },
-  { id: 2, name: "Villa Interior", city: "Jeddah" },
-  { id: 3, name: "Private Residence", city: "Dubai" },
-  { id: 4, name: "Apartment Styling", city: "Rome" },
-];
-
 const PLACEHOLDER_IMAGE = "/images/prime-logo.svg";
 
 function showroomImage(showroom: ShowroomItem) {
@@ -118,18 +104,13 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
   useEffect(() => {
     setLoading(true);
     const controller = new AbortController();
-    const fallback = isProjects ? FALLBACK_PROJECTS : FALLBACK_SHOWROOMS;
     fetch(`/api/be/${kind}`, { signal: controller.signal })
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setItems(data);
-        } else {
-          setItems(fallback);
-        }
+        setItems(Array.isArray(data) ? data : []);
       })
       .catch(() => {
-        if (!controller.signal.aborted) setItems(fallback);
+        if (!controller.signal.aborted) setItems([]);
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
@@ -138,6 +119,9 @@ function HomeCollectionSection({ kind }: { kind: "showrooms" | "projects" }) {
   }, [kind, isProjects]);
 
   const cards = items;
+
+  // Don't render the section at all when there's nothing to show
+  if (!loading && cards.length === 0) return null;
 
   const scrollRail = (direction: -1 | 1) => {
     const rail = railRef.current;
