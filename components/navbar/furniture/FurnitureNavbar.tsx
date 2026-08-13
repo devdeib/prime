@@ -105,6 +105,10 @@ export default function FurnitureNavbar() {
 
       <span className={styles.navDivider} aria-hidden />
 
+      <span className={`${styles.languageWrap} ${profileOnLight ? styles.langOnLight : ""}`}>
+        <LanguageToggle />
+      </span>
+
       <Nav.Link
         as={Link} href="/vip-meeting"
         className={linkCls(pathname === "/vip-meeting")}
@@ -126,10 +130,6 @@ export default function FurnitureNavbar() {
       {session && (
         <ProfileNavItem onLight={profileOnLight} heroFlat={profileHeroFlat} />
       )}
-
-      <span className={`${styles.languageWrap} ${profileOnLight ? styles.langOnLight : ""}`}>
-        <LanguageToggle />
-      </span>
     </>
   );
 
