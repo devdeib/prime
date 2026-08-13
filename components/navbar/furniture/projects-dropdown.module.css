@@ -25,7 +25,7 @@
 
 .megaWrap {
   position: fixed;
-  top: 100px;
+  top: 80px; /* flush with navbar bottom — no gap */
   left: 0;
   right: 0;
   z-index: 1090;
@@ -46,17 +46,17 @@
   z-index: 1;
   background: #ffffff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: none;
+  box-shadow: 0 8px 32px rgba(7, 12, 22, 0.1);
 }
 
-/* Bridge from navbar link into panel so hover is not lost in the gap */
+/* Invisible extension upward so mouse moving from navbar into panel doesn't lose hover */
 .megaPanel::before {
   content: "";
   position: absolute;
-  top: -24px;
+  top: -8px;
   left: 0;
   right: 0;
-  height: 24px;
+  height: 8px;
 }
 
 .megaInner {
@@ -258,6 +258,7 @@
   color: #1e2735 !important;
   text-align: left;
   text-decoration: none;
+  line-height: 1;
 }
 
 .mobileMainLink:hover {
@@ -266,9 +267,14 @@
 }
 
 .mobileChevron {
+  display: inline-block;
   flex-shrink: 0;
+  margin-left: 6px;
   transition: transform 0.22s ease;
   color: #1e2735;
+  /* vertically center with the text */
+  position: relative;
+  top: 1px;
 }
 
 .mobileChevronOpen {

@@ -1,6 +1,4 @@
-/* ────────────────────────────────────────────────────────────
-   NAVBAR SHELL
-──────────────────────────────────────────────────────────── */
+/* ── Shell ─────────────────────────────────────────────────── */
 .navShell {
   position: fixed;
   top: 0;
@@ -21,23 +19,21 @@
   box-shadow: 0 2px 24px rgba(0, 0, 0, 0.22);
 }
 
-/* ────────────────────────────────────────────────────────────
-   INNER CONTAINER
-──────────────────────────────────────────────────────────── */
+/* ── Container ─────────────────────────────────────────────── */
 .navContainer {
   display: flex;
   align-items: center;
   height: 100%;
-  padding-inline: 2.5rem;
+  /* logo gets extra left breathing room; links pushed right */
+  padding-left: 3.5rem;
+  padding-right: 2.5rem;
   gap: 0;
 }
 
-/* ────────────────────────────────────────────────────────────
-   BRAND / LOGO  — left
-──────────────────────────────────────────────────────────── */
+/* ── Brand — left ──────────────────────────────────────────── */
 .brandLeft {
   flex-shrink: 0;
-  margin-right: auto; /* pushes all nav links to the right */
+  margin-right: auto; /* pushes desktop links to the right */
 }
 
 .brandMark {
@@ -53,25 +49,23 @@
   filter: brightness(0) invert(1);
 }
 
-/* ────────────────────────────────────────────────────────────
-   DESKTOP LINKS  (hidden on mobile)
-──────────────────────────────────────────────────────────── */
+/* ── Desktop links ─────────────────────────────────────────── */
 .desktopLinks {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 38px;
   flex-shrink: 0;
+  /* slight right padding so last items don't hug the edge */
+  padding-right: 0.5rem;
 }
 
-/* ────────────────────────────────────────────────────────────
-   SHARED LINK STYLE
-──────────────────────────────────────────────────────────── */
+/* ── Link base ─────────────────────────────────────────────── */
 .navLink {
-  color: rgba(255, 255, 255, 0.88) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
   padding: 0 !important;
   margin: 0 !important;
   line-height: 1;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
   transition: color 0.15s;
   text-decoration: none;
@@ -81,8 +75,9 @@
   color: #ffffff !important;
 }
 
+/* Font restored — was 0.76rem, back to original 0.82rem */
 .ft14 {
-  font-size: 0.76rem !important;
+  font-size: 0.82rem !important;
   text-transform: uppercase;
 }
 
@@ -101,33 +96,27 @@
   opacity: 0.8;
 }
 
-/* ────────────────────────────────────────────────────────────
-   DIVIDER  (between page links and utilities)
-──────────────────────────────────────────────────────────── */
+/* ── Divider ───────────────────────────────────────────────── */
 .navDivider {
   display: inline-block;
   width: 1px;
   height: 13px;
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.25);
   flex-shrink: 0;
 }
 
-/* ────────────────────────────────────────────────────────────
-   LANGUAGE TOGGLE WRAPPER
-──────────────────────────────────────────────────────────── */
+/* ── Language wrap ─────────────────────────────────────────── */
 .languageWrap {
   display: inline-flex;
   align-items: center;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .langOnLight {
-  color: rgba(255, 255, 255, 0.88); /* stays white on dark navbar */
+  color: rgba(255, 255, 255, 0.9);
 }
 
-/* ────────────────────────────────────────────────────────────
-   HAMBURGER  (mobile only — hidden on desktop)
-──────────────────────────────────────────────────────────── */
+/* ── Hamburger (mobile only) ───────────────────────────────── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -154,21 +143,15 @@
   transform-origin: center;
 }
 
-/* X state */
-.barTop  { transform: translateY(6.5px) rotate(45deg); }
-.barMid  { opacity: 0; transform: scaleX(0); }
-.barBot  { transform: translateY(-6.5px) rotate(-45deg); }
+.barTop { transform: translateY(6.5px) rotate(45deg); }
+.barMid { opacity: 0; transform: scaleX(0); }
+.barBot { transform: translateY(-6.5px) rotate(-45deg); }
 
-/* hamburger dark on mobile shell white bg */
 @media (max-width: 991px) {
-  .hamburgerBar {
-    background: #1e2735;
-  }
+  .hamburgerBar { background: #1e2735; }
 }
 
-/* ────────────────────────────────────────────────────────────
-   BACKDROP  (mobile)
-──────────────────────────────────────────────────────────── */
+/* ── Backdrop ──────────────────────────────────────────────── */
 .mobileBackdrop {
   display: none;
   position: fixed;
@@ -185,9 +168,7 @@
   pointer-events: auto;
 }
 
-/* ────────────────────────────────────────────────────────────
-   MOBILE DRAWER
-──────────────────────────────────────────────────────────── */
+/* ── Mobile drawer ─────────────────────────────────────────── */
 .mobileDrawer {
   position: fixed;
   top: 0;
@@ -214,7 +195,7 @@
   gap: 0;
 }
 
-/* Links inside mobile drawer */
+/* Links inside drawer */
 .mobileInner .navLink {
   color: #1e2735 !important;
   font-size: 0.85rem !important;
@@ -230,26 +211,14 @@
   opacity: 0.65;
 }
 
-.mobileInner .navLinkActive::after {
-  display: none;
-}
+.mobileInner .navLinkActive::after { display: none; }
 
-/* Remove the bottom border from a link that sits right before the divider */
-.mobileInner .navLink + .navDivider {
-  margin-top: -1px;
-}
-
-/* Also target via :has when navLink is immediately before navDivider sibling */
-.mobileInner :is(.navLink):has(+ .navDivider) {
-  border-bottom: none;
-}
-
-/* Remove bottom border from Services (last page link before divider) */
+/* Showrooms is the last page link before divider — remove its border */
 .mobileInner .lastPageLink {
   border-bottom: none !important;
 }
 
-/* Divider rule */
+/* Divider in drawer */
 .mobileInner .navDivider {
   display: block;
   width: 100%;
@@ -258,7 +227,7 @@
   margin: 0.6rem 0;
 }
 
-/* Language wrap in drawer */
+/* Language in drawer */
 .mobileInner .languageWrap {
   color: #1e2735;
   padding: 0.9rem 0;
@@ -266,9 +235,7 @@
   width: 100%;
 }
 
-/* ────────────────────────────────────────────────────────────
-   MOBILE BREAKPOINT  (≤991px)
-──────────────────────────────────────────────────────────── */
+/* ── Mobile breakpoint ─────────────────────────────────────── */
 @media (max-width: 991px) {
   .navShell {
     height: 64px;
@@ -282,42 +249,27 @@
   }
 
   .navContainer {
-    padding-inline: 1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
   }
 
-  /* Navy logo on white mobile bar */
   .brandMark :global(img) {
     width: 38px !important;
     filter: brightness(0) saturate(100%) invert(14%) sepia(20%) saturate(900%)
       hue-rotate(182deg) brightness(90%) contrast(95%);
   }
 
-  .desktopLinks {
-    display: none; /* hidden — drawer replaces it */
-  }
-
-  .hamburger {
-    display: flex;
-  }
-
-  .mobileBackdrop {
-    display: block;
-  }
+  .desktopLinks { display: none; }
+  .hamburger    { display: flex; }
+  .mobileBackdrop { display: block; }
 }
 
-/* ────────────────────────────────────────────────────────────
-   SLIGHTLY TIGHTER DESKTOP  (1280px)
-──────────────────────────────────────────────────────────── */
+/* ── Tighter at 1280px ─────────────────────────────────────── */
 @media (min-width: 992px) and (max-width: 1280px) {
-  .desktopLinks {
-    gap: 22px;
-  }
-
-  .ft14 {
-    font-size: 0.71rem !important;
-  }
-
+  .desktopLinks { gap: 26px; }
+  .ft14         { font-size: 0.76rem !important; }
   .navContainer {
-    padding-inline: 1.75rem;
+    padding-left: 2rem;
+    padding-right: 1.75rem;
   }
 }

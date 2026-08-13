@@ -99,7 +99,7 @@ export default function ProjectsDropdown({
         <button
           type="button"
           className={`${linkClassName} ${styles.mobileMainLink}`}
-          onClick={() => setOpen((v) => !v)}
+          onClick={(e) => { e.stopPropagation(); setOpen((v) => !v); }}
         >
           {label}
           <svg
